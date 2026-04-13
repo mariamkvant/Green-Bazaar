@@ -1,0 +1,51 @@
+import express from 'express';
+import cors from 'cors';
+import path from 'path';
+import { initDatabase } from './database';
+import userRoutes from './routes/userRoutes';
+import listingRoutes from './routes/listingRoutes';
+import orderRoutes from './routes/orderRoutes';
+import messageRoutes from './routes/messageRoutes';
+import reviewRoutes from './routes/reviewRoutes';
+import disputeRoutes from './routes/disputeRoutes';
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(cors({ origin: true, credentials: true }));
+app.use(express.json({ limit: '5mb' }));
+
+// Security headers
+app.use((_req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  next();
+});
+
+// API routes
+app.use('/api/users', userRoutes);
+app.use('/api/listings', listingRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/messages', messageRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/disputes', disputeRoutes);
+
+app.get('/api/health', (_req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// Serve static frontend
+const staticPath = path.resolve(__dirname, '..');
+app.use(express.static(staticPath));
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(staticPath, 'index.html'));
+});
+
+initDatabase().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Green Bazaar running on port ${PORT}`);
+  });
+}).catch(err => {
+  console.error('DB init failed:', err);
+  process.exit(1);
+});
