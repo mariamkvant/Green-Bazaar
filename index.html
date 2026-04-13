@@ -11,104 +11,241 @@
 <body>
     <header class="header">
         <div class="container header-inner">
-            <a href="#" class="logo">
+            <a href="#" class="logo" onclick="showPage('home')">
                 <span class="logo-icon">🌿</span>
                 <span class="logo-text">მწვანე ბაზარი</span>
                 <span class="logo-sub">Plant Marketplace</span>
             </a>
-            <nav class="nav">
-                <a href="#listings" class="nav-link">Browse Plants</a>
+            <nav class="nav" id="mainNav">
+                <a href="#" class="nav-link" onclick="showPage('home')">Browse Plants</a>
                 <a href="#about" class="nav-link">About</a>
-                <a href="#contact" class="nav-link">Contact</a>
-                <a href="#" class="btn btn-outline" id="registerBuyerBtn">Register as Buyer</a>
-                <a href="#" class="btn btn-primary" id="sellBtn">Sell Your Plants</a>
+                <!-- Logged out -->
+                <div id="navLoggedOut">
+                    <a href="#" class="btn btn-outline" id="registerBuyerBtn">Register as Buyer</a>
+                    <a href="#" class="btn btn-outline" id="loginBtn">Log In</a>
+                    <a href="#" class="btn btn-primary" id="sellBtn">Sell Your Plants</a>
+                </div>
+                <!-- Logged in -->
+                <div id="navLoggedIn" style="display:none;">
+                    <a href="#" class="nav-link" onclick="showPage('dashboard')">📋 My Dashboard</a>
+                    <a href="#" class="nav-link" onclick="showPage('messages')">💬 Messages <span class="badge-count" id="msgBadge" style="display:none;"></span></a>
+                    <span class="nav-user" id="navUserName"></span>
+                    <a href="#" class="btn btn-outline btn-sm" id="logoutBtn">Log Out</a>
+                </div>
             </nav>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">☰</button>
         </div>
     </header>
 
-    <section class="hero">
-        <div class="container">
-            <h1>Find the Perfect Plants for Your Garden</h1>
-            <p>Georgia's growing marketplace for quality plants. Browse Thuja, ornamental trees, and more from local growers.</p>
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Search plants... (e.g. Thuja, Emerald, Smaragd)" aria-label="Search plants">
-                <button class="btn btn-primary" id="searchBtn">Search</button>
+    <!-- ===== HOME PAGE ===== -->
+    <div id="page-home">
+        <section class="hero">
+            <div class="container">
+                <h1>Find the Perfect Plants for Your Garden</h1>
+                <p>Georgia's growing marketplace for quality plants. Browse Thuja, ornamental trees, and more from local growers.</p>
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search plants... (e.g. Thuja, Emerald, Smaragd)" aria-label="Search plants">
+                    <button class="btn btn-primary" id="searchBtn">Search</button>
+                </div>
+                <div class="filter-tags">
+                    <button class="tag active" data-filter="all">All</button>
+                    <button class="tag" data-filter="thuja">Thuja</button>
+                    <button class="tag" data-filter="hedge">Hedge Plants</button>
+                    <button class="tag" data-filter="ornamental">Ornamental</button>
+                    <button class="tag" data-filter="fruit">Fruit Trees</button>
+                </div>
             </div>
-            <div class="filter-tags">
-                <button class="tag active" data-filter="all">All</button>
-                <button class="tag" data-filter="thuja">Thuja</button>
-                <button class="tag" data-filter="hedge">Hedge Plants</button>
-                <button class="tag" data-filter="ornamental">Ornamental</button>
-                <button class="tag" data-filter="fruit">Fruit Trees</button>
+        </section>
+        <section class="listings" id="listings">
+            <div class="container">
+                <h2 class="section-title">Available Plants</h2>
+                <p class="section-subtitle">Fresh listings from local Georgian growers</p>
+                <div class="grid" id="plantGrid"></div>
+                <p class="no-results" id="noResults" style="display:none;">No plants match your search. Try a different keyword.</p>
+            </div>
+        </section>
+        <section class="how-it-works" id="how-it-works">
+            <div class="container">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-subtitle">Safe buying and selling with escrow protection</p>
+                <div class="steps">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <span class="step-icon">🔍</span>
+                        <h3>Browse & Choose</h3>
+                        <p>Find the perfect plant from verified local growers across Georgia.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <span class="step-icon">💳</span>
+                        <h3>Pay Securely</h3>
+                        <p>Your payment is held in escrow — the seller doesn't get paid until you confirm delivery.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <span class="step-icon">📦</span>
+                        <h3>Receive & Inspect</h3>
+                        <p>Get your plant delivered or pick it up. You have 3 days to inspect its condition.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">4</span>
+                        <span class="step-icon">⭐</span>
+                        <h3>Confirm & Review</h3>
+                        <p>Confirm the plant is healthy, leave a review, and the seller gets paid.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="about" id="about">
+            <div class="container">
+                <h2 class="section-title">Why მწვანე ბაზარი?</h2>
+                <div class="features">
+                    <div class="feature">
+                        <span class="feature-icon">🔒</span>
+                        <h3>Escrow Protection</h3>
+                        <p>Your money is safe. Payments are held until you confirm the plant arrived healthy.</p>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">🌱</span>
+                        <h3>Local Growers</h3>
+                        <p>All plants grown locally in Georgia, adapted to our climate and soil.</p>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">⭐</span>
+                        <h3>Verified Reviews</h3>
+                        <p>Real ratings from real buyers. "Plant Arrived Healthy" badge you can trust.</p>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">🛡️</span>
+                        <h3>Dispute Resolution</h3>
+                        <p>Issues? Our mediation team resolves disputes fairly within 48 hours.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ===== PLANT DETAIL PAGE ===== -->
+    <div id="page-plant" style="display:none;" class="page-section">
+        <div class="container">
+            <a href="#" class="back-link" onclick="showPage('home')">← Back to listings</a>
+            <div class="plant-detail" id="plantDetail"></div>
+            <div class="reviews-section" id="reviewsSection"></div>
+        </div>
+    </div>
+
+    <!-- ===== DASHBOARD PAGE ===== -->
+    <div id="page-dashboard" style="display:none;" class="page-section">
+        <div class="container">
+            <h2 class="section-title">My Dashboard</h2>
+            <div class="dash-tabs">
+                <button class="dash-tab active" data-tab="orders">My Orders</button>
+                <button class="dash-tab" data-tab="sales">My Sales</button>
+                <button class="dash-tab" data-tab="disputes">Disputes</button>
+            </div>
+            <div class="dash-content" id="dashContent"></div>
+        </div>
+    </div>
+
+    <!-- ===== MESSAGES PAGE ===== -->
+    <div id="page-messages" style="display:none;" class="page-section">
+        <div class="container">
+            <h2 class="section-title">Messages</h2>
+            <div class="msg-layout">
+                <div class="msg-list" id="msgList"></div>
+                <div class="msg-chat" id="msgChat">
+                    <p class="msg-empty">Select a conversation to start chatting</p>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <section class="listings" id="listings">
+    <!-- ===== CHECKOUT PAGE ===== -->
+    <div id="page-checkout" style="display:none;" class="page-section">
         <div class="container">
-            <h2 class="section-title">Available Plants</h2>
-            <p class="section-subtitle">Fresh listings from local Georgian growers</p>
-            <div class="grid" id="plantGrid">
-                <!-- Plants injected by JS -->
+            <a href="#" class="back-link" id="checkoutBack">← Back</a>
+            <h2 class="section-title">Secure Checkout</h2>
+            <div class="checkout-layout">
+                <div class="checkout-summary" id="checkoutSummary"></div>
+                <div class="checkout-form-wrap">
+                    <div class="escrow-notice">
+                        <span>🔒</span>
+                        <div>
+                            <strong>Escrow Protection</strong>
+                            <p>Your payment is held securely until you confirm the plant arrived in good condition. You have 3 days after delivery to inspect.</p>
+                        </div>
+                    </div>
+                    <form id="checkoutForm" class="contact-form">
+                        <h3>Delivery Method</h3>
+                        <div class="radio-group">
+                            <label class="radio-label"><input type="radio" name="delivery" value="pickup" checked> 🏪 Local Pickup (Free)</label>
+                            <label class="radio-label"><input type="radio" name="delivery" value="courier"> 🚚 Courier Delivery (+₾10)</label>
+                        </div>
+                        <div id="deliveryAddress" style="display:none;">
+                            <label for="addressInput">Delivery Address <span class="required">*</span></label>
+                            <textarea id="addressInput" rows="2" placeholder="Full delivery address"></textarea>
+                        </div>
+                        <h3>Payment Method</h3>
+                        <div class="radio-group">
+                            <label class="radio-label"><input type="radio" name="payment" value="card" checked> 💳 Bank Card (TBC / BOG)</label>
+                            <label class="radio-label"><input type="radio" name="payment" value="transfer"> 🏦 Bank Transfer</label>
+                        </div>
+                        <div id="cardFields">
+                            <label for="cardNumber">Card Number <span class="required">*</span></label>
+                            <input type="text" id="cardNumber" placeholder="XXXX XXXX XXXX XXXX" maxlength="19">
+                            <div class="form-row">
+                                <div>
+                                    <label for="cardExpiry">Expiry <span class="required">*</span></label>
+                                    <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5">
+                                </div>
+                                <div>
+                                    <label for="cardCvv">CVV <span class="required">*</span></label>
+                                    <input type="text" id="cardCvv" placeholder="XXX" maxlength="3">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="transferFields" style="display:none;">
+                            <div class="info-box">
+                                <p>Transfer to: <strong>GE00TB0000000000000000</strong></p>
+                                <p>Bank: TBC Bank</p>
+                                <p>Recipient: მწვანე ბაზარი LLC</p>
+                                <p>Include your order number in the description.</p>
+                            </div>
+                        </div>
+                        <div class="order-total" id="orderTotal"></div>
+                        <button type="submit" class="btn btn-primary btn-full btn-lg">🔒 Pay Securely</button>
+                        <p class="checkout-note">By paying, you agree to our <a href="#" class="link" onclick="openModal('privacyModal')">Privacy Policy</a> and Buyer Protection terms.</p>
+                    </form>
+                </div>
             </div>
-            <p class="no-results" id="noResults" style="display:none;">No plants match your search. Try a different keyword.</p>
         </div>
-    </section>
+    </div>
 
-    <section class="about" id="about">
-        <div class="container">
-            <h2 class="section-title">Why მწვანე ბაზარი?</h2>
-            <div class="features">
-                <div class="feature">
-                    <span class="feature-icon">🌱</span>
-                    <h3>Local Growers</h3>
-                    <p>All plants are grown locally in Georgia, adapted to our climate and soil conditions.</p>
-                </div>
-                <div class="feature">
-                    <span class="feature-icon">📦</span>
-                    <h3>Direct from Seller</h3>
-                    <p>Buy directly from growers — no middlemen, better prices, fresher plants.</p>
-                </div>
-                <div class="feature">
-                    <span class="feature-icon">🤝</span>
-                    <h3>Trusted Community</h3>
-                    <p>Verified sellers with ratings and reviews from real buyers across Georgia.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- ===== ALL MODALS ===== -->
 
-    <!-- Contact Modal -->
-    <div class="modal-overlay" id="contactModal">
-        <div class="modal">
-            <button class="modal-close" id="modalClose" aria-label="Close modal">&times;</button>
-            <h2 id="modalTitle">Contact Seller</h2>
-            <div id="modalBody">
-                <div class="seller-info">
-                    <p><strong>Seller:</strong> <span id="modalSeller"></span></p>
-                    <p><strong>Phone:</strong> <span id="modalPhone"></span></p>
-                    <p><strong>Location:</strong> <span id="modalLocation"></span></p>
-                </div>
-                <form id="contactForm" class="contact-form">
-                    <label for="buyerName">Your Name</label>
-                    <input type="text" id="buyerName" required placeholder="Enter your name">
-                    <label for="buyerPhone">Your Phone</label>
-                    <input type="tel" id="buyerPhone" required placeholder="+995 5XX XXX XXX">
-                    <label for="buyerMessage">Message</label>
-                    <textarea id="buyerMessage" rows="3" placeholder="I'm interested in this plant..."></textarea>
-                    <button type="submit" class="btn btn-primary btn-full">Send Inquiry</button>
-                </form>
-            </div>
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal modal-sm">
+            <button class="modal-close" data-close="loginModal" aria-label="Close">&times;</button>
+            <h2>👋 Welcome Back</h2>
+            <form id="loginForm" class="contact-form">
+                <label for="loginEmail">Email <span class="required">*</span></label>
+                <input type="email" id="loginEmail" required placeholder="your@email.com">
+                <label for="loginPassword">Password <span class="required">*</span></label>
+                <input type="password" id="loginPassword" required placeholder="Your password">
+                <button type="submit" class="btn btn-primary btn-full">Log In</button>
+            </form>
+            <p class="modal-switch">Don't have an account? <a href="#" class="link" id="switchToRegister">Register here</a></p>
         </div>
     </div>
 
     <!-- Seller Registration Modal -->
     <div class="modal-overlay" id="sellModal">
         <div class="modal">
-            <button class="modal-close" id="sellModalClose" aria-label="Close modal">&times;</button>
+            <button class="modal-close" data-close="sellModal" aria-label="Close">&times;</button>
             <h2>🌱 Register as a Seller</h2>
-            <p class="modal-desc">Start selling your plants on მწვანე ბაზარი. We'll verify your email and get you set up.</p>
+            <p class="modal-desc">Start selling your plants on მწვანე ბაზარი.</p>
             <form id="sellerForm" class="contact-form">
                 <label for="sellerName">Full Name <span class="required">*</span></label>
                 <input type="text" id="sellerName" required placeholder="Full name">
@@ -128,7 +265,7 @@
                     <option value="Gori">Gori</option>
                     <option value="Senaki">Senaki</option>
                     <option value="Marneuli">Marneuli</option>
-                    <option value="Other">Other (specify in description)</option>
+                    <option value="Other">Other</option>
                 </select>
                 <label for="sellerPlants">What plants do you grow? <span class="required">*</span></label>
                 <textarea id="sellerPlants" rows="3" required placeholder="Describe the types and quantities..."></textarea>
@@ -136,7 +273,7 @@
                 <input type="password" id="sellerPassword" required minlength="8" placeholder="Minimum 8 characters">
                 <div class="checkbox-group">
                     <input type="checkbox" id="sellerPrivacy" required>
-                    <label for="sellerPrivacy">I agree to the <a href="#" class="link" id="sellerPrivacyLink">Privacy Policy</a> <span class="required">*</span></label>
+                    <label for="sellerPrivacy">I agree to the <a href="#" class="link privacy-link">Privacy Policy</a> <span class="required">*</span></label>
                 </div>
                 <button type="submit" class="btn btn-primary btn-full">Register & Verify Email</button>
             </form>
@@ -146,9 +283,9 @@
     <!-- Buyer Registration Modal -->
     <div class="modal-overlay" id="buyerModal">
         <div class="modal">
-            <button class="modal-close" id="buyerModalClose" aria-label="Close modal">&times;</button>
+            <button class="modal-close" data-close="buyerModal" aria-label="Close">&times;</button>
             <h2>🛒 Register as a Buyer</h2>
-            <p class="modal-desc">Create an account to contact sellers, save favorites, and track your orders.</p>
+            <p class="modal-desc">Create an account to buy plants with escrow protection.</p>
             <form id="buyerForm" class="contact-form">
                 <label for="regBuyerName">Full Name <span class="required">*</span></label>
                 <input type="text" id="regBuyerName" required placeholder="Full name">
@@ -174,7 +311,7 @@
                 <input type="password" id="regBuyerPassword" required minlength="8" placeholder="Minimum 8 characters">
                 <div class="checkbox-group">
                     <input type="checkbox" id="buyerPrivacy" required>
-                    <label for="buyerPrivacy">I agree to the <a href="#" class="link" id="buyerPrivacyLink">Privacy Policy</a> <span class="required">*</span></label>
+                    <label for="buyerPrivacy">I agree to the <a href="#" class="link privacy-link">Privacy Policy</a> <span class="required">*</span></label>
                 </div>
                 <button type="submit" class="btn btn-primary btn-full">Register & Verify Email</button>
             </form>
@@ -184,7 +321,7 @@
     <!-- Email Verification Modal -->
     <div class="modal-overlay" id="verifyModal">
         <div class="modal modal-sm">
-            <button class="modal-close" id="verifyModalClose" aria-label="Close modal">&times;</button>
+            <button class="modal-close" data-close="verifyModal" aria-label="Close">&times;</button>
             <div class="verify-content">
                 <span class="verify-icon">📧</span>
                 <h2>Check Your Email</h2>
@@ -200,57 +337,89 @@
         </div>
     </div>
 
+    <!-- Review Modal -->
+    <div class="modal-overlay" id="reviewModal">
+        <div class="modal">
+            <button class="modal-close" data-close="reviewModal" aria-label="Close">&times;</button>
+            <h2>⭐ Leave a Review</h2>
+            <div id="reviewOrderInfo"></div>
+            <form id="reviewForm" class="contact-form">
+                <label>Overall Rating <span class="required">*</span></label>
+                <div class="star-rating" id="starRating">
+                    <span class="star" data-val="1">☆</span>
+                    <span class="star" data-val="2">☆</span>
+                    <span class="star" data-val="3">☆</span>
+                    <span class="star" data-val="4">☆</span>
+                    <span class="star" data-val="5">☆</span>
+                </div>
+                <input type="hidden" id="ratingValue" value="0">
+                <label>Plant Condition on Arrival <span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-label"><input type="radio" name="condition" value="healthy" required> 🌿 Healthy & Perfect</label>
+                    <label class="radio-label"><input type="radio" name="condition" value="good"> 👍 Good, minor issues</label>
+                    <label class="radio-label"><input type="radio" name="condition" value="damaged"> ⚠️ Damaged / Unhealthy</label>
+                </div>
+                <label for="reviewText">Your Review</label>
+                <textarea id="reviewText" rows="3" placeholder="Tell others about your experience..."></textarea>
+                <button type="submit" class="btn btn-primary btn-full">Submit Review</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dispute Modal -->
+    <div class="modal-overlay" id="disputeModal">
+        <div class="modal">
+            <button class="modal-close" data-close="disputeModal" aria-label="Close">&times;</button>
+            <h2>🛡️ Open a Dispute</h2>
+            <p class="modal-desc">We're sorry something went wrong. Describe the issue and we'll mediate within 48 hours.</p>
+            <div id="disputeOrderInfo"></div>
+            <form id="disputeForm" class="contact-form">
+                <label for="disputeReason">Reason <span class="required">*</span></label>
+                <select id="disputeReason" required>
+                    <option value="">Select a reason</option>
+                    <option value="damaged">Plant arrived damaged</option>
+                    <option value="wrong">Wrong plant received</option>
+                    <option value="dead">Plant was dead on arrival</option>
+                    <option value="noshow">Seller didn't show up for pickup</option>
+                    <option value="notasdesribed">Plant doesn't match description</option>
+                    <option value="other">Other</option>
+                </select>
+                <label for="disputeDesc">Describe the issue <span class="required">*</span></label>
+                <textarea id="disputeDesc" rows="4" required placeholder="Please provide details and attach photos if possible..."></textarea>
+                <label for="disputeResolution">What resolution do you want?</label>
+                <div class="radio-group">
+                    <label class="radio-label"><input type="radio" name="resolution" value="refund" checked> Full refund</label>
+                    <label class="radio-label"><input type="radio" name="resolution" value="partial"> Partial refund</label>
+                    <label class="radio-label"><input type="radio" name="resolution" value="replacement"> Replacement plant</label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Submit Dispute</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Privacy Policy Modal -->
     <div class="modal-overlay" id="privacyModal">
         <div class="modal modal-lg">
-            <button class="modal-close" id="privacyModalClose" aria-label="Close modal">&times;</button>
+            <button class="modal-close" data-close="privacyModal" aria-label="Close">&times;</button>
             <h2>Privacy Policy</h2>
             <div class="privacy-content">
                 <p class="privacy-date">Last updated: April 14, 2026</p>
-
                 <h3>1. Information We Collect</h3>
-                <p>When you register on მწვანე ბაზარი, we collect the following personal information:</p>
-                <ul>
-                    <li>Full name</li>
-                    <li>Email address</li>
-                    <li>Phone number</li>
-                    <li>City/Region (location)</li>
-                    <li>Account type (buyer or seller)</li>
-                </ul>
-                <p>For sellers, we additionally collect information about the plants you grow and sell.</p>
-
+                <p>When you register on მწვანე ბაზარი, we collect: full name, email address, phone number, city/region, and account type (buyer or seller). For sellers, we additionally collect plant inventory descriptions.</p>
                 <h3>2. How We Use Your Information</h3>
-                <ul>
-                    <li>To create and manage your account</li>
-                    <li>To verify your email address</li>
-                    <li>To connect buyers with sellers</li>
-                    <li>To display seller contact information on plant listings</li>
-                    <li>To send important platform updates and notifications</li>
-                </ul>
-
-                <h3>3. Information Sharing</h3>
-                <p>We do not sell your personal data to third parties. Seller contact information (name, phone, location) is visible to registered buyers when they inquire about a listing. Email addresses are never publicly displayed.</p>
-
-                <h3>4. Data Security</h3>
-                <p>We implement appropriate security measures to protect your personal information. Passwords are encrypted and never stored in plain text. However, no method of transmission over the internet is 100% secure.</p>
-
-                <h3>5. Your Rights</h3>
-                <p>You have the right to:</p>
-                <ul>
-                    <li>Access your personal data</li>
-                    <li>Correct inaccurate information</li>
-                    <li>Request deletion of your account and data</li>
-                    <li>Withdraw consent at any time</li>
-                </ul>
-
-                <h3>6. Cookies</h3>
-                <p>We use essential cookies to maintain your session and preferences. No third-party tracking cookies are used.</p>
-
-                <h3>7. Contact</h3>
-                <p>For privacy-related questions, contact us at: <strong>privacy@bazaar.green</strong></p>
-
-                <h3>8. Changes to This Policy</h3>
-                <p>We may update this policy from time to time. We will notify registered users of significant changes via email.</p>
+                <p>To create and manage your account, verify your email, connect buyers with sellers, process payments through escrow, facilitate delivery, and send platform notifications.</p>
+                <h3>3. Payment & Escrow</h3>
+                <p>Payment information is processed securely through our banking partners (TBC Bank, Bank of Georgia). We do not store full card numbers. Escrow funds are held in a segregated account until delivery is confirmed.</p>
+                <h3>4. Information Sharing</h3>
+                <p>We do not sell your personal data. Seller contact info (name, phone, location) is visible to buyers during transactions. Email addresses are never publicly displayed.</p>
+                <h3>5. Data Security</h3>
+                <p>We implement industry-standard security measures. Passwords are encrypted. Payment data is handled by PCI-compliant banking partners.</p>
+                <h3>6. Buyer Protection</h3>
+                <p>Buyers have a 3-day inspection window after delivery. If a dispute is raised, escrow funds are held until resolution. Our mediation team aims to resolve disputes within 48 hours.</p>
+                <h3>7. Your Rights</h3>
+                <p>You may access, correct, or delete your personal data at any time. Contact privacy@bazaar.green for requests.</p>
+                <h3>8. Changes</h3>
+                <p>We will notify registered users of significant policy changes via email.</p>
             </div>
         </div>
     </div>
@@ -264,14 +433,13 @@
                 </div>
                 <div>
                     <h4>Quick Links</h4>
-                    <a href="#listings">Browse Plants</a>
+                    <a href="#" onclick="showPage('home')">Browse Plants</a>
                     <a href="#about">About Us</a>
-                    <a href="#" id="footerSellLink">Sell Plants</a>
-                    <a href="#" id="footerPrivacyLink">Privacy Policy</a>
+                    <a href="#" class="privacy-link">Privacy Policy</a>
                 </div>
                 <div>
                     <h4>Contact</h4>
-                    <p>Email: info@mwvane-bazari.ge</p>
+                    <p>Email: info@bazaar.green</p>
                     <p>Phone: +995 XXX XXX XXX</p>
                     <p>Tbilisi, Georgia</p>
                 </div>
@@ -283,6 +451,7 @@
     </footer>
 
     <script src="plants.js"></script>
+    <script src="store.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

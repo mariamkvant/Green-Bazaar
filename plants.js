@@ -12,6 +12,7 @@ const plants = [
     stock: "available",
     description: "Classic pyramid-shaped Thuja with bright emerald foliage. Perfect for hedges and privacy screens. Grows well in Georgian climate, drought-tolerant once established. Ready for planting now — will fill out nicely in 3–6 months.",
     seller: "Giorgi's Nursery",
+    sellerId: 1000,
     phone: "+995 555 123 456",
     location: "Tbilisi, Dighomi",
     image: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=600&h=400&fit=crop"
@@ -29,6 +30,7 @@ const plants = [
     stock: "available",
     description: "The fastest growing Thuja variety — ideal if you need a green fence quickly. Adds 30–40 cm per year. Dense foliage provides excellent privacy. Well-rooted and ready for transplanting.",
     seller: "Giorgi's Nursery",
+    sellerId: 1000,
     phone: "+995 555 123 456",
     location: "Tbilisi, Dighomi",
     image: "https://images.unsplash.com/photo-1598512752271-33f913a5af13?w=600&h=400&fit=crop"
@@ -46,6 +48,7 @@ const plants = [
     stock: "limited",
     description: "Premium large Thuja for instant impact. Dark green, dense foliage that stays vibrant year-round. Excellent wind resistance. Limited stock — these go fast in spring season.",
     seller: "Kakheti Green Farm",
+    sellerId: 2000,
     phone: "+995 577 234 567",
     location: "Telavi, Kakheti",
     image: "https://images.unsplash.com/photo-1604762524889-3e2fcc145683?w=600&h=400&fit=crop"
@@ -63,6 +66,7 @@ const plants = [
     stock: "available",
     description: "Budget-friendly bulk pack for creating a full hedge line. 10 healthy Smaragd saplings, perfect spacing for a 5-meter fence. Younger plants that will establish roots quickly and grow vigorously in 3–6 months.",
     seller: "Giorgi's Nursery",
+    sellerId: 1000,
     phone: "+995 555 123 456",
     location: "Tbilisi, Dighomi",
     image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&h=400&fit=crop"
@@ -80,6 +84,7 @@ const plants = [
     stock: "available",
     description: "Compact, ball-shaped Thuja with stunning golden-yellow foliage. Perfect for garden borders, rock gardens, or decorative pots. Low maintenance and naturally keeps its round shape.",
     seller: "Batumi Botanics",
+    sellerId: 3000,
     phone: "+995 599 345 678",
     location: "Batumi, Adjara",
     image: "https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=600&h=400&fit=crop"
@@ -97,6 +102,7 @@ const plants = [
     stock: "available",
     description: "Adorable dwarf globe Thuja, perfect for small gardens, balconies, and container planting. Stays compact and round. Very hardy — handles Georgian winters with ease.",
     seller: "Batumi Botanics",
+    sellerId: 3000,
     phone: "+995 599 345 678",
     location: "Batumi, Adjara",
     image: "https://images.unsplash.com/photo-1491147334573-44cbb4602074?w=600&h=400&fit=crop"
@@ -114,6 +120,7 @@ const plants = [
     stock: "available",
     description: "Glossy evergreen hedge plant, very popular in Georgian gardens. Fast growing with beautiful white spring flowers. Creates a dense, lush privacy screen. Tolerates shade well.",
     seller: "Kakheti Green Farm",
+    sellerId: 2000,
     phone: "+995 577 234 567",
     location: "Telavi, Kakheti",
     image: "https://images.unsplash.com/photo-1462275646964-a0e3c11f18a6?w=600&h=400&fit=crop"
@@ -131,6 +138,7 @@ const plants = [
     stock: "limited",
     description: "Stunning ornamental tree with deep red-purple leaves. A showpiece for any garden. Prefers partial shade and well-drained soil. Limited availability — grown from selected stock.",
     seller: "Batumi Botanics",
+    sellerId: 3000,
     phone: "+995 599 345 678",
     location: "Batumi, Adjara",
     image: "https://images.unsplash.com/photo-1603912699214-92627f304eb6?w=600&h=400&fit=crop"
@@ -148,6 +156,7 @@ const plants = [
     stock: "preorder",
     description: "Traditional Georgian pomegranate, fruit-bearing variety. Will produce fruit within 1–2 seasons. Loves the Georgian sun and well-drained soil. Pre-order for autumn planting season.",
     seller: "Kakheti Green Farm",
+    sellerId: 2000,
     phone: "+995 577 234 567",
     location: "Telavi, Kakheti",
     image: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=600&h=400&fit=crop"
@@ -165,6 +174,7 @@ const plants = [
     stock: "available",
     description: "Reliable fig variety that thrives in Georgian climate. Sweet, juicy fruits ready by late summer. Self-pollinating — only one tree needed. Beautiful large leaves add tropical feel to any garden.",
     seller: "Giorgi's Nursery",
+    sellerId: 1000,
     phone: "+995 555 123 456",
     location: "Tbilisi, Dighomi",
     image: "https://images.unsplash.com/photo-1601379760883-1bb497c558e0?w=600&h=400&fit=crop"
