@@ -33,6 +33,7 @@ function updateAuthUI() {
   document.getElementById("navLoggedIn").style.display = session ? "flex" : "none";
   if (session) {
     document.getElementById("navUserName").textContent = session.name;
+    document.getElementById("navAddListing").style.display = session.type === "seller" ? "inline" : "none";
     const unread = Store.getUnreadCount(session.id);
     const badge = document.getElementById("msgBadge");
     if (unread > 0) { badge.textContent = unread; badge.style.display = "inline"; }
@@ -80,10 +81,12 @@ function renderPlants(list) {
   }).join("");
 }
 
+function getAllPlants() { return Store.getAllPlants(); }
+
 let activeFilter = "all";
 function filterPlants() {
   const query = document.getElementById("searchInput").value.toLowerCase().trim();
-  return plants.filter(p => {
+  return getAllPlants().filter(p => {
     const matchFilter = activeFilter === "all" || p.tags.includes(activeFilter);
     const matchSearch = !query || p.name.toLowerCase().includes(query) || p.latin.toLowerCase().includes(query) ||
       p.description.toLowerCase().includes(query) || p.seller.toLowerCase().includes(query) || p.location.toLowerCase().includes(query);
@@ -94,7 +97,7 @@ function filterPlants() {
 // === Plant Detail Page ===
 function renderPlantDetail(plantId) {
   currentPlantId = plantId;
-  const p = plants.find(x => x.id === plantId);
+  const p = getAllPlants().find(x => x.id === plantId);
   if (!p) return;
   const reviews = Store.getReviewsForPlant(p.id);
   const avgRating = reviews.length ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1) : null;
@@ -160,7 +163,7 @@ function handleBuyNow(plantId) {
 function handleMessageSeller(plantId) {
   const session = Store.getSession();
   if (!session) { showToast("Please log in to message sellers"); openModal("loginModal"); return; }
-  const p = plants.find(x => x.id === plantId);
+  const p = getAllPlants().find(x => x.id === plantId);
   if (!p) return;
   // Create initial message
   Store.sendMessage({
@@ -175,7 +178,7 @@ function handleMessageSeller(plantId) {
 
 // === Checkout ===
 function renderCheckout(plantId) {
-  const p = plants.find(x => x.id === plantId);
+  const p = getAllPlants().find(x => x.id === plantId);
   if (!p) return;
   currentCheckoutPlant = p;
   const serviceFee = Math.round(p.price * 0.07);
@@ -283,6 +286,31 @@ function renderDashTab(tab, orders, disputes, session) {
     const sales = orders.filter(o => o.sellerId === session.id);
     if (!sales.length) { content.innerHTML = '<p class="dash-empty">No sales yet.</p>'; return; }
     content.innerHTML = sales.map(o => renderOrderCard(o, "seller")).join("");
+  }
+  else if (tab === "listings") {
+    const myListings = Store.getListingsForSeller(session.id);
+    if (!myListings.length) {
+      content.innerHTML = session.type === "seller"
+        ? '<p class="dash-empty">No listings yet. <a href="#" onclick="openModal(\'listingModal\')">Create your first listing</a></p>'
+        : '<p class="dash-empty">Only seller accounts can create listings.</p>';
+      return;
+    }
+    content.innerHTML = `<div class="grid">${myListings.map(l => `
+      <div class="card listing-card">
+        <img class="card-img" src="${l.image || 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&h=400&fit=crop'}" alt="${l.name}" onerror="this.style.background='#e8f5e2';">
+        <div class="card-body">
+          <span class="card-badge ${l.active ? 'badge-available' : 'badge-limited'}">${l.active ? 'Active' : 'Inactive'}</span>
+          <h3 class="card-title">${l.name}</h3>
+          <p class="card-latin">${l.latin || ''}</p>
+          <div class="card-footer">
+            <span class="card-price">₾${l.price} <span class="card-price-unit">/ ${l.unit || 'per plant'}</span></span>
+          </div>
+          <div class="order-actions" style="margin-top:10px;">
+            <button class="btn btn-outline btn-sm" onclick="toggleListing(${l.id})">${l.active ? '⏸ Deactivate' : '▶ Activate'}</button>
+            <button class="btn btn-outline btn-sm" style="border-color:#d32f2f;color:#d32f2f;" onclick="deleteListing(${l.id})">🗑 Delete</button>
+          </div>
+        </div>
+      </div>`).join("")}</div>`;
   }
   else if (tab === "disputes") {
     if (!disputes.length) { content.innerHTML = '<p class="dash-empty">No disputes. That\'s great!</p>'; return; }
@@ -663,6 +691,56 @@ document.querySelectorAll(".tag").forEach(tag => {
 });
 document.getElementById("searchInput").addEventListener("input", () => renderPlants(filterPlants()));
 document.getElementById("searchBtn").addEventListener("click", () => renderPlants(filterPlants()));
+
+// === Listing Management ===
+function toggleListing(id) {
+  const listing = Store.getListings().find(l => l.id === id);
+  if (!listing) return;
+  Store.updateListing(id, { active: !listing.active });
+  showToast(listing.active ? "Listing deactivated" : "Listing activated");
+  renderDashboard();
+  renderPlants(filterPlants());
+}
+
+function deleteListing(id) {
+  if (!confirm("Are you sure you want to delete this listing?")) return;
+  Store.deleteListing(id);
+  showToast("Listing deleted");
+  renderDashboard();
+  renderPlants(filterPlants());
+}
+
+// === Create Listing ===
+document.getElementById("listingForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const session = Store.getSession();
+  if (!session || session.type !== "seller") { showToast("Only sellers can create listings"); return; }
+  const user = Store.getProfile(session.id);
+
+  const listing = Store.saveListing({
+    name: document.getElementById("listName").value,
+    latin: document.getElementById("listLatin").value,
+    category: document.getElementById("listCategory").value,
+    tags: [document.getElementById("listCategory").value],
+    price: parseInt(document.getElementById("listPrice").value),
+    unit: document.getElementById("listUnit").value,
+    height: document.getElementById("listHeight").value,
+    age: document.getElementById("listAge").value,
+    stock: document.getElementById("listStock").value,
+    description: document.getElementById("listDesc").value,
+    image: document.getElementById("listImage").value || "",
+    sellerId: session.id,
+    sellerName: session.name,
+    phone: user ? user.phone : "",
+    location: user ? user.city : session.city
+  });
+
+  closeModal("listingModal");
+  e.target.reset();
+  showToast(`"${listing.name}" is now live!`);
+  renderPlants(filterPlants());
+  showPage("home");
+});
 
 // === Mobile Menu ===
 document.getElementById("mobileMenuBtn").addEventListener("click", () => {

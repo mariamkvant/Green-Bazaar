@@ -43,6 +43,65 @@ const Store = {
   getSession() { return this._get("gb_session", null); },
   isLoggedIn() { return !!this.getSession(); },
 
+  // --- Listings (user-created plants) ---
+  getListings() { return this._get("gb_listings", []); },
+  saveListing(listing) {
+    const listings = this.getListings();
+    listing.id = 1000 + Date.now();
+    listing.createdAt = new Date().toISOString();
+    listing.active = true;
+    listings.push(listing);
+    this._set("gb_listings", listings);
+    return listing;
+  },
+  updateListing(id, updates) {
+    const listings = this.getListings();
+    const idx = listings.findIndex(l => l.id === id);
+    if (idx === -1) return null;
+    Object.assign(listings[idx], updates);
+    this._set("gb_listings", listings);
+    return listings[idx];
+  },
+  deleteListing(id) {
+    const listings = this.getListings().filter(l => l.id !== id);
+    this._set("gb_listings", listings);
+  },
+  getListingsForSeller(sellerId) {
+    return this.getListings().filter(l => l.sellerId === sellerId);
+  },
+  getAllPlants() {
+    // Merge hardcoded sample plants with user-created listings
+    const userListings = this.getListings().filter(l => l.active).map(l => ({
+      id: l.id, name: l.name, latin: l.latin || "", category: l.category,
+      tags: l.tags || [l.category], price: l.price, unit: l.unit || "per plant",
+      height: l.height, age: l.age, stock: l.stock || "available",
+      description: l.description, seller: l.sellerName, sellerId: l.sellerId,
+      phone: l.phone || "", location: l.location,
+      image: l.image || "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&h=400&fit=crop"
+    }));
+    return [...plants, ...userListings];
+  },
+
+  // --- Profile ---
+  getProfile(userId) {
+    const users = this.getUsers();
+    return users.find(u => u.id === userId) || null;
+  },
+  updateProfile(userId, updates) {
+    const users = this.getUsers();
+    const idx = users.findIndex(u => u.id === userId);
+    if (idx === -1) return null;
+    Object.assign(users[idx], updates);
+    this._set("gb_users", users);
+    // Update session too
+    const session = this.getSession();
+    if (session && session.id === userId) {
+      Object.assign(session, { name: users[idx].name, city: users[idx].city });
+      this._set("gb_session", session);
+    }
+    return users[idx];
+  },
+
   // --- Orders ---
   getOrders() { return this._get("gb_orders", []); },
   createOrder(order) {

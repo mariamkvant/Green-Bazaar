@@ -29,6 +29,7 @@
                 <div id="navLoggedIn" style="display:none;">
                     <a href="#" class="nav-link" onclick="showPage('dashboard')">📋 My Dashboard</a>
                     <a href="#" class="nav-link" onclick="showPage('messages')">💬 Messages <span class="badge-count" id="msgBadge" style="display:none;"></span></a>
+                    <a href="#" class="nav-link seller-only" id="navAddListing" onclick="openModal('listingModal')" style="display:none;">➕ Add Listing</a>
                     <span class="nav-user" id="navUserName"></span>
                     <a href="#" class="btn btn-outline btn-sm" id="logoutBtn">Log Out</a>
                 </div>
@@ -142,6 +143,7 @@
             <div class="dash-tabs">
                 <button class="dash-tab active" data-tab="orders">My Orders</button>
                 <button class="dash-tab" data-tab="sales">My Sales</button>
+                <button class="dash-tab" data-tab="listings">My Listings</button>
                 <button class="dash-tab" data-tab="disputes">Disputes</button>
             </div>
             <div class="dash-content" id="dashContent"></div>
@@ -393,6 +395,66 @@
                     <label class="radio-label"><input type="radio" name="resolution" value="replacement"> Replacement plant</label>
                 </div>
                 <button type="submit" class="btn btn-primary btn-full">Submit Dispute</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Create Listing Modal -->
+    <div class="modal-overlay" id="listingModal">
+        <div class="modal modal-lg">
+            <button class="modal-close" data-close="listingModal" aria-label="Close">&times;</button>
+            <h2>🌱 Create New Listing</h2>
+            <p class="modal-desc">Add a plant to sell on მწვანე ბაზარი</p>
+            <form id="listingForm" class="contact-form">
+                <label for="listName">Plant Name <span class="required">*</span></label>
+                <input type="text" id="listName" required placeholder="e.g. Thuja Smaragd (Emerald Green)">
+                <label for="listLatin">Latin Name</label>
+                <input type="text" id="listLatin" placeholder="e.g. Thuja occidentalis 'Smaragd'">
+                <label for="listCategory">Category <span class="required">*</span></label>
+                <select id="listCategory" required>
+                    <option value="">Select category</option>
+                    <option value="thuja">Thuja</option>
+                    <option value="hedge">Hedge Plants</option>
+                    <option value="ornamental">Ornamental</option>
+                    <option value="fruit">Fruit Trees</option>
+                </select>
+                <div class="form-row">
+                    <div>
+                        <label for="listPrice">Price (₾) <span class="required">*</span></label>
+                        <input type="number" id="listPrice" required min="1" placeholder="25">
+                    </div>
+                    <div>
+                        <label for="listUnit">Unit</label>
+                        <select id="listUnit">
+                            <option value="per plant">Per plant</option>
+                            <option value="per tree">Per tree</option>
+                            <option value="pack of 5">Pack of 5</option>
+                            <option value="pack of 10">Pack of 10</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div>
+                        <label for="listHeight">Height <span class="required">*</span></label>
+                        <input type="text" id="listHeight" required placeholder="e.g. 80–100 cm">
+                    </div>
+                    <div>
+                        <label for="listAge">Age <span class="required">*</span></label>
+                        <input type="text" id="listAge" required placeholder="e.g. 3 years">
+                    </div>
+                </div>
+                <label for="listStock">Availability <span class="required">*</span></label>
+                <select id="listStock" required>
+                    <option value="available">Available Now</option>
+                    <option value="limited">Limited Stock</option>
+                    <option value="preorder">Pre-order</option>
+                </select>
+                <label for="listDesc">Description <span class="required">*</span></label>
+                <textarea id="listDesc" rows="4" required placeholder="Describe the plant, growing conditions, what makes it special..."></textarea>
+                <label for="listImage">Image URL</label>
+                <input type="url" id="listImage" placeholder="https://... (paste a link to a photo)">
+                <p class="field-hint">Tip: Upload your photo to <a href="https://imgur.com" target="_blank" class="link">imgur.com</a> or <a href="https://imgbb.com" target="_blank" class="link">imgbb.com</a> and paste the direct link here.</p>
+                <button type="submit" class="btn btn-primary btn-full btn-lg">🌿 Publish Listing</button>
             </form>
         </div>
     </div>
