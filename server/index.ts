@@ -34,18 +34,24 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Serve static frontend
-const staticPath = path.resolve(__dirname, '..');
+// Serve static frontend — try multiple paths
+const path1 = path.resolve(__dirname, '..');
+const path2 = path.resolve(__dirname, '..', '..');
+const fs = require('fs');
+const staticPath = fs.existsSync(path.join(path2, 'index.html')) ? path2 : 
+                   fs.existsSync(path.join(path1, 'index.html')) ? path1 : path2;
+console.log('Serving static files from:', staticPath);
 app.use(express.static(staticPath));
 app.get('*', (_req, res) => {
   res.sendFile(path.join(staticPath, 'index.html'));
 });
 
 initDatabase().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Green Bazaar running on port ${PORT}`);
-  });
+  console.log('Database connected successfully');
 }).catch(err => {
-  console.error('DB init failed:', err);
-  process.exit(1);
+  console.error('WARNING: DB init failed, starting without DB:', err.message);
+});
+
+app.listen(PORT, () => {
+  console.log(`Green Bazaar running on port ${PORT}`);
 });
