@@ -7,13 +7,14 @@ const router = Router();
 // Create review
 router.post('/', authMiddleware, async (req: AuthRequest, res) => {
   try {
-    const { order_id, rating, condition, comment } = req.body;
+    const { order_id, rating, condition, comment, photos } = req.body;
     const order = await db.get('SELECT * FROM orders WHERE id = ? AND buyer_id = ? AND status = ?', order_id, req.userId, 'completed');
     if (!order) return res.status(400).json({ error: 'Can only review completed orders' });
     const existing = await db.get('SELECT id FROM reviews WHERE order_id = ?', order_id);
     if (existing) return res.status(409).json({ error: 'Already reviewed' });
-    await db.run('INSERT INTO reviews (order_id, listing_id, buyer_id, seller_id, rating, condition, comment) VALUES (?,?,?,?,?,?,?)',
-      order_id, order.listing_id, req.userId, order.seller_id, rating, condition || '', comment || '');
+    const photosJson = photos && photos.length ? JSON.stringify(photos.slice(0, 3)) : null;
+    await db.run('INSERT INTO reviews (order_id, listing_id, buyer_id, seller_id, rating, condition, comment, photos) VALUES (?,?,?,?,?,?,?,?)',
+      order_id, order.listing_id, req.userId, order.seller_id, rating, condition || '', comment || '', photosJson);
     // Update seller rating
     const stats = await db.get('SELECT AVG(rating) as avg, COUNT(*) as cnt FROM reviews WHERE seller_id = ?', order.seller_id);
     await db.run('UPDATE users SET rating = ?, review_count = ? WHERE id = ?', Math.round(stats.avg * 10) / 10, stats.cnt, order.seller_id);

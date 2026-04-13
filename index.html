@@ -393,6 +393,13 @@
                 </div>
                 <label for="reviewText">Your Review</label>
                 <textarea id="reviewText" rows="3" placeholder="Tell others about your experience..."></textarea>
+                <label>Add Photos</label>
+                <div class="photo-upload-area">
+                    <input type="file" id="reviewPhotos" accept="image/*" multiple style="display:none;">
+                    <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('reviewPhotos').click()">📷 Add Photos</button>
+                    <span class="photo-hint">Up to 3 photos of the plant you received</span>
+                </div>
+                <div class="photo-preview" id="reviewPhotoPreview"></div>
                 <button type="submit" class="btn btn-primary btn-full">Submit Review</button>
             </form>
         </div>

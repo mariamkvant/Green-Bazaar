@@ -418,3 +418,18 @@ img { max-width: 100%; display: block; }
     padding: 8px 14px; background: #F5F0E8; border-radius: 6px; margin-bottom: 12px;
 }
 .order-cancelled { opacity: 0.7; }
+
+/* === Review Photos === */
+.photo-upload-area { display: flex; align-items: center; gap: 10px; margin: 6px 0; }
+.photo-hint { font-size: 0.75rem; color: #aaa; }
+.photo-preview { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
+.photo-thumb { position: relative; width: 80px; height: 80px; border-radius: 6px; overflow: hidden; }
+.photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.photo-remove {
+    position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.6);
+    color: #fff; border: none; border-radius: 50%; width: 20px; height: 20px;
+    font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.review-photos { display: flex; gap: 8px; margin: 8px 0; flex-wrap: wrap; }
+.review-photo { width: 100px; height: 80px; object-fit: cover; border-radius: 6px; cursor: pointer; }
+.review-photo:hover { opacity: 0.85; }

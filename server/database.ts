@@ -86,6 +86,7 @@ export async function initDatabase() {
         rating INTEGER NOT NULL CHECK(rating >= 1 AND rating <= 5),
         condition TEXT,
         comment TEXT DEFAULT '',
+        photos TEXT,
         created_at TIMESTAMPTZ DEFAULT NOW()
       )
     `);

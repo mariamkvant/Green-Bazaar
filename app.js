@@ -142,6 +142,7 @@ async function renderPlantDetail(plantId) {
           </span>
         </div>
         <p class="review-text">${r.comment || "No comment"}</p>
+        ${r.photos ? `<div class="review-photos">${JSON.parse(r.photos).map(src => `<img src="${src}" alt="Review photo" class="review-photo">`).join("")}</div>` : ""}
         <p class="review-meta">by ${r.buyer_name} · ${new Date(r.created_at).toLocaleDateString()}</p>
       </div>`).join("") : '<p class="no-reviews">No reviews yet.</p>';
     document.getElementById("reviewsSection").innerHTML = `<h2>Reviews</h2>${reviewsHtml}`;
@@ -437,6 +438,36 @@ document.getElementById("starRating").addEventListener("click", (e) => {
   document.getElementById("ratingValue").value = val;
   document.querySelectorAll("#starRating .star").forEach(s => { s.textContent = parseInt(s.dataset.val) <= val ? "★" : "☆"; });
 });
+// Review photo handling
+let reviewPhotos = [];
+document.getElementById("reviewPhotos").addEventListener("change", (e) => {
+  const files = Array.from(e.target.files).slice(0, 3);
+  reviewPhotos = [];
+  const preview = document.getElementById("reviewPhotoPreview");
+  preview.innerHTML = "";
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      reviewPhotos.push(ev.target.result);
+      preview.innerHTML = reviewPhotos.map((src, i) => `
+        <div class="photo-thumb">
+          <img src="${src}" alt="Review photo ${i+1}">
+          <button type="button" class="photo-remove" onclick="removeReviewPhoto(${i})">×</button>
+        </div>`).join("");
+    };
+    reader.readAsDataURL(file);
+  });
+});
+function removeReviewPhoto(idx) {
+  reviewPhotos.splice(idx, 1);
+  const preview = document.getElementById("reviewPhotoPreview");
+  preview.innerHTML = reviewPhotos.map((src, i) => `
+    <div class="photo-thumb">
+      <img src="${src}" alt="Review photo ${i+1}">
+      <button type="button" class="photo-remove" onclick="removeReviewPhoto(${i})">×</button>
+    </div>`).join("");
+}
+
 document.getElementById("reviewForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const rating = parseInt(document.getElementById("ratingValue").value);
@@ -444,8 +475,8 @@ document.getElementById("reviewForm").addEventListener("submit", async (e) => {
   const condition = document.querySelector('input[name="condition"]:checked');
   if (!condition) { showToast("Please select plant condition"); return; }
   try {
-    await Store.addReview({ order_id: reviewOrderId, rating, condition: condition.value, comment: document.getElementById("reviewText").value });
-    closeModal("reviewModal"); showToast("Review submitted!"); renderDashboard();
+    await Store.addReview({ order_id: reviewOrderId, rating, condition: condition.value, comment: document.getElementById("reviewText").value, photos: reviewPhotos });
+    closeModal("reviewModal"); showToast("Review submitted!"); reviewPhotos = []; document.getElementById("reviewPhotoPreview").innerHTML = ""; renderDashboard();
   } catch (err) { showToast(err.message); }
 });
 
