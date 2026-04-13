@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>მწვანე ბაზარი — Plant Marketplace Georgia</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container header-inner">
+            <a href="#" class="logo">
+                <span class="logo-icon">🌿</span>
+                <span class="logo-text">მწვანე ბაზარი</span>
+                <span class="logo-sub">Plant Marketplace</span>
+            </a>
+            <nav class="nav">
+                <a href="#listings" class="nav-link">Browse Plants</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <a href="#" class="btn btn-primary" id="sellBtn">Sell Your Plants</a>
+            </nav>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">☰</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Find the Perfect Plants for Your Garden</h1>
+            <p>Georgia's growing marketplace for quality plants. Browse Thuja, ornamental trees, and more from local growers.</p>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search plants... (e.g. Thuja, Emerald, Smaragd)" aria-label="Search plants">
+                <button class="btn btn-primary" id="searchBtn">Search</button>
+            </div>
+            <div class="filter-tags">
+                <button class="tag active" data-filter="all">All</button>
+                <button class="tag" data-filter="thuja">Thuja</button>
+                <button class="tag" data-filter="hedge">Hedge Plants</button>
+                <button class="tag" data-filter="ornamental">Ornamental</button>
+                <button class="tag" data-filter="fruit">Fruit Trees</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="listings" id="listings">
+        <div class="container">
+            <h2 class="section-title">Available Plants</h2>
+            <p class="section-subtitle">Fresh listings from local Georgian growers</p>
+            <div class="grid" id="plantGrid">
+                <!-- Plants injected by JS -->
+            </div>
+            <p class="no-results" id="noResults" style="display:none;">No plants match your search. Try a different keyword.</p>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title">Why მწვანე ბაზარი?</h2>
+            <div class="features">
+                <div class="feature">
+                    <span class="feature-icon">🌱</span>
+                    <h3>Local Growers</h3>
+                    <p>All plants are grown locally in Georgia, adapted to our climate and soil conditions.</p>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">📦</span>
+                    <h3>Direct from Seller</h3>
+                    <p>Buy directly from growers — no middlemen, better prices, fresher plants.</p>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">🤝</span>
+                    <h3>Trusted Community</h3>
+                    <p>Verified sellers with ratings and reviews from real buyers across Georgia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Modal -->
+    <div class="modal-overlay" id="contactModal">
+        <div class="modal">
+            <button class="modal-close" id="modalClose" aria-label="Close modal">&times;</button>
+            <h2 id="modalTitle">Contact Seller</h2>
+            <div id="modalBody">
+                <div class="seller-info">
+                    <p><strong>Seller:</strong> <span id="modalSeller"></span></p>
+                    <p><strong>Phone:</strong> <span id="modalPhone"></span></p>
+                    <p><strong>Location:</strong> <span id="modalLocation"></span></p>
+                </div>
+                <form id="contactForm" class="contact-form">
+                    <label for="buyerName">Your Name</label>
+                    <input type="text" id="buyerName" required placeholder="Enter your name">
+                    <label for="buyerPhone">Your Phone</label>
+                    <input type="tel" id="buyerPhone" required placeholder="+995 5XX XXX XXX">
+                    <label for="buyerMessage">Message</label>
+                    <textarea id="buyerMessage" rows="3" placeholder="I'm interested in this plant..."></textarea>
+                    <button type="submit" class="btn btn-primary btn-full">Send Inquiry</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sell Modal -->
+    <div class="modal-overlay" id="sellModal">
+        <div class="modal">
+            <button class="modal-close" id="sellModalClose" aria-label="Close modal">&times;</button>
+            <h2>Start Selling Your Plants</h2>
+            <p class="modal-desc">Interested in listing your plants on მწვანე ბაზარი? We're onboarding new sellers now.</p>
+            <form id="sellerForm" class="contact-form">
+                <label for="sellerName">Your Name</label>
+                <input type="text" id="sellerName" required placeholder="Full name">
+                <label for="sellerPhone">Phone Number</label>
+                <input type="tel" id="sellerPhone" required placeholder="+995 5XX XXX XXX">
+                <label for="sellerCity">City / Region</label>
+                <input type="text" id="sellerCity" required placeholder="e.g. Tbilisi, Kutaisi, Batumi">
+                <label for="sellerPlants">What plants do you grow?</label>
+                <textarea id="sellerPlants" rows="3" placeholder="Describe the types and quantities..."></textarea>
+                <button type="submit" class="btn btn-primary btn-full">Request to Join</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h3>🌿 მწვანე ბაზარი</h3>
+                    <p>Georgia's plant marketplace. Connecting growers with garden lovers since 2026.</p>
+                </div>
+                <div>
+                    <h4>Quick Links</h4>
+                    <a href="#listings">Browse Plants</a>
+                    <a href="#about">About Us</a>
+                    <a href="#" id="footerSellLink">Sell Plants</a>
+                </div>
+                <div>
+                    <h4>Contact</h4>
+                    <p>Email: info@mwvane-bazari.ge</p>
+                    <p>Phone: +995 XXX XXX XXX</p>
+                    <p>Tbilisi, Georgia</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 მწვანე ბაზარი. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="plants.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

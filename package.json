@@ -1,0 +1,9 @@
+{
+  "name": "mwvane-bazari",
+  "version": "1.0.0",
+  "description": "Plant Marketplace Georgia",
+  "scripts": {
+    "start": "npx serve -s . -l $PORT",
+    "dev": "npx serve -s . -l 3000"
+  }
+}

@@ -1,0 +1,257 @@
+/* === Reset & Base === */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: #1a1a1a;
+    background: #fafaf8;
+    line-height: 1.6;
+}
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
+.container { max-width: 1140px; margin: 0 auto; padding: 0 20px; }
+
+/* === Header === */
+.header {
+    background: #fff;
+    border-bottom: 1px solid #e8e8e4;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+}
+.logo { display: flex; align-items: center; gap: 8px; }
+.logo-icon { font-size: 1.5rem; }
+.logo-text { font-size: 1.2rem; font-weight: 700; color: #2d5a27; }
+.logo-sub { font-size: 0.75rem; color: #888; margin-left: 4px; }
+.nav { display: flex; align-items: center; gap: 24px; }
+.nav-link { font-size: 0.9rem; color: #555; transition: color 0.2s; }
+.nav-link:hover { color: #2d5a27; }
+.mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+
+/* === Buttons === */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-primary { background: #2d5a27; color: #fff; }
+.btn-primary:hover { background: #224a1e; }
+.btn-outline { background: transparent; border: 1.5px solid #2d5a27; color: #2d5a27; }
+.btn-outline:hover { background: #2d5a27; color: #fff; }
+.btn-full { width: 100%; justify-content: center; }
+
+/* === Hero === */
+.hero {
+    background: linear-gradient(135deg, #f0f7ee 0%, #e8f5e2 100%);
+    padding: 60px 0 40px;
+    text-align: center;
+}
+.hero h1 { font-size: 2.2rem; font-weight: 700; color: #1a1a1a; margin-bottom: 12px; }
+.hero p { font-size: 1.05rem; color: #555; max-width: 560px; margin: 0 auto 28px; }
+
+/* === Search === */
+.search-bar {
+    display: flex;
+    max-width: 500px;
+    margin: 0 auto 20px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.search-bar input {
+    flex: 1;
+    padding: 14px 18px;
+    border: none;
+    font-size: 0.95rem;
+    outline: none;
+    font-family: inherit;
+}
+.search-bar .btn { border-radius: 0; }
+
+/* === Filter Tags === */
+.filter-tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.tag {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    border: 1.5px solid #ccc;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+.tag:hover, .tag.active { background: #2d5a27; color: #fff; border-color: #2d5a27; }
+
+/* === Listings Grid === */
+.listings { padding: 50px 0; }
+.section-title { font-size: 1.6rem; font-weight: 700; text-align: center; margin-bottom: 6px; }
+.section-subtitle { text-align: center; color: #777; margin-bottom: 32px; font-size: 0.95rem; }
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+/* === Plant Card === */
+.card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e8e8e4;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+.card-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    background: #e8f5e2;
+}
+.card-body { padding: 18px; }
+.card-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+.badge-available { background: #e8f5e2; color: #2d5a27; }
+.badge-limited { background: #fff3e0; color: #e65100; }
+.badge-preorder { background: #e3f2fd; color: #1565c0; }
+.card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 4px; }
+.card-latin { font-size: 0.8rem; color: #999; font-style: italic; margin-bottom: 8px; }
+.card-desc { font-size: 0.85rem; color: #666; margin-bottom: 12px; line-height: 1.5; }
+.card-meta { display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.8rem; color: #888; margin-bottom: 14px; }
+.card-meta span { display: flex; align-items: center; gap: 4px; }
+.card-price { font-size: 1.2rem; font-weight: 700; color: #2d5a27; }
+.card-price-unit { font-size: 0.8rem; font-weight: 400; color: #999; }
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid #f0f0ec;
+}
+.card-seller { font-size: 0.8rem; color: #888; }
+.card-seller strong { color: #555; }
+
+/* === About / Features === */
+.about { padding: 50px 0; background: #fff; }
+.features { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px; margin-top: 24px; }
+.feature { text-align: center; padding: 24px; }
+.feature-icon { font-size: 2rem; display: block; margin-bottom: 12px; }
+.feature h3 { font-size: 1.05rem; margin-bottom: 8px; }
+.feature p { font-size: 0.9rem; color: #666; }
+
+/* === Modal === */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+    background: #fff;
+    border-radius: 14px;
+    padding: 32px;
+    max-width: 440px;
+    width: 90%;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.modal h2 { font-size: 1.3rem; margin-bottom: 6px; }
+.modal-desc { color: #666; font-size: 0.9rem; margin-bottom: 20px; }
+.modal-close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #999;
+}
+.seller-info { background: #f8f8f5; padding: 14px; border-radius: 8px; margin-bottom: 18px; }
+.seller-info p { font-size: 0.9rem; margin-bottom: 4px; }
+.contact-form label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 4px; margin-top: 12px; }
+.contact-form input, .contact-form textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.contact-form input:focus, .contact-form textarea:focus { border-color: #2d5a27; }
+.contact-form .btn { margin-top: 18px; }
+
+/* === Footer === */
+.footer { background: #1a1a1a; color: #ccc; padding: 40px 0 20px; }
+.footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; }
+.footer h3 { color: #fff; margin-bottom: 10px; }
+.footer h4 { color: #fff; margin-bottom: 10px; font-size: 0.95rem; }
+.footer a { display: block; color: #aaa; font-size: 0.9rem; margin-bottom: 6px; transition: color 0.2s; }
+.footer a:hover { color: #8bc34a; }
+.footer p { font-size: 0.85rem; line-height: 1.6; }
+.footer-bottom { text-align: center; margin-top: 32px; padding-top: 20px; border-top: 1px solid #333; font-size: 0.8rem; }
+
+/* === No Results === */
+.no-results { text-align: center; color: #999; font-size: 1rem; padding: 40px 0; }
+
+/* === Toast === */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #2d5a27;
+    color: #fff;
+    padding: 14px 24px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    z-index: 300;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .nav { display: none; }
+    .nav.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: #fff;
+        padding: 20px;
+        border-bottom: 1px solid #e8e8e4;
+        gap: 16px;
+    }
+    .mobile-menu-btn { display: block; }
+    .hero h1 { font-size: 1.6rem; }
+    .grid { grid-template-columns: 1fr; }
+}
