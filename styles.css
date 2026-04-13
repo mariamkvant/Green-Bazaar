@@ -389,3 +389,32 @@ img { max-width: 100%; display: block; }
 .request-estimate .total-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.85rem; color: #666; }
 .request-estimate .total-final { border-top: 1.5px solid #2A4139; padding-top: 8px; margin-top: 4px; font-weight: 700; color: #2A4139; }
 .detail-actions .btn-lg { flex: 1; min-width: 180px; justify-content: center; }
+
+/* === Order Progress Tracker === */
+.progress-tracker {
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px 0; margin: 12px 0; gap: 0;
+}
+.progress-step {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    min-width: 70px; position: relative;
+}
+.progress-step span { font-size: 0.7rem; color: #aaa; text-align: center; }
+.step-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #E0DCD4; border: 2px solid #D9CCBA;
+    transition: all 0.3s;
+}
+.step-line { flex: 1; height: 2px; background: #E0DCD4; min-width: 20px; margin-top: -18px; }
+.step-done .step-dot { background: #2A4139; border-color: #2A4139; }
+.step-done span { color: #2A4139; font-weight: 500; }
+.step-done ~ .step-line { background: #2A4139; }
+.step-active .step-dot { background: #B8704B; border-color: #B8704B; box-shadow: 0 0 0 4px rgba(184,112,75,0.2); }
+.step-active span { color: #B8704B; font-weight: 600; }
+.step-cancelled .step-dot { background: #999; border-color: #999; }
+.step-cancelled span { color: #999; }
+.order-waiting {
+    text-align: center; font-size: 0.85rem; color: #666;
+    padding: 8px 14px; background: #F5F0E8; border-radius: 6px; margin-bottom: 12px;
+}
+.order-cancelled { opacity: 0.7; }

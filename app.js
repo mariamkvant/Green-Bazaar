@@ -284,30 +284,76 @@ async function renderDashTab(tab, orders, disputes, session) {
 }
 
 function renderOrderCard(o, role) {
-  const statusColors = { paid: "#1565c0", shipped: "#e65100", delivered: "#2d5a27", completed: "#2d5a27", disputed: "#d32f2f" };
-  const escrowColors = { held: "#e65100", released: "#2d5a27", refunded: "#d32f2f" };
+  const statusColors = { paid: "#4A7C8F", accepted: "#8B9E7C", shipped: "#B8704B", delivered: "#2A4139", completed: "#2A4139", disputed: "#7A3B2E", cancelled: "#999" };
+  const escrowColors = { held: "#B8704B", released: "#2A4139", refunded: "#999" };
+
+  // Step progress tracker
+  const allSteps = ['paid', 'accepted', 'shipped', 'delivered', 'completed'];
+  const currentIdx = allSteps.indexOf(o.status);
+  const isCancelled = o.status === 'cancelled' || o.status === 'disputed';
+  const stepLabels = { paid: '💳 Paid', accepted: '✅ Accepted', shipped: '📦 Shipped', delivered: '📬 Received', completed: '🌿 Completed' };
+  const stepsHtml = allSteps.map((s, i) => {
+    const state = isCancelled ? 'step-cancelled' : i < currentIdx ? 'step-done' : i === currentIdx ? 'step-active' : 'step-pending';
+    return `<div class="progress-step ${state}"><div class="step-dot"></div><span>${stepLabels[s]}</span></div>`;
+  }).join('<div class="step-line"></div>');
+
+  // Actions based on status + role
   let actions = "";
-  if (role === "seller" && o.status === "paid") actions = `<button class="btn btn-primary btn-sm" onclick="orderAction(${o.id},'ship')">📦 Mark as Shipped</button>`;
-  if (role === "buyer" && o.status === "shipped") actions = `<button class="btn btn-primary btn-sm" onclick="orderAction(${o.id},'delivered')">✅ Confirm Delivery</button>`;
+  if (role === "seller" && o.status === "paid") {
+    actions = `<button class="btn btn-primary btn-sm" onclick="orderAction(${o.id},'accept')">✅ Accept Order</button>
+               <button class="btn btn-outline btn-sm" onclick="orderAction(${o.id},'decline')">❌ Decline</button>`;
+  }
+  if (role === "seller" && o.status === "accepted") {
+    actions = `<button class="btn btn-primary btn-sm" onclick="orderAction(${o.id},'ship')">📦 Mark as Shipped / Ready</button>`;
+  }
+  if (role === "buyer" && o.status === "shipped") {
+    actions = `<button class="btn btn-primary btn-sm" onclick="orderAction(${o.id},'delivered')">📬 I Received the Plant</button>`;
+  }
   if (role === "buyer" && o.status === "delivered") {
     const dl = o.inspection_deadline ? new Date(o.inspection_deadline) : null;
     const days = dl ? Math.max(0, Math.ceil((dl - new Date()) / 86400000)) : 3;
-    actions = `<div class="inspection-notice">🔍 Inspection: ${days} days left</div>
-      <button class="btn btn-primary btn-sm" onclick="orderAction(${o.id},'confirm')">🌿 Plant Healthy — Release Payment</button>
+    actions = `<div class="inspection-notice">🔍 Inspection window: ${days} days remaining</div>
+      <button class="btn btn-primary btn-sm" onclick="orderAction(${o.id},'confirm')">🌿 Plant is Healthy — Release Payment</button>
       <button class="btn btn-outline btn-sm" onclick="openDisputeModal(${o.id})">⚠️ Report Issue</button>`;
   }
-  if (role === "buyer" && o.status === "completed") actions = `<button class="btn btn-outline btn-sm" onclick="openReviewModal(${o.id}, ${o.listing_id}, ${o.seller_id})">⭐ Leave Review</button>`;
+  if (role === "buyer" && o.status === "completed") {
+    actions = `<button class="btn btn-outline btn-sm" onclick="openReviewModal(${o.id}, ${o.listing_id}, ${o.seller_id})">⭐ Leave Review</button>`;
+  }
+  // Cancel option for buyer before shipping
+  if (role === "buyer" && ['paid', 'accepted'].includes(o.status)) {
+    actions += `<button class="btn btn-outline btn-sm" style="border-color:#7A3B2E;color:#7A3B2E;" onclick="orderAction(${o.id},'cancel')">🚫 Cancel Order</button>`;
+  }
+  // Nudge option
+  if (!['completed', 'cancelled', 'disputed'].includes(o.status)) {
+    actions += `<button class="btn btn-outline btn-sm" onclick="orderAction(${o.id},'nudge')">👋 Send Reminder</button>`;
+  }
 
-  return `<div class="order-card">
+  // Status message
+  const waitingFor = {
+    paid: role === 'seller' ? 'Action needed: Accept or decline this order' : 'Waiting for seller to accept...',
+    accepted: role === 'seller' ? 'Action needed: Ship the plant or mark as ready for pickup' : 'Seller is preparing your plant...',
+    shipped: role === 'buyer' ? 'Action needed: Confirm you received the plant' : 'Waiting for buyer to confirm delivery...',
+    delivered: role === 'buyer' ? 'Action needed: Inspect the plant and confirm it\'s healthy' : 'Buyer is inspecting the plant (3-day window)...',
+    completed: '🎉 Order complete! Payment released.',
+    cancelled: '🚫 Order cancelled.',
+    disputed: '⚠️ Dispute in progress. Our team is reviewing.',
+  };
+
+  return `<div class="order-card ${isCancelled ? 'order-cancelled' : ''}">
     <div class="order-header"><span class="order-id">#${o.id}</span><div>
       <span class="order-status" style="background:${statusColors[o.status]||'#888'}">${o.status.toUpperCase()}</span>
       <span class="escrow-status" style="background:${escrowColors[o.escrow_status]||'#888'}">Escrow: ${o.escrow_status}</span>
     </div></div>
     <div class="order-body">
-      <img src="${o.plant_image||''}" alt="${o.plant_name}" class="order-img" onerror="this.style.background='#e8f5e2';">
-      <div><h3>${o.plant_name}</h3><p>${role==="buyer"?"Seller: "+o.seller_name:"Buyer: "+o.buyer_name}</p>
-        <p>Delivery: ${o.delivery_method==="courier"?"🚚 Courier":"🏪 Pickup"}</p><p class="order-total">Total: ₾${o.total}</p></div>
+      <img src="${o.plant_image||''}" alt="${o.plant_name}" class="order-img" onerror="this.style.background='#EDE9E0';">
+      <div><h3>${o.plant_name}</h3>
+        <p>${role==="buyer" ? "Seller: "+o.seller_name : "Buyer: "+o.buyer_name}</p>
+        <p>Delivery: ${o.delivery_method==="courier" ? "🚚 Courier" : "🏪 Pickup"}</p>
+        <p class="order-total">Total: ₾${o.total}</p>
+      </div>
     </div>
+    <div class="progress-tracker">${stepsHtml}</div>
+    <div class="order-waiting">${waitingFor[o.status] || ''}</div>
     <div class="order-actions">${actions}</div>
   </div>`;
 }
