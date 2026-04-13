@@ -20,6 +20,7 @@
                 <a href="#listings" class="nav-link">Browse Plants</a>
                 <a href="#about" class="nav-link">About</a>
                 <a href="#contact" class="nav-link">Contact</a>
+                <a href="#" class="btn btn-outline" id="registerBuyerBtn">Register as Buyer</a>
                 <a href="#" class="btn btn-primary" id="sellBtn">Sell Your Plants</a>
             </nav>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">☰</button>
@@ -102,23 +103,155 @@
         </div>
     </div>
 
-    <!-- Sell Modal -->
+    <!-- Seller Registration Modal -->
     <div class="modal-overlay" id="sellModal">
         <div class="modal">
             <button class="modal-close" id="sellModalClose" aria-label="Close modal">&times;</button>
-            <h2>Start Selling Your Plants</h2>
-            <p class="modal-desc">Interested in listing your plants on მწვანე ბაზარი? We're onboarding new sellers now.</p>
+            <h2>🌱 Register as a Seller</h2>
+            <p class="modal-desc">Start selling your plants on მწვანე ბაზარი. We'll verify your email and get you set up.</p>
             <form id="sellerForm" class="contact-form">
-                <label for="sellerName">Your Name</label>
+                <label for="sellerName">Full Name <span class="required">*</span></label>
                 <input type="text" id="sellerName" required placeholder="Full name">
-                <label for="sellerPhone">Phone Number</label>
+                <label for="sellerEmail">Email Address <span class="required">*</span></label>
+                <input type="email" id="sellerEmail" required placeholder="your@email.com">
+                <label for="sellerPhone">Phone Number <span class="required">*</span></label>
                 <input type="tel" id="sellerPhone" required placeholder="+995 5XX XXX XXX">
-                <label for="sellerCity">City / Region</label>
-                <input type="text" id="sellerCity" required placeholder="e.g. Tbilisi, Kutaisi, Batumi">
-                <label for="sellerPlants">What plants do you grow?</label>
-                <textarea id="sellerPlants" rows="3" placeholder="Describe the types and quantities..."></textarea>
-                <button type="submit" class="btn btn-primary btn-full">Request to Join</button>
+                <label for="sellerCity">City / Region <span class="required">*</span></label>
+                <select id="sellerCity" required>
+                    <option value="">Select your location</option>
+                    <option value="Tbilisi">Tbilisi</option>
+                    <option value="Batumi">Batumi, Adjara</option>
+                    <option value="Kutaisi">Kutaisi</option>
+                    <option value="Rustavi">Rustavi</option>
+                    <option value="Zugdidi">Zugdidi</option>
+                    <option value="Telavi">Telavi, Kakheti</option>
+                    <option value="Gori">Gori</option>
+                    <option value="Senaki">Senaki</option>
+                    <option value="Marneuli">Marneuli</option>
+                    <option value="Other">Other (specify in description)</option>
+                </select>
+                <label for="sellerPlants">What plants do you grow? <span class="required">*</span></label>
+                <textarea id="sellerPlants" rows="3" required placeholder="Describe the types and quantities..."></textarea>
+                <label for="sellerPassword">Create Password <span class="required">*</span></label>
+                <input type="password" id="sellerPassword" required minlength="8" placeholder="Minimum 8 characters">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="sellerPrivacy" required>
+                    <label for="sellerPrivacy">I agree to the <a href="#" class="link" id="sellerPrivacyLink">Privacy Policy</a> <span class="required">*</span></label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Register & Verify Email</button>
             </form>
+        </div>
+    </div>
+
+    <!-- Buyer Registration Modal -->
+    <div class="modal-overlay" id="buyerModal">
+        <div class="modal">
+            <button class="modal-close" id="buyerModalClose" aria-label="Close modal">&times;</button>
+            <h2>🛒 Register as a Buyer</h2>
+            <p class="modal-desc">Create an account to contact sellers, save favorites, and track your orders.</p>
+            <form id="buyerForm" class="contact-form">
+                <label for="regBuyerName">Full Name <span class="required">*</span></label>
+                <input type="text" id="regBuyerName" required placeholder="Full name">
+                <label for="regBuyerEmail">Email Address <span class="required">*</span></label>
+                <input type="email" id="regBuyerEmail" required placeholder="your@email.com">
+                <label for="regBuyerPhone">Phone Number <span class="required">*</span></label>
+                <input type="tel" id="regBuyerPhone" required placeholder="+995 5XX XXX XXX">
+                <label for="regBuyerCity">City / Region <span class="required">*</span></label>
+                <select id="regBuyerCity" required>
+                    <option value="">Select your location</option>
+                    <option value="Tbilisi">Tbilisi</option>
+                    <option value="Batumi">Batumi, Adjara</option>
+                    <option value="Kutaisi">Kutaisi</option>
+                    <option value="Rustavi">Rustavi</option>
+                    <option value="Zugdidi">Zugdidi</option>
+                    <option value="Telavi">Telavi, Kakheti</option>
+                    <option value="Gori">Gori</option>
+                    <option value="Senaki">Senaki</option>
+                    <option value="Marneuli">Marneuli</option>
+                    <option value="Other">Other</option>
+                </select>
+                <label for="regBuyerPassword">Create Password <span class="required">*</span></label>
+                <input type="password" id="regBuyerPassword" required minlength="8" placeholder="Minimum 8 characters">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="buyerPrivacy" required>
+                    <label for="buyerPrivacy">I agree to the <a href="#" class="link" id="buyerPrivacyLink">Privacy Policy</a> <span class="required">*</span></label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Register & Verify Email</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Email Verification Modal -->
+    <div class="modal-overlay" id="verifyModal">
+        <div class="modal modal-sm">
+            <button class="modal-close" id="verifyModalClose" aria-label="Close modal">&times;</button>
+            <div class="verify-content">
+                <span class="verify-icon">📧</span>
+                <h2>Check Your Email</h2>
+                <p>We've sent a verification code to:</p>
+                <p class="verify-email" id="verifyEmailDisplay"></p>
+                <form id="verifyForm" class="contact-form">
+                    <label for="verifyCode">Enter 6-digit code</label>
+                    <input type="text" id="verifyCode" required maxlength="6" pattern="[0-9]{6}" placeholder="000000" class="code-input">
+                    <button type="submit" class="btn btn-primary btn-full">Verify Email</button>
+                </form>
+                <p class="resend-text">Didn't receive it? <a href="#" class="link" id="resendCode">Resend code</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Policy Modal -->
+    <div class="modal-overlay" id="privacyModal">
+        <div class="modal modal-lg">
+            <button class="modal-close" id="privacyModalClose" aria-label="Close modal">&times;</button>
+            <h2>Privacy Policy</h2>
+            <div class="privacy-content">
+                <p class="privacy-date">Last updated: April 14, 2026</p>
+
+                <h3>1. Information We Collect</h3>
+                <p>When you register on მწვანე ბაზარი, we collect the following personal information:</p>
+                <ul>
+                    <li>Full name</li>
+                    <li>Email address</li>
+                    <li>Phone number</li>
+                    <li>City/Region (location)</li>
+                    <li>Account type (buyer or seller)</li>
+                </ul>
+                <p>For sellers, we additionally collect information about the plants you grow and sell.</p>
+
+                <h3>2. How We Use Your Information</h3>
+                <ul>
+                    <li>To create and manage your account</li>
+                    <li>To verify your email address</li>
+                    <li>To connect buyers with sellers</li>
+                    <li>To display seller contact information on plant listings</li>
+                    <li>To send important platform updates and notifications</li>
+                </ul>
+
+                <h3>3. Information Sharing</h3>
+                <p>We do not sell your personal data to third parties. Seller contact information (name, phone, location) is visible to registered buyers when they inquire about a listing. Email addresses are never publicly displayed.</p>
+
+                <h3>4. Data Security</h3>
+                <p>We implement appropriate security measures to protect your personal information. Passwords are encrypted and never stored in plain text. However, no method of transmission over the internet is 100% secure.</p>
+
+                <h3>5. Your Rights</h3>
+                <p>You have the right to:</p>
+                <ul>
+                    <li>Access your personal data</li>
+                    <li>Correct inaccurate information</li>
+                    <li>Request deletion of your account and data</li>
+                    <li>Withdraw consent at any time</li>
+                </ul>
+
+                <h3>6. Cookies</h3>
+                <p>We use essential cookies to maintain your session and preferences. No third-party tracking cookies are used.</p>
+
+                <h3>7. Contact</h3>
+                <p>For privacy-related questions, contact us at: <strong>privacy@bazaar.green</strong></p>
+
+                <h3>8. Changes to This Policy</h3>
+                <p>We may update this policy from time to time. We will notify registered users of significant changes via email.</p>
+            </div>
         </div>
     </div>
 
@@ -134,6 +267,7 @@
                     <a href="#listings">Browse Plants</a>
                     <a href="#about">About Us</a>
                     <a href="#" id="footerSellLink">Sell Plants</a>
+                    <a href="#" id="footerPrivacyLink">Privacy Policy</a>
                 </div>
                 <div>
                     <h4>Contact</h4>

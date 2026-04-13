@@ -71,6 +71,23 @@ document.querySelectorAll(".tag").forEach(tag => {
 document.getElementById("searchInput").addEventListener("input", () => renderPlants(filterPlants()));
 document.getElementById("searchBtn").addEventListener("click", () => renderPlants(filterPlants()));
 
+// === Modal Helpers ===
+function openModal(id) { document.getElementById(id).classList.add("open"); }
+function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+
+function setupModal(modalId, closeId) {
+  document.getElementById(closeId).addEventListener("click", () => closeModal(modalId));
+  document.getElementById(modalId).addEventListener("click", (e) => {
+    if (e.target === e.currentTarget) closeModal(modalId);
+  });
+}
+
+setupModal("contactModal", "modalClose");
+setupModal("sellModal", "sellModalClose");
+setupModal("buyerModal", "buyerModalClose");
+setupModal("verifyModal", "verifyModalClose");
+setupModal("privacyModal", "privacyModalClose");
+
 // === Contact Modal ===
 function openContact(id) {
   const plant = plants.find(p => p.id === id);
@@ -79,44 +96,87 @@ function openContact(id) {
   document.getElementById("modalSeller").textContent = plant.seller;
   document.getElementById("modalPhone").textContent = plant.phone;
   document.getElementById("modalLocation").textContent = plant.location;
-  document.getElementById("contactModal").classList.add("open");
+  openModal("contactModal");
 }
 
-document.getElementById("modalClose").addEventListener("click", () => {
-  document.getElementById("contactModal").classList.remove("open");
-});
-document.getElementById("contactModal").addEventListener("click", (e) => {
-  if (e.target === e.currentTarget) e.currentTarget.classList.remove("open");
-});
-
-// === Contact Form ===
 document.getElementById("contactForm").addEventListener("submit", (e) => {
   e.preventDefault();
-  document.getElementById("contactModal").classList.remove("open");
+  closeModal("contactModal");
   showToast("Inquiry sent! The seller will contact you soon.");
   e.target.reset();
 });
 
-// === Sell Modal ===
+// === Seller Registration ===
+let pendingVerificationEmail = "";
+let pendingVerificationType = "";
+
 document.getElementById("sellBtn").addEventListener("click", (e) => {
   e.preventDefault();
-  document.getElementById("sellModal").classList.add("open");
+  openModal("sellModal");
 });
 document.getElementById("footerSellLink").addEventListener("click", (e) => {
   e.preventDefault();
-  document.getElementById("sellModal").classList.add("open");
+  openModal("sellModal");
 });
-document.getElementById("sellModalClose").addEventListener("click", () => {
-  document.getElementById("sellModal").classList.remove("open");
-});
-document.getElementById("sellModal").addEventListener("click", (e) => {
-  if (e.target === e.currentTarget) e.currentTarget.classList.remove("open");
-});
+
 document.getElementById("sellerForm").addEventListener("submit", (e) => {
   e.preventDefault();
-  document.getElementById("sellModal").classList.remove("open");
-  showToast("Request submitted! We'll reach out to you shortly.");
-  e.target.reset();
+  const email = document.getElementById("sellerEmail").value;
+  pendingVerificationEmail = email;
+  pendingVerificationType = "seller";
+  closeModal("sellModal");
+  document.getElementById("verifyEmailDisplay").textContent = email;
+  openModal("verifyModal");
+});
+
+// === Buyer Registration ===
+document.getElementById("registerBuyerBtn").addEventListener("click", (e) => {
+  e.preventDefault();
+  openModal("buyerModal");
+});
+
+document.getElementById("buyerForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const email = document.getElementById("regBuyerEmail").value;
+  pendingVerificationEmail = email;
+  pendingVerificationType = "buyer";
+  closeModal("buyerModal");
+  document.getElementById("verifyEmailDisplay").textContent = email;
+  openModal("verifyModal");
+});
+
+// === Email Verification ===
+document.getElementById("verifyForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const code = document.getElementById("verifyCode").value;
+  // Simulate verification (in production, validate against backend)
+  if (code.length === 6) {
+    closeModal("verifyModal");
+    const type = pendingVerificationType === "seller" ? "Seller" : "Buyer";
+    showToast(`${type} account verified! Welcome to მწვანე ბაზარი 🌿`);
+    document.getElementById("verifyCode").value = "";
+    // Reset the registration form
+    if (pendingVerificationType === "seller") {
+      document.getElementById("sellerForm").reset();
+    } else {
+      document.getElementById("buyerForm").reset();
+    }
+    pendingVerificationEmail = "";
+    pendingVerificationType = "";
+  }
+});
+
+document.getElementById("resendCode").addEventListener("click", (e) => {
+  e.preventDefault();
+  showToast(`Verification code resent to ${pendingVerificationEmail}`);
+});
+
+// === Privacy Policy ===
+document.querySelectorAll("#sellerPrivacyLink, #buyerPrivacyLink, #footerPrivacyLink").forEach(link => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault();
+    openModal("privacyModal");
+  });
 });
 
 // === Mobile Menu ===

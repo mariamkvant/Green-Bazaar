@@ -255,3 +255,53 @@ img { max-width: 100%; display: block; }
     .hero h1 { font-size: 1.6rem; }
     .grid { grid-template-columns: 1fr; }
 }
+
+/* === Registration Extras === */
+.required { color: #d32f2f; }
+.checkbox-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 14px;
+}
+.checkbox-group input[type="checkbox"] { margin-top: 3px; accent-color: #2d5a27; }
+.checkbox-group label { font-size: 0.85rem; color: #555; margin: 0; }
+.link { color: #2d5a27; text-decoration: underline; cursor: pointer; }
+.link:hover { color: #224a1e; }
+
+.contact-form select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    outline: none;
+    background: #fff;
+    transition: border-color 0.2s;
+    cursor: pointer;
+}
+.contact-form select:focus { border-color: #2d5a27; }
+
+/* === Email Verification === */
+.modal-sm { max-width: 380px; text-align: center; }
+.verify-icon { font-size: 3rem; display: block; margin-bottom: 12px; }
+.verify-content h2 { margin-bottom: 8px; }
+.verify-content p { color: #666; font-size: 0.9rem; }
+.verify-email { font-weight: 600; color: #2d5a27; font-size: 1rem; margin: 4px 0 16px; }
+.code-input {
+    text-align: center;
+    font-size: 1.5rem;
+    letter-spacing: 8px;
+    font-weight: 600;
+}
+.resend-text { font-size: 0.8rem; color: #999; margin-top: 14px; }
+
+/* === Privacy Policy === */
+.modal-lg { max-width: 600px; }
+.privacy-content { max-height: 60vh; overflow-y: auto; padding-right: 8px; }
+.privacy-content h3 { font-size: 1rem; margin: 18px 0 6px; color: #1a1a1a; }
+.privacy-content p { font-size: 0.88rem; color: #555; margin-bottom: 8px; }
+.privacy-content ul { padding-left: 20px; margin-bottom: 10px; }
+.privacy-content li { font-size: 0.88rem; color: #555; margin-bottom: 4px; }
+.privacy-date { font-size: 0.8rem; color: #999; font-style: italic; margin-bottom: 12px; }
