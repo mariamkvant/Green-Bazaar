@@ -384,3 +384,8 @@ img { max-width: 100%; display: block; }
 @media (max-width: 480px) {
     .grid { grid-template-columns: 1fr; }
 }
+
+/* === Request Estimate === */
+.request-estimate .total-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.85rem; color: #666; }
+.request-estimate .total-final { border-top: 1.5px solid #2A4139; padding-top: 8px; margin-top: 4px; font-weight: 700; color: #2A4139; }
+.detail-actions .btn-lg { flex: 1; min-width: 180px; justify-content: center; }

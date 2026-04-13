@@ -339,6 +339,36 @@
         </div>
     </div>
 
+    <!-- Plant Request Modal -->
+    <div class="modal-overlay" id="requestModal">
+        <div class="modal">
+            <button class="modal-close" data-close="requestModal" aria-label="Close">&times;</button>
+            <h2>📩 Request This Plant</h2>
+            <p class="modal-desc">Send a request to the seller. They'll review and send you a custom quote.</p>
+            <div id="requestPlantInfo"></div>
+            <form id="requestForm" class="contact-form">
+                <label for="reqQuantity">Quantity <span class="required">*</span></label>
+                <div class="form-row">
+                    <input type="number" id="reqQuantity" required min="1" value="1" placeholder="1">
+                    <div>
+                        <label for="reqDelivery" style="margin-top:0;">Preferred Delivery</label>
+                        <select id="reqDelivery">
+                            <option value="pickup">Local Pickup</option>
+                            <option value="courier">Courier Delivery</option>
+                            <option value="flexible">Flexible</option>
+                        </select>
+                    </div>
+                </div>
+                <label for="reqDate">Preferred Date</label>
+                <input type="date" id="reqDate">
+                <label for="reqMessage">Message to Seller <span class="required">*</span></label>
+                <textarea id="reqMessage" rows="3" required placeholder="Hi, I'd like to request this plant. Any questions about size, availability, bulk pricing..."></textarea>
+                <div class="request-estimate" id="requestEstimate"></div>
+                <button type="submit" class="btn btn-primary btn-full">📩 Send Request</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Review Modal -->
     <div class="modal-overlay" id="reviewModal">
         <div class="modal">

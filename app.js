@@ -126,6 +126,7 @@ async function renderPlantDetail(plantId) {
           </div>
           <div class="detail-actions">
             <button class="btn btn-primary btn-lg" onclick="handleBuyNow(${p.id})">🛒 Buy Now — Escrow Protected</button>
+            <button class="btn btn-outline btn-lg" onclick="openRequestModal(${p.id}, ${p.seller_id}, '${(p.seller_name||'').replace(/'/g,"\\'")}', '${(p.name||'').replace(/'/g,"\\'")}', ${p.price})">📩 Request This Plant</button>
             <button class="btn btn-outline" onclick="handleMessageSeller(${p.id}, ${p.seller_id}, '${(p.seller_name||'').replace(/'/g,"\\'")}', '${(p.name||'').replace(/'/g,"\\'")}')">💬 Message Seller</button>
           </div>
           <div class="escrow-badge"><span>🔒</span> Payment held in escrow until you confirm delivery. 3-day inspection window.</div>
@@ -415,6 +416,58 @@ document.getElementById("disputeForm").addEventListener("submit", async (e) => {
       requested_resolution: document.querySelector('input[name="resolution"]:checked').value
     });
     closeModal("disputeModal"); showToast("Dispute submitted. Review within 48 hours."); renderDashboard();
+  } catch (err) { showToast(err.message); }
+});
+
+// === Plant Request ===
+let reqPlantId = null, reqSellerId = null, reqSellerName = '', reqPlantName = '', reqPrice = 0;
+
+function openRequestModal(plantId, sellerId, sellerName, plantName, price) {
+  if (!Store.isLoggedIn()) { showToast("Please log in to send a request"); openModal("loginModal"); return; }
+  reqPlantId = plantId; reqSellerId = sellerId; reqSellerName = sellerName; reqPlantName = plantName; reqPrice = price;
+  document.getElementById("requestPlantInfo").innerHTML = `
+    <div class="info-box"><strong>${plantName}</strong> · ₾${price} · by ${sellerName}</div>`;
+  document.getElementById("reqQuantity").value = 1;
+  updateRequestEstimate();
+  openModal("requestModal");
+}
+
+function updateRequestEstimate() {
+  const qty = parseInt(document.getElementById("reqQuantity").value) || 1;
+  const subtotal = reqPrice * qty;
+  const fee = Math.round(subtotal * 0.07);
+  document.getElementById("requestEstimate").innerHTML = `
+    <div class="info-box" style="margin-top:12px;">
+      <div class="total-row"><span>Estimated: ${qty} × ₾${reqPrice}</span><span>₾${subtotal}</span></div>
+      <div class="total-row"><span>Service fee (7%)</span><span>₾${fee}</span></div>
+      <div class="total-row total-final"><span>Estimated total</span><span>₾${subtotal + fee}</span></div>
+      <p style="font-size:0.75rem;color:#999;margin-top:6px;">Final price confirmed by seller after review.</p>
+    </div>`;
+}
+
+document.getElementById("reqQuantity").addEventListener("input", updateRequestEstimate);
+
+document.getElementById("requestForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!Store.isLoggedIn()) return;
+  const qty = document.getElementById("reqQuantity").value;
+  const delivery = document.getElementById("reqDelivery").value;
+  const date = document.getElementById("reqDate").value;
+  const message = document.getElementById("reqMessage").value;
+
+  const body = `📩 Plant Request\n` +
+    `Plant: ${reqPlantName}\n` +
+    `Quantity: ${qty}\n` +
+    `Delivery: ${delivery}\n` +
+    `${date ? 'Preferred date: ' + date + '\n' : ''}` +
+    `Message: ${message}`;
+
+  try {
+    await Store.sendMessage({ receiver_id: reqSellerId, listing_id: reqPlantId, body });
+    closeModal("requestModal");
+    e.target.reset();
+    showToast("Request sent! The seller will review and respond.");
+    showPage("messages");
   } catch (err) { showToast(err.message); }
 });
 
