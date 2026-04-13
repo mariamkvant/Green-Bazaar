@@ -13,7 +13,7 @@ const Store = {
   saveUser(user) {
     const users = this.getUsers();
     user.id = Date.now();
-    user.verified = false;
+    user.verified = true;
     user.rating = 0;
     user.reviewCount = 0;
     user.joinDate = new Date().toISOString();

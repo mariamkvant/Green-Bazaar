@@ -601,8 +601,11 @@ document.getElementById("sellerForm").addEventListener("submit", (e) => {
   });
   pendingVerification = { email, type: "seller" };
   closeModal("sellModal");
-  document.getElementById("verifyEmailDisplay").textContent = email;
-  openModal("verifyModal");
+  const user = Store.findUser(email);
+  Store.login(user);
+  updateAuthUI();
+  showToast(`Welcome to მწვანე ბაზარი, ${user.name}! 🌿`);
+  e.target.reset();
 });
 
 // Buyer registration
@@ -619,8 +622,11 @@ document.getElementById("buyerForm").addEventListener("submit", (e) => {
   });
   pendingVerification = { email, type: "buyer" };
   closeModal("buyerModal");
-  document.getElementById("verifyEmailDisplay").textContent = email;
-  openModal("verifyModal");
+  const user = Store.findUser(email);
+  Store.login(user);
+  updateAuthUI();
+  showToast(`Welcome to მწვანე ბაზარი, ${user.name}! 🌿`);
+  e.target.reset();
 });
 
 // Email verification
