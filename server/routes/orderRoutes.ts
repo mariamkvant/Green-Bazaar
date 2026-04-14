@@ -23,7 +23,6 @@ router.post('/', authMiddleware, async (req: AuthRequest, res) => {
       'INSERT INTO orders (buyer_id, seller_id, listing_id, total, price, delivery_cost, service_fee, delivery_method, delivery_address, payment_method) VALUES (?,?,?,?,?,?,?,?,?,?)',
       req.userId, listing.seller_id, listing_id, total, subtotal, deliveryCost, serviceFee, delivery_method || 'pickup', delivery_address || '', payment_method || 'card'
     );
-    const buyer = await db.get('SELECT name FROM users WHERE id = ?', req.userId);
     // Auto-message + notification
     await db.run('INSERT INTO messages (sender_id, receiver_id, order_id, listing_id, body) VALUES (?,?,?,?,?)',
       req.userId, listing.seller_id, result.id, listing_id,
