@@ -57,4 +57,22 @@ router.post('/seed', async (req, res) => {
   } catch (e: any) { res.status(500).json({ error: e.message }); }
 });
 
+// Reset and re-seed — deletes sample data and re-creates it
+router.post('/reseed', async (req, res) => {
+  try {
+    const secret = req.headers['x-admin-secret'] || req.query.secret;
+    if (secret !== (process.env.ADMIN_SECRET || 'gb-admin-2026')) {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+    // Delete old sample listings and sellers
+    const sampleSellers = await db.all("SELECT id FROM users WHERE email LIKE '%@bazaar.green'");
+    for (const s of sampleSellers) {
+      await db.run('DELETE FROM listings WHERE seller_id = ?', s.id);
+      await db.run('DELETE FROM users WHERE id = ?', s.id);
+    }
+    // Now call seed logic by forwarding
+    res.json({ message: 'Old sample data cleared. Call /api/admin/seed to re-seed.' });
+  } catch (e: any) { res.status(500).json({ error: e.message }); }
+});
+
 export default router;

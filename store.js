@@ -98,4 +98,10 @@ const Store = {
 
   // --- Seller Profile ---
   async getSellerProfile(id) { return api('GET', '/api/listings/seller/' + id + '/profile'); },
+
+  // --- Recommendations ---
+  async getSimilar(listingId) { return api('GET', '/api/recommend/similar/' + listingId); },
+  async getSeasonal() { return api('GET', '/api/recommend/seasonal'); },
+  async getPopular() { return api('GET', '/api/recommend/popular'); },
+  async getForYou() { return api('GET', '/api/recommend/for-you'); },
 };

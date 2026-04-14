@@ -508,3 +508,10 @@ img { max-width: 100%; display: block; }
     .story-grid { grid-template-columns: 1fr; }
     .story-image { max-height: 240px; }
 }
+
+/* === Recommendation Sections === */
+.recs-section { padding: 36px 0; }
+.recs-alt { background: #fff; }
+.grid-scroll { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+.similar-section { margin-top: 32px; }
+.similar-section h2 { font-size: 1.1rem; margin-bottom: 14px; color: #2A4139; font-weight: 500; }

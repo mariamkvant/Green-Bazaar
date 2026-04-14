@@ -198,6 +198,8 @@ async function renderPlantDetail(plantId) {
         <p class="review-meta">by ${r.buyer_name} · ${new Date(r.created_at).toLocaleDateString()}</p>
       </div>`).join("") : '<p class="no-reviews">No reviews yet.</p>';
     document.getElementById("reviewsSection").innerHTML = `<h2>Reviews</h2>${reviewsHtml}`;
+    // Load similar plants
+    loadSimilarPlants(plantId);
   } catch (e) { console.error(e); showToast("Failed to load plant details"); }
 }
 
@@ -902,8 +904,61 @@ function showToast(msg) {
 updateAuthUI();
 loadFavIds();
 loadListings();
+loadRecommendations();
 // Apply saved language
 if (getLang() === 'ka') {
   document.getElementById("langToggle").textContent = '🇬🇧 Eng';
   document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
+}
+
+// === Recommendations ===
+async function loadRecommendations() {
+  try {
+    // Seasonal
+    const seasonal = await Store.getSeasonal();
+    if (seasonal.plants && seasonal.plants.length) {
+      document.getElementById("seasonalMonth").textContent = `Plants ideal for planting in ${seasonal.month}`;
+      document.getElementById("seasonalGrid").innerHTML = seasonal.plants.map(p => renderMiniCard(p)).join("");
+    } else {
+      document.getElementById("seasonal-recs").style.display = "none";
+    }
+    // Popular
+    const popular = await Store.getPopular();
+    if (popular.length) {
+      document.getElementById("popularGrid").innerHTML = popular.map(p => renderMiniCard(p)).join("");
+    } else {
+      document.getElementById("popular-recs").style.display = "none";
+    }
+    // For You
+    if (Store.isLoggedIn()) {
+      const forYou = await Store.getForYou();
+      if (forYou.length) {
+        document.getElementById("foryou-recs").style.display = "block";
+        document.getElementById("foryouGrid").innerHTML = forYou.map(p => renderMiniCard(p)).join("");
+      }
+    }
+  } catch (e) { console.log('Recs:', e.message); }
+}
+
+function renderMiniCard(p) {
+  return `<div class="card" onclick="showPage('plant',${p.id})" style="cursor:pointer;">
+    <img class="card-img" src="${p.image || ''}" alt="${esc(p.name)}" loading="lazy" onerror="this.style.background='#EDE9E0';this.alt='Image';">
+    <div class="card-body">
+      <h3 class="card-title">${esc(p.name)}</h3>
+      <div class="card-footer" style="border:none;padding-top:4px;">
+        <span class="card-price">₾${p.price}</span>
+        <span class="card-seller">${esc(p.seller_name || '')}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+async function loadSimilarPlants(listingId) {
+  try {
+    const similar = await Store.getSimilar(listingId);
+    if (similar.length) {
+      document.getElementById("reviewsSection").insertAdjacentHTML('beforebegin',
+        `<div class="similar-section"><h2>Similar Plants</h2><div class="grid grid-scroll">${similar.map(p => renderMiniCard(p)).join("")}</div></div>`);
+    }
+  } catch {}
 }
