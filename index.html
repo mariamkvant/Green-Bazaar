@@ -39,7 +39,7 @@
                     <a href="#" class="nav-link" onclick="showPage('notifications')">Notifications <span class="badge-count" id="notifBadge" style="display:none;"></span></a>
                     <a href="#" class="nav-link seller-only" id="navAddListing" onclick="openModal('listingModal')" style="display:none;" data-i18n="addListing">+ Add Listing</a>
                     <a href="#" class="nav-link" id="navAdmin" onclick="showPage('admin')" style="display:none;">Admin</a>
-                    <span class="nav-user" id="navUserName" onclick="openProfileEdit()" style="cursor:pointer;" title="Edit Profile"></span>
+                    <span class="nav-user" id="navUserName" onclick="showPage('profile')" style="cursor:pointer;" title="My Profile"></span>
                     <a href="#" class="btn btn-outline btn-sm" id="logoutBtn" data-i18n="logout">Log Out</a>
                 </div>
             </nav>
@@ -412,6 +412,14 @@
         </div>
     </div>
 
+    <!-- ===== MY PROFILE PAGE ===== -->
+    <div id="page-profile" style="display:none;" class="page-section">
+        <div class="container" style="max-width:600px;">
+            <div class="profile-card" id="profileCard"></div>
+            <div class="profile-menu" id="profileMenu"></div>
+        </div>
+    </div>
+
     <!-- ===== ADMIN PAGE ===== -->
     <div id="page-admin" style="display:none;" class="page-section">
         <div class="container">
@@ -448,6 +456,33 @@
                 <button type="submit" class="btn btn-primary btn-full">Log In</button>
             </form>
             <p class="modal-switch">Don't have an account? <a href="#" class="link" id="switchToRegister">Register here</a></p>
+            <p class="modal-switch"><a href="#" class="link" id="forgotPwLink">Forgot password?</a></p>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal-overlay" id="forgotPwModal">
+        <div class="modal modal-sm">
+            <button class="modal-close" data-close="forgotPwModal" aria-label="Close">&times;</button>
+            <h2>Reset Password</h2>
+            <div id="forgotStep1">
+                <p class="modal-desc">Enter your email and we'll send you a reset code.</p>
+                <form id="forgotForm" class="contact-form">
+                    <label for="forgotEmail">Email</label>
+                    <input type="email" id="forgotEmail" required placeholder="your@email.com">
+                    <button type="submit" class="btn btn-primary btn-full">Send Reset Code</button>
+                </form>
+            </div>
+            <div id="forgotStep2" style="display:none;">
+                <p class="modal-desc">Enter the code sent to your email and your new password.</p>
+                <form id="resetForm" class="contact-form">
+                    <label for="resetCode">Reset Code</label>
+                    <input type="text" id="resetCode" required maxlength="6" placeholder="6-digit code" class="code-input">
+                    <label for="resetNewPw">New Password</label>
+                    <input type="password" id="resetNewPw" required minlength="8" placeholder="Minimum 8 characters">
+                    <button type="submit" class="btn btn-primary btn-full">Reset Password</button>
+                </form>
+            </div>
         </div>
     </div>
 

@@ -18,6 +18,7 @@ function showPage(page, data) {
   if (page === "notifications") renderNotifications();
   if (page === "seller" && data) renderSellerProfile(data);
   if (page === "admin") renderAdminPage();
+  if (page === "profile") renderMyProfile();
 }
 
 // === Modal Helpers ===
@@ -1043,6 +1044,77 @@ function showToast(msg) {
   toast.textContent = msg; toast.classList.add("show");
   setTimeout(() => toast.classList.remove("show"), 3500);
 }
+
+// === My Profile Page (Boomerang-style) ===
+async function renderMyProfile() {
+  if (!Store.isLoggedIn()) { showPage("home"); return; }
+  try {
+    const p = await Store.getProfile();
+    const s = p.stats || {};
+    document.getElementById("profileCard").innerHTML = `
+      <div class="prof-header">
+        <div class="prof-avatar">${(p.name||'?')[0].toUpperCase()}</div>
+        <div class="prof-info">
+          <h2>${esc(p.name)} ${p.verified ? '<span class="prof-verified" title="Email verified">✓</span>' : '<span class="prof-unverified">Unverified</span>'}
+            ${p.verified_seller ? '<span class="verified-badge-lg">Verified Grower</span>' : ''}</h2>
+          <p>${esc(p.email)}</p>
+          <p>${esc(p.city || '')} · ${p.type === 'seller' ? 'Seller' : 'Buyer'} · Joined ${new Date(p.created_at).toLocaleDateString()}</p>
+        </div>
+      </div>
+      <div class="prof-stats">
+        <div class="prof-stat"><span class="stat-num">${s.orders_bought || 0}</span><span class="stat-label">Purchased</span></div>
+        <div class="prof-stat"><span class="stat-num">${s.orders_sold || 0}</span><span class="stat-label">Sold</span></div>
+        <div class="prof-stat"><span class="stat-num">${s.active_listings || 0}</span><span class="stat-label">Listings</span></div>
+        <div class="prof-stat"><span class="stat-num">${s.favorites || 0}</span><span class="stat-label">Favorites</span></div>
+        <div class="prof-stat"><span class="stat-num">${p.rating || 0}</span><span class="stat-label">Rating</span></div>
+      </div>
+      ${p.bio ? `<p class="prof-bio">${esc(p.bio)}</p>` : ''}`;
+
+    document.getElementById("profileMenu").innerHTML = `
+      <div class="prof-menu-list">
+        <a class="prof-menu-item" onclick="showPage('dashboard')"><span>Dashboard</span><span>→</span></a>
+        <a class="prof-menu-item" onclick="showPage('messages')"><span>Messages</span><span>→</span></a>
+        <a class="prof-menu-item" onclick="showPage('favorites')"><span>Favorites</span><span>→</span></a>
+        <a class="prof-menu-item" onclick="showPage('notifications')"><span>Notifications</span><span>→</span></a>
+        <a class="prof-menu-item" onclick="openProfileEdit()"><span>Edit Profile</span><span>→</span></a>
+        ${p.is_admin ? '<a class="prof-menu-item" onclick="showPage(\'admin\')"><span>Admin Dashboard</span><span>→</span></a>' : ''}
+      </div>
+      <button class="btn btn-full" style="background:transparent;color:#7A3B2E;border:1px solid #EDE9E0;margin-top:16px;" onclick="Store.logout();updateAuthUI();showPage('home');showToast('Logged out');">Log Out</button>`;
+  } catch (e) { showToast("Failed to load profile"); }
+}
+
+// === Forgot Password ===
+document.getElementById("forgotPwLink").addEventListener("click", (e) => {
+  e.preventDefault(); closeModal("loginModal"); openModal("forgotPwModal");
+});
+
+let forgotEmail = '';
+document.getElementById("forgotForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  forgotEmail = document.getElementById("forgotEmail").value;
+  try {
+    await Store.forgotPassword(forgotEmail);
+    document.getElementById("forgotStep1").style.display = "none";
+    document.getElementById("forgotStep2").style.display = "block";
+    showToast("Reset code sent to your email!");
+  } catch (err) { showToast(err.message); }
+});
+
+document.getElementById("resetForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  try {
+    await api('POST', '/api/users/reset-password', {
+      email: forgotEmail,
+      code: document.getElementById("resetCode").value,
+      newPassword: document.getElementById("resetNewPw").value,
+    });
+    closeModal("forgotPwModal");
+    document.getElementById("forgotStep1").style.display = "block";
+    document.getElementById("forgotStep2").style.display = "none";
+    showToast("Password reset! You can now log in.");
+    openModal("loginModal");
+  } catch (err) { showToast(err.message); }
+});
 
 // === Admin Page ===
 async function renderAdminPage() {
