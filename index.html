@@ -294,9 +294,10 @@
                     </div>
                     <form id="checkoutForm" class="contact-form">
                         <h3>Delivery Method</h3>
-                        <div class="radio-group">
-                            <label class="radio-label"><input type="radio" name="delivery" value="pickup" checked> 🏪 Local Pickup (Free)</label>
-                            <label class="radio-label"><input type="radio" name="delivery" value="courier"> 🚚 Courier Delivery (+₾10)</label>
+                        <div class="radio-group" id="deliveryOptions">
+                            <label class="radio-label"><input type="radio" name="delivery" value="pickup" checked> Local Pickup (Free)</label>
+                            <label class="radio-label"><input type="radio" name="delivery" value="courier"> Courier Delivery (+₾10)</label>
+                            <label class="radio-label" id="sellerDeliveryOption" style="display:none;"><input type="radio" name="delivery" value="seller"> <span id="sellerDeliveryLabel">Seller Delivery</span></label>
                         </div>
                         <div id="deliveryAddress" style="display:none;">
                             <label for="addressInput">Delivery Address <span class="required">*</span></label>
@@ -793,6 +794,13 @@
                         <li>Up to 5 photos — first one becomes the main image</li>
                     </ul>
                 </div>
+                <details class="form-section">
+                    <summary>🚚 Delivery Options</summary>
+                    <label for="listDeliveryFee">Delivery Fee (₾)</label>
+                    <input type="number" id="listDeliveryFee" min="0" value="0" placeholder="0 = free delivery">
+                    <label for="listDeliveryNote">Delivery Note</label>
+                    <input type="text" id="listDeliveryNote" placeholder="e.g. Free delivery in Tbilisi, ₾15 outside">
+                </details>
                 <details class="form-section">
                     <summary>🌱 Plant Care Guide (optional — helps buyers)</summary>
                     <label for="listWatering">Watering</label>

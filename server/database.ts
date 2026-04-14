@@ -146,6 +146,10 @@ export async function initDatabase() {
     try { await client.query('ALTER TABLE listings ADD COLUMN IF NOT EXISTS soil TEXT'); } catch(e) {}
     try { await client.query('ALTER TABLE listings ADD COLUMN IF NOT EXISTS frost_tolerance TEXT'); } catch(e) {}
     try { await client.query('ALTER TABLE listings ADD COLUMN IF NOT EXISTS best_planting TEXT'); } catch(e) {}
+    try { await client.query('ALTER TABLE listings ADD COLUMN IF NOT EXISTS delivery_fee INTEGER DEFAULT 0'); } catch(e) {}
+    try { await client.query('ALTER TABLE listings ADD COLUMN IF NOT EXISTS delivery_note TEXT'); } catch(e) {}
+    try { await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS verify_code TEXT'); } catch(e) {}
+    try { await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS verify_expires TIMESTAMPTZ'); } catch(e) {}
 
     // Add verified badge fields to users
     try { await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS verified_seller BOOLEAN DEFAULT false'); } catch(e) {}

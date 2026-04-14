@@ -246,9 +246,18 @@ async function renderCheckout(plantId) {
     currentCheckoutPlant = p;
     document.getElementById("checkoutSummary").innerHTML = `
       <div class="checkout-item">
-        <img src="${p.image || ''}" alt="${p.name}" class="checkout-img" onerror="this.style.background='#e8f5e2';">
-        <div><h3>${p.name}</h3><p class="card-latin">${p.latin || ''}</p><p>📍 ${p.seller_city} · by ${p.seller_name}</p></div>
+        <img src="${p.image || ''}" alt="${esc(p.name)}" class="checkout-img" onerror="this.style.background='#EDE9E0';">
+        <div><h3>${esc(p.name)}</h3><p class="card-latin">${esc(p.latin || '')}</p><p>📍 ${esc(p.seller_city)} · by ${esc(p.seller_name)}</p></div>
       </div>`;
+    // Show seller delivery option if available
+    const sellerOpt = document.getElementById("sellerDeliveryOption");
+    if (p.delivery_fee !== undefined && p.delivery_fee !== null) {
+      sellerOpt.style.display = "block";
+      const fee = parseInt(p.delivery_fee) || 0;
+      document.getElementById("sellerDeliveryLabel").textContent = `Seller Delivery ${fee > 0 ? '(+₾' + fee + ')' : '(Free)'}${p.delivery_note ? ' — ' + p.delivery_note : ''}`;
+    } else {
+      sellerOpt.style.display = "none";
+    }
     updateOrderTotal();
     document.getElementById("checkoutBack").onclick = (e) => { e.preventDefault(); showPage("plant", plantId); };
   } catch (e) { showToast("Failed to load checkout"); }
@@ -258,7 +267,9 @@ function updateOrderTotal() {
   if (!currentCheckoutPlant) return;
   const p = currentCheckoutPlant;
   const delivery = document.querySelector('input[name="delivery"]:checked').value;
-  const deliveryCost = delivery === "courier" ? 10 : 0;
+  let deliveryCost = 0;
+  if (delivery === 'courier') deliveryCost = 10;
+  else if (delivery === 'seller') deliveryCost = parseInt(p.delivery_fee) || 0;
   const serviceFee = Math.round(p.price * 0.07);
   const total = p.price + deliveryCost + serviceFee;
   document.getElementById("orderTotal").innerHTML = `
@@ -756,7 +767,12 @@ document.getElementById("sellerForm").addEventListener("submit", async (e) => {
       phone: document.getElementById("sellerPhone").value, city: document.getElementById("sellerCity").value,
       password: document.getElementById("sellerPassword").value, type: "seller"
     });
-    closeModal("sellModal"); updateAuthUI(); showToast(`Welcome, ${user.name}! 🌿`); e.target.reset();
+    closeModal("sellModal"); e.target.reset();
+    updateAuthUI();
+    // Show verification modal
+    document.getElementById("verifyEmailDisplay").textContent = user.email;
+    openModal("verifyModal");
+    showToast("Check your email for a verification code!");
   } catch (err) { showToast(err.message); }
 });
 
@@ -768,8 +784,31 @@ document.getElementById("buyerForm").addEventListener("submit", async (e) => {
       phone: document.getElementById("regBuyerPhone").value, city: document.getElementById("regBuyerCity").value,
       password: document.getElementById("regBuyerPassword").value, type: "buyer"
     });
-    closeModal("buyerModal"); updateAuthUI(); showToast(`Welcome, ${user.name}! 🌿`); e.target.reset();
+    closeModal("buyerModal"); e.target.reset();
+    updateAuthUI();
+    document.getElementById("verifyEmailDisplay").textContent = user.email;
+    openModal("verifyModal");
+    showToast("Check your email for a verification code!");
   } catch (err) { showToast(err.message); }
+});
+
+// Email verification form
+document.getElementById("verifyForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  try {
+    await Store.verifyEmail(document.getElementById("verifyCode").value);
+    closeModal("verifyModal");
+    // Refresh session
+    const profile = await Store.getProfile();
+    localStorage.setItem('gb_session', JSON.stringify(profile));
+    updateAuthUI();
+    showToast("Email verified! Welcome to მწვანე ბაზარი 🌿");
+  } catch (err) { showToast(err.message); }
+});
+
+document.getElementById("resendCode").addEventListener("click", async (e) => {
+  e.preventDefault();
+  try { await Store.resendVerify(); showToast("New code sent!"); } catch (err) { showToast(err.message); }
 });
 
 // === Filter & Search ===

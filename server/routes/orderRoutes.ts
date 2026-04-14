@@ -11,6 +11,9 @@ router.post('/', authMiddleware, async (req: AuthRequest, res) => {
     const listing = await db.get('SELECT * FROM listings WHERE id = ? AND active = true', listing_id);
     if (!listing) return res.status(404).json({ error: 'Listing not found' });
     if (listing.seller_id === req.userId) return res.status(400).json({ error: 'Cannot buy your own listing' });
+    // Check email verified
+    const buyer = await db.get('SELECT verified, name FROM users WHERE id = ?', req.userId);
+    if (!buyer?.verified) return res.status(403).json({ error: 'Please verify your email before purchasing' });
     const qty = Math.max(1, parseInt(quantity) || 1);
     const deliveryCost = delivery_method === 'courier' ? 10 : 0;
     const subtotal = listing.price * qty;

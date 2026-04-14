@@ -52,14 +52,16 @@ router.get('/seller/:id/profile', async (req, res) => {
 // Create listing (seller only)
 router.post('/', authMiddleware, async (req: AuthRequest, res) => {
   try {
-    const user = await db.get('SELECT type FROM users WHERE id = ?', req.userId);
-    if (!user || user.type !== 'seller') return res.status(403).json({ error: 'Only sellers can create listings' });
-    const { name, latin, category, price, unit, height, age, stock, description, image, images, watering, sunlight, soil, frost_tolerance, best_planting } = req.body;
+    // Check email verified for sellers
+    const userCheck = await db.get('SELECT type, verified FROM users WHERE id = ?', req.userId);
+    if (!userCheck || userCheck.type !== 'seller') return res.status(403).json({ error: 'Only sellers can create listings' });
+    if (!userCheck.verified) return res.status(403).json({ error: 'Please verify your email before creating listings' });
+    const { name, latin, category, price, unit, height, age, stock, description, image, images, watering, sunlight, soil, frost_tolerance, best_planting, delivery_fee, delivery_note } = req.body;
     if (!name || !category || !price || !description) return res.status(400).json({ error: 'Required fields missing' });
     const imagesJson = images && images.length ? JSON.stringify(images.slice(0, 5)) : null;
     const result = await db.run(
-      'INSERT INTO listings (seller_id, name, latin, category, price, unit, height, age, stock, description, image, images, watering, sunlight, soil, frost_tolerance, best_planting) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-      req.userId, name, latin || '', category, price, unit || 'per plant', height || '', age || '', stock || 'available', description, image || '', imagesJson, watering || '', sunlight || '', soil || '', frost_tolerance || '', best_planting || ''
+      'INSERT INTO listings (seller_id, name, latin, category, price, unit, height, age, stock, description, image, images, watering, sunlight, soil, frost_tolerance, best_planting, delivery_fee, delivery_note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+      req.userId, name, latin || '', category, price, unit || 'per plant', height || '', age || '', stock || 'available', description, image || '', imagesJson, watering || '', sunlight || '', soil || '', frost_tolerance || '', best_planting || '', parseInt(delivery_fee) || 0, delivery_note || ''
     );
     const listing = await db.get('SELECT * FROM listings WHERE id = ?', result.id);
     res.json(listing);
