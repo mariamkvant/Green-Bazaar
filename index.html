@@ -38,6 +38,7 @@
                     <a href="#" class="nav-link" onclick="showPage('favorites')">Favorites</a>
                     <a href="#" class="nav-link" onclick="showPage('notifications')">Notifications <span class="badge-count" id="notifBadge" style="display:none;"></span></a>
                     <a href="#" class="nav-link seller-only" id="navAddListing" onclick="openModal('listingModal')" style="display:none;" data-i18n="addListing">+ Add Listing</a>
+                    <a href="#" class="nav-link" id="navAdmin" onclick="showPage('admin')" style="display:none;">Admin</a>
                     <span class="nav-user" id="navUserName" onclick="openProfileEdit()" style="cursor:pointer;" title="Edit Profile"></span>
                     <a href="#" class="btn btn-outline btn-sm" id="logoutBtn" data-i18n="logout">Log Out</a>
                 </div>
@@ -408,6 +409,19 @@
                     <p class="resend-text"><a href="#" class="link" id="profResendCode">Resend code</a></p>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- ===== ADMIN PAGE ===== -->
+    <div id="page-admin" style="display:none;" class="page-section">
+        <div class="container">
+            <h2 class="section-title">Admin Dashboard</h2>
+            <div class="admin-stats" id="adminStats"></div>
+            <div class="admin-tabs">
+                <button class="dash-tab active" onclick="loadAdminTab('users')">Users</button>
+                <button class="dash-tab" onclick="loadAdminTab('disputes')">Disputes</button>
+            </div>
+            <div id="adminContent"></div>
         </div>
     </div>
 

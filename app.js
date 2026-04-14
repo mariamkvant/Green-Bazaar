@@ -17,6 +17,7 @@ function showPage(page, data) {
   if (page === "favorites") renderFavorites();
   if (page === "notifications") renderNotifications();
   if (page === "seller" && data) renderSellerProfile(data);
+  if (page === "admin") renderAdminPage();
 }
 
 // === Modal Helpers ===
@@ -46,6 +47,11 @@ async function updateAuthUI() {
       if (unreadMsg > 0) { msgBadge.textContent = unreadMsg; msgBadge.style.display = "inline"; } else msgBadge.style.display = "none";
       const notifBadge = document.getElementById("notifBadge");
       if (unreadNotif > 0) { notifBadge.textContent = unreadNotif; notifBadge.style.display = "inline"; } else notifBadge.style.display = "none";
+      // Check admin
+      try {
+        const admin = await Store.checkAdmin();
+        document.getElementById("navAdmin").style.display = admin.is_admin ? "inline" : "none";
+      } catch { document.getElementById("navAdmin").style.display = "none"; }
     } catch {}
   }
 }
@@ -1036,6 +1042,68 @@ function showToast(msg) {
   if (!toast) { toast = document.createElement("div"); toast.className = "toast"; document.body.appendChild(toast); }
   toast.textContent = msg; toast.classList.add("show");
   setTimeout(() => toast.classList.remove("show"), 3500);
+}
+
+// === Admin Page ===
+async function renderAdminPage() {
+  if (!Store.isLoggedIn()) { showPage("home"); return; }
+  try {
+    const stats = await Store.getAdminStats();
+    document.getElementById("adminStats").innerHTML = `
+      <div class="stats-grid">
+        <div class="stat-card"><span class="stat-num">${stats.total_users}</span><span class="stat-label">Users</span></div>
+        <div class="stat-card"><span class="stat-num">${stats.sellers}</span><span class="stat-label">Sellers</span></div>
+        <div class="stat-card"><span class="stat-num">${stats.buyers}</span><span class="stat-label">Buyers</span></div>
+        <div class="stat-card"><span class="stat-num">${stats.active_listings}</span><span class="stat-label">Listings</span></div>
+        <div class="stat-card"><span class="stat-num">${stats.total_orders}</span><span class="stat-label">Orders</span></div>
+        <div class="stat-card"><span class="stat-num">${stats.completed_orders}</span><span class="stat-label">Completed</span></div>
+        <div class="stat-card"><span class="stat-num">₾${stats.platform_revenue}</span><span class="stat-label">Revenue (fees)</span></div>
+        <div class="stat-card"><span class="stat-num">${stats.avg_rating}</span><span class="stat-label">Avg Rating</span></div>
+        <div class="stat-card"><span class="stat-num">${stats.new_users_week}</span><span class="stat-label">New (7d)</span></div>
+        <div class="stat-card"><span class="stat-num">${stats.open_disputes}</span><span class="stat-label">Open Disputes</span></div>
+        <div class="stat-card"><span class="stat-num">${stats.total_messages}</span><span class="stat-label">Messages</span></div>
+        <div class="stat-card"><span class="stat-num">${stats.total_reviews}</span><span class="stat-label">Reviews</span></div>
+      </div>`;
+    loadAdminTab('users');
+  } catch (e) { showToast("Admin access required"); showPage("home"); }
+}
+
+async function loadAdminTab(tab) {
+  const content = document.getElementById("adminContent");
+  document.querySelectorAll(".admin-tabs .dash-tab").forEach(t => t.classList.remove("active"));
+  event.target?.classList.add("active");
+
+  if (tab === 'users') {
+    const users = await Store.getAdminUsers();
+    content.innerHTML = `<table class="admin-table">
+      <thead><tr><th>Name</th><th>Email</th><th>Type</th><th>City</th><th>Verified</th><th>Rating</th><th>Actions</th></tr></thead>
+      <tbody>${users.map(u => `<tr>
+        <td>${esc(u.name)}</td><td>${esc(u.email)}</td><td>${u.type}</td><td>${esc(u.city||'')}</td>
+        <td>${u.verified ? '<span class="email-verified-icon" title="Email verified">✓</span>' : '<span class="email-unverified">✗</span>'}</td>
+        <td>${u.rating||0} (${u.review_count||0})</td>
+        <td>${!u.verified ? `<button class="btn btn-sm btn-primary" onclick="adminVerify(${u.id})">Verify</button>` : ''}</td>
+      </tr>`).join("")}</tbody>
+    </table>`;
+  } else if (tab === 'disputes') {
+    const disputes = await Store.getAdminDisputes();
+    content.innerHTML = disputes.length ? disputes.map(d => `
+      <div class="order-card dispute-card">
+        <div class="order-header"><span class="order-id">DSP-${d.id}</span><span class="order-status" style="background:${d.status==='open'?'#B8704B':'#8B9E7C'}">${d.status}</span></div>
+        <p><strong>${esc(d.buyer_name)}</strong> vs <strong>${esc(d.seller_name)}</strong> — ${esc(d.plant_name)}</p>
+        <p>Reason: ${esc(d.reason)}</p><p>${esc(d.description||'')}</p>
+        ${d.status === 'open' ? `<div class="order-actions">
+          <button class="btn btn-sm btn-primary" onclick="adminResolve(${d.id},'refund')">Refund Buyer</button>
+          <button class="btn btn-sm btn-outline" style="border-color:#2A4139;color:#2A4139;" onclick="adminResolve(${d.id},'release')">Release to Seller</button>
+        </div>` : ''}
+      </div>`).join("") : '<p class="dash-empty">No disputes</p>';
+  }
+}
+
+async function adminVerify(userId) {
+  try { await Store.adminVerifyUser(userId); showToast("User verified"); loadAdminTab('users'); } catch (e) { showToast(e.message); }
+}
+async function adminResolve(disputeId, resolution) {
+  try { await Store.resolveDispute(disputeId, resolution); showToast("Dispute resolved"); loadAdminTab('disputes'); } catch (e) { showToast(e.message); }
 }
 
 // === Init ===

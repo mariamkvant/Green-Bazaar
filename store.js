@@ -104,4 +104,12 @@ const Store = {
   async getSeasonal() { return api('GET', '/api/recommend/seasonal'); },
   async getPopular() { return api('GET', '/api/recommend/popular'); },
   async getForYou() { return api('GET', '/api/recommend/for-you'); },
+
+  // --- Admin ---
+  async checkAdmin() { return api('GET', '/api/admin/check'); },
+  async getAdminStats() { return api('GET', '/api/admin/stats'); },
+  async getAdminUsers() { return api('GET', '/api/admin/users'); },
+  async adminVerifyUser(id) { return api('PUT', '/api/admin/users/' + id + '/verify'); },
+  async getAdminDisputes() { return api('GET', '/api/admin/disputes'); },
+  async resolveDispute(id, resolution) { return api('PUT', '/api/admin/disputes/' + id + '/resolve', { resolution }); },
 };

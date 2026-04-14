@@ -572,3 +572,16 @@ img { max-width: 100%; display: block; }
 .recs-products-section h2, .similar-section h2, .seller-profile-header h1,
 .step h3, .feature h3 { font-family: 'DM Serif Display', serif; font-weight: 400; }
 .footer h3, .footer h4 { font-family: 'DM Serif Display', serif; font-weight: 400; }
+
+/* === Admin === */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 24px; }
+.stat-card { background: #fff; border: 1px solid #EDE9E0; border-radius: 6px; padding: 14px; text-align: center; }
+.stat-num { display: block; font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: #2A4139; }
+.stat-label { font-size: 0.7rem; color: #999; text-transform: uppercase; letter-spacing: 0.5px; }
+.admin-tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+.admin-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 6px; overflow: hidden; font-size: 0.82rem; }
+.admin-table th { background: #2A4139; color: #F5F0E8; padding: 10px 12px; text-align: left; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.admin-table td { padding: 10px 12px; border-bottom: 1px solid #F5F0E8; }
+.admin-table tr:hover { background: #FAFAF8; }
+.email-verified-icon { color: #2A4139; font-weight: 600; }
+.email-unverified { color: #B8704B; }

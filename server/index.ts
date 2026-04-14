@@ -13,6 +13,7 @@ import favoriteRoutes from './routes/favoriteRoutes';
 import notificationRoutes from './routes/notificationRoutes';
 import seedRoutes from './routes/seedRoutes';
 import recommendRoutes from './routes/recommendRoutes';
+import adminRoutes from './routes/adminRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -37,6 +38,7 @@ app.use('/api/disputes', disputeRoutes);
 app.use('/api/favorites', favoriteRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/admin', seedRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/recommend', recommendRoutes);
 
 app.get('/api/health', (_req, res) => {
