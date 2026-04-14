@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { initDatabase } from './database';
+import db from './database';
 import userRoutes from './routes/userRoutes';
 import listingRoutes from './routes/listingRoutes';
 import orderRoutes from './routes/orderRoutes';
