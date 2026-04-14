@@ -21,6 +21,7 @@ function showPage(page, data) {
   if (page === "profile") renderMyProfile();
   if (page === "people") {} // static page, search is interactive
   if (page === "news") renderNewsPage();
+  if (page === "support") {} // static forms
 }
 
 // === Modal Helpers ===
@@ -320,7 +321,34 @@ async function renderDashboard() {
   if (!Store.isLoggedIn()) { showPage("home"); return; }
   const session = Store.getSession();
   try {
-    const [orders, disputes] = await Promise.all([Store.getMyOrders(), Store.getMyDisputes()]);
+    const [orders, disputes, dashStats] = await Promise.all([
+      Store.getMyOrders(), Store.getMyDisputes(), Store.getDashboardStats().catch(() => null)
+    ]);
+
+    // Stats + activity header
+    let headerHtml = '';
+    if (dashStats) {
+      headerHtml = `<div class="dash-stats-bar">
+        <div class="dash-stat"><span class="stat-num">${dashStats.trust_score}/100</span><span class="stat-label">Trust</span></div>
+        <div class="dash-stat"><span class="stat-num">₾${dashStats.stats.total_spent}</span><span class="stat-label">Spent</span></div>
+        <div class="dash-stat"><span class="stat-num">₾${dashStats.stats.total_earned}</span><span class="stat-label">Earned</span></div>
+        <div class="dash-stat"><span class="stat-num">${dashStats.stats.completed_orders}</span><span class="stat-label">Done</span></div>
+        <div class="dash-stat"><span class="stat-num">${dashStats.user.rating||0}</span><span class="stat-label">Rating</span></div>
+      </div>
+      <div class="dash-quick-links">
+        <a onclick="showPage('home')">Browse</a><a onclick="openModal('listingModal')">+ Sell</a>
+        <a onclick="showPage('messages')">Messages</a><a onclick="showPage('favorites')">Favorites</a><a onclick="showPage('support')">Help</a>
+      </div>
+      ${dashStats.recent_activity.length ? `<details class="dash-section" open><summary>Recent Activity</summary>
+        ${dashStats.recent_activity.slice(0,5).map(a => `<div class="activity-item"><span>${a.type==='order'?'Order':'Review'}: ${esc(a.plant_name)} — ${a.status}</span><small>${new Date(a.created_at).toLocaleDateString()}</small></div>`).join("")}
+      </details>` : ''}
+      ${dashStats.predictions.length ? `<details class="dash-section"><summary>Seller Insights</summary>
+        ${dashStats.predictions.map(p => `<div class="prediction-card"><strong>${esc(p.category)}</strong><span>${p.orders} orders · ~${p.avgDaysToSell}d avg</span></div>`).join("")}
+      </details>` : ''}`;
+    }
+
+    document.getElementById("dashContent").innerHTML = headerHtml;
+
     document.querySelectorAll(".dash-tab").forEach(tab => {
       tab.onclick = () => {
         document.querySelectorAll(".dash-tab").forEach(t => t.classList.remove("active"));

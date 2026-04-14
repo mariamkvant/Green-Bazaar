@@ -113,4 +113,9 @@ const Store = {
   async adminVerifyUser(id) { return api('PUT', '/api/admin/users/' + id + '/verify'); },
   async getAdminDisputes() { return api('GET', '/api/admin/disputes'); },
   async resolveDispute(id, resolution) { return api('PUT', '/api/admin/disputes/' + id + '/resolve', { resolution }); },
+
+  // --- Support ---
+  async sendSupport(data) { return api('POST', '/api/support', data); },
+  async sendPartnership(data) { return api('POST', '/api/support/partnership', data); },
+  async getDashboardStats() { return api('GET', '/api/support/dashboard-stats'); },
 };
