@@ -14,17 +14,17 @@ img { max-width: 100%; display: block; }
 .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
 /* === Header === */
-.header { background: #2A4139; position: sticky; top: 0; z-index: 100; }
+.header { background: #fff; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #EDE9E0; }
 .header-inner { display: flex; align-items: center; justify-content: space-between; height: 56px; }
 .logo { display: flex; align-items: center; gap: 10px; }
 .logo-icon { font-size: 1.1rem; }
-.logo-text { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: #F5F0E8; }
+.logo-text { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: #2A4139; }
 .logo-sub { font-size: 0.6rem; color: #8B9E7C; margin-left: 8px; text-transform: uppercase; letter-spacing: 2px; font-weight: 400; }
 .nav { display: flex; align-items: center; gap: 20px; }
-.nav-link { font-size: 0.78rem; color: #D9CCBA; transition: color 0.2s; letter-spacing: 0.3px; }
-.nav-link:hover { color: #fff; }
-.nav-user { font-size: 0.78rem; color: #8B9E7C; font-weight: 500; letter-spacing: 0.2px; }
-.mobile-menu-btn { display: none; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #F5F0E8; }
+.nav-link { font-size: 0.78rem; color: #666; transition: color 0.2s; letter-spacing: 0.3px; }
+.nav-link:hover { color: #2A4139; }
+.nav-user { font-size: 0.78rem; color: #2A4139; font-weight: 500; letter-spacing: 0.2px; }
+.mobile-menu-btn { display: none; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #2A4139; }
 #navLoggedOut, #navLoggedIn { display: flex; align-items: center; gap: 14px; }
 
 /* === Buttons === */
@@ -36,8 +36,8 @@ img { max-width: 100%; display: block; }
 }
 .btn-primary { background: #B8704B; color: #fff; }
 .btn-primary:hover { background: #A0603E; }
-.btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #D9CCBA; }
-.btn-outline:hover { background: rgba(255,255,255,0.06); }
+.btn-outline { background: transparent; border: 1px solid #DDD8D0; color: #666; }
+.btn-outline:hover { background: #F5F0E8; color: #2A4139; }
 .btn-full { width: 100%; }
 .btn-sm { padding: 6px 12px; font-size: 0.75rem; }
 .btn-lg { padding: 12px 24px; font-size: 0.85rem; }
@@ -454,8 +454,9 @@ img { max-width: 100%; display: block; }
     .nav { display: none; }
     .nav.open {
         display: flex; flex-direction: column;
-        position: absolute; top: 60px; left: 0; right: 0;
-        background: #2A4139; padding: 16px; gap: 12px;
+        position: absolute; top: 56px; left: 0; right: 0;
+        background: #fff; padding: 16px; gap: 12px;
+        border-bottom: 1px solid #EDE9E0; box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     }
     .mobile-menu-btn { display: block; }
     .hero h1 { font-size: 1.5rem; }
@@ -558,8 +559,8 @@ img { max-width: 100%; display: block; }
 
 /* === Language Select === */
 .lang-toggle {
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
-    color: #D9CCBA; padding: 3px 6px; border-radius: 3px; font-size: 0.7rem;
+    background: #fff; border: 1px solid #DDD8D0;
+    color: #666; padding: 3px 6px; border-radius: 3px; font-size: 0.7rem;
     cursor: pointer; font-family: inherit;
 }
 
@@ -632,12 +633,12 @@ img { max-width: 100%; display: block; }
     display: flex; align-items: center; gap: 6px; background: none; border: none;
     cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: background 0.2s;
 }
-.user-menu-btn:hover { background: rgba(255,255,255,0.08); }
+.user-menu-btn:hover { background: #F5F0E8; }
 .user-avatar-nav {
-    width: 28px; height: 28px; border-radius: 50%; background: #8B9E7C; color: #fff;
+    width: 28px; height: 28px; border-radius: 50%; background: #2A4139; color: #fff;
     display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600;
 }
-.user-menu-name { font-size: 0.78rem; color: #D9CCBA; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.user-menu-name { font-size: 0.78rem; color: #2A4139; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .user-menu-badges { display: flex; gap: 2px; }
 .user-dropdown {
     display: none; position: absolute; top: 100%; right: 0; margin-top: 6px;
