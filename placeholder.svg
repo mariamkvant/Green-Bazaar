@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#F5F0E8"/>
+  <g transform="translate(160,120)" fill="none" stroke="#8B9E7C" stroke-width="2" stroke-linecap="round">
+    <path d="M20 80 L20 40"/>
+    <path d="M20 60 C20 40 0 30 0 10 C0 -5 15 -5 20 10"/>
+    <path d="M20 50 C20 30 40 20 40 0 C40 -15 25 -15 20 0"/>
+    <path d="M20 70 C20 55 5 45 -5 30 C-10 20 0 15 10 25"/>
+    <path d="M20 65 C20 50 35 40 45 25 C50 15 40 10 30 20"/>
+    <ellipse cx="20" cy="82" rx="25" ry="8" fill="#EDE9E0" stroke="#D9CCBA"/>
+  </g>
+  <text x="200" y="240" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#bbb">Plant Image</text>
+</svg>

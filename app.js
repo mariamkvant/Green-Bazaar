@@ -83,8 +83,8 @@ function renderPlants(list) {
     return `
       <article class="card" style="cursor:pointer;">
         <div class="card-img-wrap" onclick="showPage('plant', ${p.id})">
-          <img class="card-img" src="${p.image || 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&h=400&fit=crop'}" alt="${p.name}" loading="lazy"
-               onerror="this.style.background='#EDE9E0';this.alt='Image unavailable';">
+          <img class="card-img" src="${p.image || 'placeholder.svg'}" alt="${p.name}" loading="lazy"
+               onerror="this.src='placeholder.svg'">
           <button class="fav-btn ${isFav ? 'fav-active' : ''}" onclick="event.stopPropagation();toggleFav(${p.id})" aria-label="Favorite">${isFav ? '❤️' : '🤍'}</button>
         </div>
         <div class="card-body" onclick="showPage('plant', ${p.id})">
