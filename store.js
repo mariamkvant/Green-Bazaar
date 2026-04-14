@@ -78,4 +78,18 @@ const Store = {
   // --- Disputes ---
   async createDispute(data) { return api('POST', '/api/disputes', data); },
   async getMyDisputes() { return api('GET', '/api/disputes/my'); },
+
+  // --- Favorites ---
+  async getFavorites() { return api('GET', '/api/favorites'); },
+  async getFavoriteIds() { return api('GET', '/api/favorites/ids'); },
+  async addFavorite(listingId) { return api('POST', '/api/favorites/' + listingId); },
+  async removeFavorite(listingId) { return api('DELETE', '/api/favorites/' + listingId); },
+
+  // --- Notifications ---
+  async getNotifications() { return api('GET', '/api/notifications'); },
+  async getNotifCount() { try { const r = await api('GET', '/api/notifications/unread'); return r.count || 0; } catch { return 0; } },
+  async markNotifsRead() { return api('PUT', '/api/notifications/read'); },
+
+  // --- Seller Profile ---
+  async getSellerProfile(id) { return api('GET', '/api/listings/seller/' + id + '/profile'); },
 };

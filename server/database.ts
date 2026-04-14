@@ -114,6 +114,46 @@ export async function initDatabase() {
     await client.query('CREATE INDEX IF NOT EXISTS idx_messages_receiver ON messages(receiver_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_reviews_seller ON reviews(seller_id)');
 
+    // Favorites table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS favorites (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        listing_id INTEGER NOT NULL REFERENCES listings(id),
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        UNIQUE(user_id, listing_id)
+      )
+    `);
+
+    // Notifications table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS notifications (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        type TEXT NOT NULL,
+        title TEXT NOT NULL,
+        body TEXT NOT NULL,
+        link TEXT,
+        is_read BOOLEAN DEFAULT false,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      )
+    `);
+
+    // Add new columns to listings for care guides, multi-image, planting season
+    try { await client.query('ALTER TABLE listings ADD COLUMN IF NOT EXISTS images TEXT'); } catch(e) {}
+    try { await client.query('ALTER TABLE listings ADD COLUMN IF NOT EXISTS watering TEXT'); } catch(e) {}
+    try { await client.query('ALTER TABLE listings ADD COLUMN IF NOT EXISTS sunlight TEXT'); } catch(e) {}
+    try { await client.query('ALTER TABLE listings ADD COLUMN IF NOT EXISTS soil TEXT'); } catch(e) {}
+    try { await client.query('ALTER TABLE listings ADD COLUMN IF NOT EXISTS frost_tolerance TEXT'); } catch(e) {}
+    try { await client.query('ALTER TABLE listings ADD COLUMN IF NOT EXISTS best_planting TEXT'); } catch(e) {}
+
+    // Add verified badge fields to users
+    try { await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS verified_seller BOOLEAN DEFAULT false'); } catch(e) {}
+    try { await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS completed_orders INTEGER DEFAULT 0'); } catch(e) {}
+
+    await client.query('CREATE INDEX IF NOT EXISTS idx_favorites_user ON favorites(user_id)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id)');
+
     // Seed sample data if empty
     const userCount = await client.query('SELECT COUNT(*) as cnt FROM users');
     if (parseInt(userCount.rows[0].cnt) === 0) {

@@ -8,6 +8,8 @@ import orderRoutes from './routes/orderRoutes';
 import messageRoutes from './routes/messageRoutes';
 import reviewRoutes from './routes/reviewRoutes';
 import disputeRoutes from './routes/disputeRoutes';
+import favoriteRoutes from './routes/favoriteRoutes';
+import notificationRoutes from './routes/notificationRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,6 +31,8 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/disputes', disputeRoutes);
+app.use('/api/favorites', favoriteRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

@@ -8,7 +8,8 @@ const router = Router();
 router.get('/', async (_req, res) => {
   try {
     const listings = await db.all(`
-      SELECT l.*, u.name as seller_name, u.city as seller_city, u.phone as seller_phone, u.rating as seller_rating, u.review_count as seller_review_count
+      SELECT l.*, u.name as seller_name, u.city as seller_city, u.phone as seller_phone,
+        u.rating as seller_rating, u.review_count as seller_review_count, u.verified_seller
       FROM listings l JOIN users u ON l.seller_id = u.id
       WHERE l.active = true ORDER BY l.created_at DESC
     `);
@@ -20,7 +21,9 @@ router.get('/', async (_req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const listing = await db.get(`
-      SELECT l.*, u.name as seller_name, u.city as seller_city, u.phone as seller_phone, u.rating as seller_rating, u.review_count as seller_review_count
+      SELECT l.*, u.name as seller_name, u.city as seller_city, u.phone as seller_phone,
+        u.rating as seller_rating, u.review_count as seller_review_count, u.verified_seller,
+        u.bio as seller_bio, u.created_at as seller_joined
       FROM listings l JOIN users u ON l.seller_id = u.id WHERE l.id = ?
     `, req.params.id);
     if (!listing) return res.status(404).json({ error: 'Listing not found' });
@@ -31,16 +34,32 @@ router.get('/:id', async (req, res) => {
   } catch (e: any) { res.status(500).json({ error: e.message }); }
 });
 
+// Seller public profile
+router.get('/seller/:id/profile', async (req, res) => {
+  try {
+    const seller = await db.get('SELECT id, name, city, bio, avatar, rating, review_count, verified_seller, completed_orders, created_at FROM users WHERE id = ?', req.params.id);
+    if (!seller) return res.status(404).json({ error: 'Seller not found' });
+    const listings = await db.all('SELECT * FROM listings WHERE seller_id = ? AND active = true ORDER BY created_at DESC', req.params.id);
+    const reviews = await db.all(`
+      SELECT r.*, u.name as buyer_name, l.name as plant_name FROM reviews r
+      JOIN users u ON r.buyer_id = u.id JOIN listings l ON r.listing_id = l.id
+      WHERE r.seller_id = ? ORDER BY r.created_at DESC LIMIT 20
+    `, req.params.id);
+    res.json({ ...seller, listings, reviews });
+  } catch (e: any) { res.status(500).json({ error: e.message }); }
+});
+
 // Create listing (seller only)
 router.post('/', authMiddleware, async (req: AuthRequest, res) => {
   try {
     const user = await db.get('SELECT type FROM users WHERE id = ?', req.userId);
     if (!user || user.type !== 'seller') return res.status(403).json({ error: 'Only sellers can create listings' });
-    const { name, latin, category, price, unit, height, age, stock, description, image } = req.body;
+    const { name, latin, category, price, unit, height, age, stock, description, image, images, watering, sunlight, soil, frost_tolerance, best_planting } = req.body;
     if (!name || !category || !price || !description) return res.status(400).json({ error: 'Required fields missing' });
+    const imagesJson = images && images.length ? JSON.stringify(images.slice(0, 5)) : null;
     const result = await db.run(
-      'INSERT INTO listings (seller_id, name, latin, category, price, unit, height, age, stock, description, image) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
-      req.userId, name, latin || '', category, price, unit || 'per plant', height || '', age || '', stock || 'available', description, image || ''
+      'INSERT INTO listings (seller_id, name, latin, category, price, unit, height, age, stock, description, image, images, watering, sunlight, soil, frost_tolerance, best_planting) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+      req.userId, name, latin || '', category, price, unit || 'per plant', height || '', age || '', stock || 'available', description, image || '', imagesJson, watering || '', sunlight || '', soil || '', frost_tolerance || '', best_planting || ''
     );
     const listing = await db.get('SELECT * FROM listings WHERE id = ?', result.id);
     res.json(listing);

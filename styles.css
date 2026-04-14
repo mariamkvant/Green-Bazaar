@@ -433,3 +433,101 @@ img { max-width: 100%; display: block; }
 .review-photos { display: flex; gap: 8px; margin: 8px 0; flex-wrap: wrap; }
 .review-photo { width: 100px; height: 80px; object-fit: cover; border-radius: 6px; cursor: pointer; }
 .review-photo:hover { opacity: 0.85; }
+
+/* === Language Toggle === */
+.lang-toggle {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: #D9CCBA; padding: 4px 10px; border-radius: 4px; font-size: 0.78rem;
+    cursor: pointer; font-family: inherit;
+}
+.lang-toggle:hover { background: rgba(255,255,255,0.15); }
+
+/* === Sort/Filter Bar === */
+.sort-filter-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.sort-filter-bar select {
+    padding: 8px 12px; border: 1.5px solid #E0DCD4; border-radius: 6px;
+    font-size: 0.82rem; font-family: inherit; background: #fff; color: #555; cursor: pointer;
+}
+.sort-filter-bar select:focus { border-color: #8B9E7C; }
+
+/* === Favorite Button === */
+.card-img-wrap { position: relative; }
+.fav-btn {
+    position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9);
+    border: none; border-radius: 50%; width: 34px; height: 34px; font-size: 1.1rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.fav-btn:hover { transform: scale(1.15); }
+.fav-active { background: #fff; }
+
+/* === Share Button === */
+.share-btn {
+    display: block; width: 100%; padding: 8px; border: none; border-top: 1px solid #F0EDE6;
+    background: transparent; color: #999; font-size: 0.78rem; cursor: pointer;
+    font-family: inherit; transition: color 0.2s;
+}
+.share-btn:hover { color: #B8704B; }
+
+/* === Planting Badge === */
+.planting-badge {
+    display: inline-block; font-size: 0.7rem; background: #E8EFE4; color: #2A4139;
+    padding: 2px 8px; border-radius: 4px; margin-bottom: 6px; margin-left: 6px;
+}
+
+/* === Verified Badge === */
+.verified-badge { color: #2A4139; font-size: 0.75rem; margin-left: 3px; }
+.verified-badge-lg {
+    display: inline-block; background: #E8EFE4; color: #2A4139; padding: 4px 12px;
+    border-radius: 4px; font-size: 0.82rem; font-weight: 600; margin-left: 8px;
+}
+
+/* === Care Guide === */
+.care-guide { background: #F5F0E8; border-radius: 8px; padding: 16px; margin: 16px 0; }
+.care-guide h3 { font-size: 0.95rem; margin-bottom: 10px; color: #2A4139; }
+.care-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.care-item { background: #fff; padding: 8px 12px; border-radius: 6px; }
+.care-label { display: block; font-size: 0.72rem; color: #999; margin-bottom: 2px; }
+.care-item span:last-child { font-size: 0.85rem; color: #555; }
+
+/* === Seller Mini Card === */
+.seller-mini {
+    display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+    background: #fff; border: 1px solid #EDE9E0; border-radius: 8px; margin-top: 12px;
+}
+.seller-mini p { font-size: 0.8rem; color: #999; margin: 0; }
+.seller-avatar-sm {
+    width: 40px; height: 40px; border-radius: 50%; background: #8B9E7C; color: #fff;
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; flex-shrink: 0;
+}
+
+/* === Seller Profile === */
+.seller-profile-header { display: flex; gap: 20px; align-items: center; margin-bottom: 20px; }
+.seller-avatar {
+    width: 72px; height: 72px; border-radius: 50%; background: #2A4139; color: #F5F0E8;
+    display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; flex-shrink: 0;
+}
+.seller-profile-header h1 { font-size: 1.4rem; color: #2A4139; margin-bottom: 4px; }
+.seller-profile-header p { font-size: 0.88rem; color: #888; margin: 2px 0; }
+.seller-bio { color: #666; font-style: italic; margin-top: 6px; }
+
+/* === Notifications === */
+.notif-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.notif-item { background: #fff; border: 1px solid #EDE9E0; border-radius: 8px; padding: 14px 16px; margin-bottom: 8px; cursor: pointer; transition: background 0.2s; }
+.notif-item:hover { background: #F5F0E8; }
+.notif-unread { border-left: 3px solid #B8704B; }
+.notif-title { font-weight: 600; font-size: 0.9rem; color: #2A4139; }
+.notif-body { font-size: 0.85rem; color: #666; margin: 4px 0; }
+.notif-time { font-size: 0.75rem; color: #aaa; }
+.notif-bell { position: relative; }
+
+/* === Form Section (collapsible) === */
+.form-section { margin-top: 14px; border: 1px solid #E0DCD4; border-radius: 6px; padding: 0; }
+.form-section summary {
+    padding: 10px 14px; cursor: pointer; font-size: 0.88rem; font-weight: 500; color: #2A4139;
+    list-style: none; background: #FAFAF7; border-radius: 6px;
+}
+.form-section summary::-webkit-details-marker { display: none; }
+.form-section[open] summary { border-bottom: 1px solid #E0DCD4; border-radius: 6px 6px 0 0; }
+.form-section[open] { padding-bottom: 10px; }
+.form-section label, .form-section input { margin-left: 14px; margin-right: 14px; width: calc(100% - 28px); }

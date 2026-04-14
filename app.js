@@ -14,6 +14,9 @@ function showPage(page, data) {
   if (page === "messages") renderMessages();
   if (page === "checkout" && data) renderCheckout(data);
   if (page === "home") loadListings();
+  if (page === "favorites") renderFavorites();
+  if (page === "notifications") renderNotifications();
+  if (page === "seller" && data) renderSellerProfile(data);
 }
 
 // === Modal Helpers ===
@@ -34,10 +37,11 @@ async function updateAuthUI() {
     document.getElementById("navUserName").textContent = session.name;
     document.getElementById("navAddListing").style.display = session.type === "seller" ? "inline" : "none";
     try {
-      const unread = await Store.getUnreadCount();
-      const badge = document.getElementById("msgBadge");
-      if (unread > 0) { badge.textContent = unread; badge.style.display = "inline"; }
-      else badge.style.display = "none";
+      const [unreadMsg, unreadNotif] = await Promise.all([Store.getUnreadCount(), Store.getNotifCount()]);
+      const msgBadge = document.getElementById("msgBadge");
+      if (unreadMsg > 0) { msgBadge.textContent = unreadMsg; msgBadge.style.display = "inline"; } else msgBadge.style.display = "none";
+      const notifBadge = document.getElementById("notifBadge");
+      if (unreadNotif > 0) { notifBadge.textContent = unreadNotif; notifBadge.style.display = "inline"; } else notifBadge.style.display = "none";
     } catch {}
   }
 }
@@ -59,12 +63,18 @@ function renderPlants(list) {
     const badgeClass = p.stock === "limited" ? "badge-limited" : p.stock === "preorder" ? "badge-preorder" : "badge-available";
     const badgeText = p.stock === "limited" ? "Limited Stock" : p.stock === "preorder" ? "Pre-order" : "Available";
     const rating = p.seller_rating ? `⭐ ${p.seller_rating}` : '';
+    const isFav = favIds.includes(p.id);
+    const verified = p.verified_seller ? '<span class="verified-badge">✓</span>' : '';
     return `
-      <article class="card" onclick="showPage('plant', ${p.id})" style="cursor:pointer;">
-        <img class="card-img" src="${p.image || 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&h=400&fit=crop'}" alt="${p.name}" loading="lazy"
-             onerror="this.style.background='#e8f5e2';this.alt='Image unavailable';">
-        <div class="card-body">
+      <article class="card" style="cursor:pointer;">
+        <div class="card-img-wrap" onclick="showPage('plant', ${p.id})">
+          <img class="card-img" src="${p.image || 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&h=400&fit=crop'}" alt="${p.name}" loading="lazy"
+               onerror="this.style.background='#EDE9E0';this.alt='Image unavailable';">
+          <button class="fav-btn ${isFav ? 'fav-active' : ''}" onclick="event.stopPropagation();toggleFav(${p.id})" aria-label="Favorite">${isFav ? '❤️' : '🤍'}</button>
+        </div>
+        <div class="card-body" onclick="showPage('plant', ${p.id})">
           <span class="card-badge ${badgeClass}">${badgeText}</span>
+          ${p.best_planting ? `<span class="planting-badge">🌱 Plant: ${p.best_planting}</span>` : ''}
           <h3 class="card-title">${p.name}</h3>
           <p class="card-latin">${p.latin || ''}</p>
           <p class="card-desc">${(p.description || '').substring(0, 100)}...</p>
@@ -76,21 +86,40 @@ function renderPlants(list) {
           ${rating ? `<div class="card-rating">${rating} (${p.seller_review_count || 0} reviews)</div>` : ''}
           <div class="card-footer">
             <div><span class="card-price">₾${p.price}</span><span class="card-price-unit"> / ${p.unit}</span></div>
-            <span class="card-seller">by <strong>${p.seller_name || ''}</strong></span>
+            <span class="card-seller" onclick="event.stopPropagation();showPage('seller',${p.seller_id})">by <strong>${p.seller_name || ''}${verified}</strong></span>
           </div>
         </div>
+        <button class="share-btn" onclick="event.stopPropagation();shareListing(${p.id},'${(p.name||'').replace(/'/g,"\\'")}')">↗ Share</button>
       </article>`;
   }).join("");
 }
 
 let activeFilter = "all";
+let favIds = [];
+
+async function loadFavIds() {
+  if (Store.isLoggedIn()) { try { favIds = await Store.getFavoriteIds(); } catch { favIds = []; } }
+}
+
 function filterPlants() {
   const query = document.getElementById("searchInput").value.toLowerCase().trim();
-  return allListings.filter(p => {
+  const sort = document.getElementById("sortSelect")?.value || "newest";
+  const cityFilter = document.getElementById("filterCity")?.value || "";
+  const priceFilter = document.getElementById("filterPrice")?.value || "";
+
+  let filtered = allListings.filter(p => {
     const matchFilter = activeFilter === "all" || p.category === activeFilter;
-    const matchSearch = !query || (p.name + p.latin + p.description + p.seller_name + p.seller_city).toLowerCase().includes(query);
-    return matchFilter && matchSearch;
+    const matchSearch = !query || (p.name + (p.latin||'') + (p.description||'') + (p.seller_name||'') + (p.seller_city||'')).toLowerCase().includes(query);
+    const matchCity = !cityFilter || (p.seller_city || '').includes(cityFilter);
+    let matchPrice = true;
+    if (priceFilter) { const [min, max] = priceFilter.split('-').map(Number); matchPrice = p.price >= min && p.price <= max; }
+    return matchFilter && matchSearch && matchCity && matchPrice;
   });
+
+  if (sort === "price_low") filtered.sort((a, b) => a.price - b.price);
+  else if (sort === "price_high") filtered.sort((a, b) => b.price - a.price);
+  else if (sort === "rating") filtered.sort((a, b) => (b.seller_rating || 0) - (a.seller_rating || 0));
+  return filtered;
 }
 
 // === Plant Detail ===
@@ -130,6 +159,25 @@ async function renderPlantDetail(plantId) {
             <button class="btn btn-outline" onclick="handleMessageSeller(${p.id}, ${p.seller_id}, '${(p.seller_name||'').replace(/'/g,"\\'")}', '${(p.name||'').replace(/'/g,"\\'")}')">💬 Message Seller</button>
           </div>
           <div class="escrow-badge"><span>🔒</span> Payment held in escrow until you confirm delivery. 3-day inspection window.</div>
+          ${(p.watering || p.sunlight || p.soil || p.frost_tolerance || p.best_planting) ? `
+          <div class="care-guide">
+            <h3>🌱 ${t('careGuide')}</h3>
+            <div class="care-grid">
+              ${p.watering ? `<div class="care-item"><span class="care-label">💧 ${t('watering')}</span><span>${p.watering}</span></div>` : ''}
+              ${p.sunlight ? `<div class="care-item"><span class="care-label">☀️ ${t('sunlight')}</span><span>${p.sunlight}</span></div>` : ''}
+              ${p.soil ? `<div class="care-item"><span class="care-label">🪴 ${t('soil')}</span><span>${p.soil}</span></div>` : ''}
+              ${p.frost_tolerance ? `<div class="care-item"><span class="care-label">❄️ ${t('frost')}</span><span>${p.frost_tolerance}</span></div>` : ''}
+              ${p.best_planting ? `<div class="care-item"><span class="care-label">📅 ${t('bestPlanting')}</span><span>${p.best_planting}</span></div>` : ''}
+            </div>
+          </div>` : ''}
+          <div class="seller-mini" onclick="showPage('seller',${p.seller_id})" style="cursor:pointer;">
+            <div class="seller-avatar-sm">${(p.seller_name||'?')[0]}</div>
+            <div>
+              <strong>${p.seller_name} ${p.verified_seller ? '<span class="verified-badge">✓</span>' : ''}</strong>
+              <p>📍 ${p.seller_city} · ⭐ ${p.seller_rating||0} (${p.seller_review_count||0} reviews)</p>
+            </div>
+            <span class="link" style="margin-left:auto;">${t('viewProfile')} →</span>
+          </div>
         </div>
       </div>`;
 
@@ -573,7 +621,12 @@ document.getElementById("listingForm").addEventListener("submit", async (e) => {
       age: document.getElementById("listAge").value,
       stock: document.getElementById("listStock").value,
       description: document.getElementById("listDesc").value,
-      image: document.getElementById("listImage").value
+      image: document.getElementById("listImage").value,
+      watering: document.getElementById("listWatering").value,
+      sunlight: document.getElementById("listSunlight").value,
+      soil: document.getElementById("listSoil").value,
+      frost_tolerance: document.getElementById("listFrost").value,
+      best_planting: document.getElementById("listBestPlanting").value,
     });
     closeModal("listingModal"); e.target.reset();
     showToast(`"${listing.name}" is now live!`);
@@ -634,6 +687,117 @@ document.querySelectorAll(".tag").forEach(tag => {
 document.getElementById("searchInput").addEventListener("input", () => renderPlants(filterPlants()));
 document.getElementById("searchBtn").addEventListener("click", () => renderPlants(filterPlants()));
 
+// === Language Toggle ===
+function toggleLang() {
+  const newLang = getLang() === 'en' ? 'ka' : 'en';
+  setLang(newLang);
+  document.getElementById("langToggle").textContent = newLang === 'en' ? '🇬🇪 ქარ' : '🇬🇧 Eng';
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
+}
+
+// === Favorites ===
+async function toggleFav(listingId) {
+  if (!Store.isLoggedIn()) { showToast("Log in to save favorites"); openModal("loginModal"); return; }
+  try {
+    if (favIds.includes(listingId)) {
+      await Store.removeFavorite(listingId);
+      favIds = favIds.filter(id => id !== listingId);
+      showToast("Removed from favorites");
+    } else {
+      await Store.addFavorite(listingId);
+      favIds.push(listingId);
+      showToast("Added to favorites ❤️");
+    }
+    renderPlants(filterPlants());
+  } catch (e) { showToast(e.message); }
+}
+
+async function renderFavorites() {
+  if (!Store.isLoggedIn()) { showPage("home"); return; }
+  try {
+    const favs = await Store.getFavorites();
+    const grid = document.getElementById("favGrid");
+    const empty = document.getElementById("favEmpty");
+    if (!favs.length) { grid.innerHTML = ""; empty.style.display = "block"; return; }
+    empty.style.display = "none";
+    grid.innerHTML = favs.map(f => `
+      <div class="card" style="cursor:pointer;" onclick="showPage('plant',${f.listing_id})">
+        <img class="card-img" src="${f.image||''}" alt="${f.name}" onerror="this.style.background='#EDE9E0';">
+        <div class="card-body">
+          <h3 class="card-title">${f.name}</h3><p class="card-latin">${f.latin||''}</p>
+          <div class="card-footer"><span class="card-price">₾${f.price}</span><span class="card-seller">by ${f.seller_name}</span></div>
+        </div>
+      </div>`).join("");
+  } catch (e) { console.error(e); }
+}
+
+// === Notifications ===
+async function renderNotifications() {
+  if (!Store.isLoggedIn()) { showPage("home"); return; }
+  try {
+    const notifs = await Store.getNotifications();
+    const list = document.getElementById("notifList");
+    const empty = document.getElementById("notifEmpty");
+    if (!notifs.length) { list.innerHTML = ""; empty.style.display = "block"; return; }
+    empty.style.display = "none";
+    list.innerHTML = notifs.map(n => `
+      <div class="notif-item ${n.is_read ? '' : 'notif-unread'}" onclick="${n.link ? `showPage('${n.link}')` : ''}">
+        <div class="notif-title">${n.title}</div>
+        <div class="notif-body">${n.body}</div>
+        <div class="notif-time">${new Date(n.created_at).toLocaleString()}</div>
+      </div>`).join("");
+  } catch (e) { console.error(e); }
+}
+
+async function markAllNotifsRead() {
+  try { await Store.markNotifsRead(); showToast("All marked as read"); updateAuthUI(); renderNotifications(); } catch {}
+}
+
+// === Seller Profile ===
+async function renderSellerProfile(sellerId) {
+  try {
+    const s = await Store.getSellerProfile(sellerId);
+    const joined = new Date(s.created_at).toLocaleDateString();
+    const verified = s.verified_seller ? '<span class="verified-badge-lg">✓ Verified Grower</span>' : '';
+    document.getElementById("sellerProfileContent").innerHTML = `
+      <div class="seller-profile-header">
+        <div class="seller-avatar">${(s.name||'?')[0].toUpperCase()}</div>
+        <div>
+          <h1>${s.name} ${verified}</h1>
+          <p>📍 ${s.city || ''} · Member since ${joined}</p>
+          <p>⭐ ${s.rating || 0}/5 from ${s.review_count || 0} reviews · ${s.completed_orders || 0} completed orders</p>
+          ${s.bio ? `<p class="seller-bio">${s.bio}</p>` : ''}
+        </div>
+      </div>
+      <h2 style="margin:24px 0 12px;">Listings (${s.listings.length})</h2>
+      <div class="grid">${s.listings.map(l => `
+        <div class="card" style="cursor:pointer;" onclick="showPage('plant',${l.id})">
+          <img class="card-img" src="${l.image||''}" alt="${l.name}" onerror="this.style.background='#EDE9E0';">
+          <div class="card-body">
+            <h3 class="card-title">${l.name}</h3><p class="card-latin">${l.latin||''}</p>
+            <div class="card-footer"><span class="card-price">₾${l.price}</span></div>
+          </div>
+        </div>`).join("") || '<p class="dash-empty">No active listings</p>'}</div>
+      <h2 style="margin:24px 0 12px;">Reviews (${s.reviews.length})</h2>
+      ${s.reviews.map(r => `
+        <div class="review-card">
+          <div class="review-header"><span class="review-stars">${"★".repeat(r.rating)}${"☆".repeat(5-r.rating)}</span><span>${r.plant_name}</span></div>
+          <p class="review-text">${r.comment||'No comment'}</p>
+          <p class="review-meta">by ${r.buyer_name} · ${new Date(r.created_at).toLocaleDateString()}</p>
+        </div>`).join("") || '<p class="dash-empty">No reviews yet</p>'}`;
+  } catch (e) { console.error(e); showToast("Failed to load profile"); }
+}
+
+// === Share Listing ===
+function shareListing(id, name) {
+  const url = window.location.origin + '?plant=' + id;
+  if (navigator.share) {
+    navigator.share({ title: name + ' — მწვანე ბაზარი', url });
+  } else {
+    navigator.clipboard.writeText(url).then(() => showToast(t('copyLink')));
+  }
+}
+
 // === Mobile Menu ===
 document.getElementById("mobileMenuBtn").addEventListener("click", () => { document.getElementById("mainNav").classList.toggle("open"); });
 
@@ -647,4 +811,10 @@ function showToast(msg) {
 
 // === Init ===
 updateAuthUI();
+loadFavIds();
 loadListings();
+// Apply saved language
+if (getLang() === 'ka') {
+  document.getElementById("langToggle").textContent = '🇬🇧 Eng';
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
+}

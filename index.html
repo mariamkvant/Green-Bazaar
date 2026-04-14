@@ -17,21 +17,25 @@
                 <span class="logo-sub">Plant Marketplace</span>
             </a>
             <nav class="nav" id="mainNav">
-                <a href="#" class="nav-link" onclick="showPage('home')">Browse Plants</a>
-                <a href="#about" class="nav-link">About</a>
+                <a href="#" class="nav-link" onclick="showPage('home')" data-i18n="browse">Browse Plants</a>
+                <a href="#about" class="nav-link" data-i18n="about">About</a>
+                <!-- Language toggle -->
+                <button class="lang-toggle" id="langToggle" onclick="toggleLang()">🇬🇪 ქარ</button>
                 <!-- Logged out -->
                 <div id="navLoggedOut">
-                    <a href="#" class="btn btn-outline" id="registerBuyerBtn">Register as Buyer</a>
-                    <a href="#" class="btn btn-outline" id="loginBtn">Log In</a>
-                    <a href="#" class="btn btn-primary" id="sellBtn">Sell Your Plants</a>
+                    <a href="#" class="btn btn-outline" id="registerBuyerBtn" data-i18n="registerBuyer">Register as Buyer</a>
+                    <a href="#" class="btn btn-outline" id="loginBtn" data-i18n="login">Log In</a>
+                    <a href="#" class="btn btn-primary" id="sellBtn" data-i18n="sellPlants">Sell Your Plants</a>
                 </div>
                 <!-- Logged in -->
                 <div id="navLoggedIn" style="display:none;">
-                    <a href="#" class="nav-link" onclick="showPage('dashboard')">📋 My Dashboard</a>
-                    <a href="#" class="nav-link" onclick="showPage('messages')">💬 Messages <span class="badge-count" id="msgBadge" style="display:none;"></span></a>
-                    <a href="#" class="nav-link seller-only" id="navAddListing" onclick="openModal('listingModal')" style="display:none;">➕ Add Listing</a>
+                    <a href="#" class="nav-link" onclick="showPage('dashboard')" data-i18n="dashboard">📋 Dashboard</a>
+                    <a href="#" class="nav-link" onclick="showPage('messages')">💬 <span class="badge-count" id="msgBadge" style="display:none;"></span></a>
+                    <a href="#" class="nav-link" onclick="showPage('favorites')">❤️</a>
+                    <a href="#" class="nav-link notif-bell" onclick="showPage('notifications')">🔔 <span class="badge-count" id="notifBadge" style="display:none;"></span></a>
+                    <a href="#" class="nav-link seller-only" id="navAddListing" onclick="openModal('listingModal')" style="display:none;" data-i18n="addListing">➕ Add Listing</a>
                     <span class="nav-user" id="navUserName"></span>
-                    <a href="#" class="btn btn-outline btn-sm" id="logoutBtn">Log Out</a>
+                    <a href="#" class="btn btn-outline btn-sm" id="logoutBtn" data-i18n="logout">Log Out</a>
                 </div>
             </nav>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">☰</button>
@@ -61,6 +65,29 @@
             <div class="container">
                 <h2 class="section-title">Available Plants</h2>
                 <p class="section-subtitle">Fresh listings from local Georgian growers</p>
+                <div class="sort-filter-bar">
+                    <select id="sortSelect" onchange="renderPlants(filterPlants())">
+                        <option value="newest">Newest</option>
+                        <option value="price_low">Price: Low → High</option>
+                        <option value="price_high">Price: High → Low</option>
+                        <option value="rating">Best Rated</option>
+                    </select>
+                    <select id="filterCity" onchange="renderPlants(filterPlants())">
+                        <option value="">All Cities</option>
+                        <option value="Tbilisi">Tbilisi</option>
+                        <option value="Batumi">Batumi</option>
+                        <option value="Kutaisi">Kutaisi</option>
+                        <option value="Telavi">Telavi</option>
+                        <option value="Rustavi">Rustavi</option>
+                    </select>
+                    <select id="filterPrice" onchange="renderPlants(filterPlants())">
+                        <option value="">Any Price</option>
+                        <option value="0-20">Under ₾20</option>
+                        <option value="20-50">₾20 – ₾50</option>
+                        <option value="50-100">₾50 – ₾100</option>
+                        <option value="100-9999">₾100+</option>
+                    </select>
+                </div>
                 <div class="grid" id="plantGrid"></div>
                 <p class="no-results" id="noResults" style="display:none;">No plants match your search. Try a different keyword.</p>
             </div>
@@ -221,6 +248,35 @@
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- ===== FAVORITES PAGE ===== -->
+    <div id="page-favorites" style="display:none;" class="page-section">
+        <div class="container">
+            <h2 class="section-title">❤️ My Favorites</h2>
+            <div class="grid" id="favGrid"></div>
+            <p class="dash-empty" id="favEmpty" style="display:none;">No favorites yet. Browse plants and tap ❤️ to save them here.</p>
+        </div>
+    </div>
+
+    <!-- ===== NOTIFICATIONS PAGE ===== -->
+    <div id="page-notifications" style="display:none;" class="page-section">
+        <div class="container">
+            <div class="notif-header">
+                <h2 class="section-title">🔔 Notifications</h2>
+                <button class="btn btn-outline btn-sm" onclick="markAllNotifsRead()">Mark all read</button>
+            </div>
+            <div id="notifList"></div>
+            <p class="dash-empty" id="notifEmpty" style="display:none;">No notifications yet.</p>
+        </div>
+    </div>
+
+    <!-- ===== SELLER PROFILE PAGE ===== -->
+    <div id="page-seller" style="display:none;" class="page-section">
+        <div class="container">
+            <a href="#" class="back-link" onclick="history.back()">← Back</a>
+            <div id="sellerProfileContent"></div>
         </div>
     </div>
 
@@ -488,9 +544,22 @@
                 </select>
                 <label for="listDesc">Description <span class="required">*</span></label>
                 <textarea id="listDesc" rows="4" required placeholder="Describe the plant, growing conditions, what makes it special..."></textarea>
-                <label for="listImage">Image URL</label>
+                <label for="listImage">Main Image URL</label>
                 <input type="url" id="listImage" placeholder="https://... (paste a link to a photo)">
-                <p class="field-hint">Tip: Upload your photo to <a href="https://imgur.com" target="_blank" class="link">imgur.com</a> or <a href="https://imgbb.com" target="_blank" class="link">imgbb.com</a> and paste the direct link here.</p>
+                <p class="field-hint">Tip: Upload to <a href="https://imgbb.com" target="_blank" class="link">imgbb.com</a> and paste the direct link.</p>
+                <details class="form-section">
+                    <summary>🌱 Plant Care Guide (optional — helps buyers)</summary>
+                    <label for="listWatering">Watering</label>
+                    <input type="text" id="listWatering" placeholder="e.g. 2-3 times per week in summer">
+                    <label for="listSunlight">Sunlight</label>
+                    <input type="text" id="listSunlight" placeholder="e.g. Full sun to partial shade">
+                    <label for="listSoil">Soil Type</label>
+                    <input type="text" id="listSoil" placeholder="e.g. Well-drained, slightly acidic">
+                    <label for="listFrost">Frost Tolerance</label>
+                    <input type="text" id="listFrost" placeholder="e.g. Hardy to -25°C">
+                    <label for="listBestPlanting">Best Planting Time</label>
+                    <input type="text" id="listBestPlanting" placeholder="e.g. March–May or September–November">
+                </details>
                 <button type="submit" class="btn btn-primary btn-full btn-lg">🌿 Publish Listing</button>
             </form>
         </div>
@@ -550,6 +619,7 @@
     </footer>
 
     <script src="plants.js"></script>
+    <script src="i18n.js"></script>
     <script src="store.js"></script>
     <script src="app.js"></script>
 </body>
