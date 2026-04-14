@@ -36,6 +36,7 @@
                     <a href="#" class="nav-link" onclick="showPage('dashboard')" data-i18n="dashboard">Dashboard</a>
                     <a href="#" class="nav-link" onclick="showPage('messages')">Messages <span class="badge-count" id="msgBadge" style="display:none;"></span></a>
                     <a href="#" class="nav-link" onclick="showPage('favorites')">Favorites</a>
+                    <a href="#" class="nav-link" onclick="showPage('people')">People</a>
                     <a href="#" class="nav-link" onclick="showPage('notifications')">Notifications <span class="badge-count" id="notifBadge" style="display:none;"></span></a>
                     <a href="#" class="nav-link seller-only" id="navAddListing" onclick="openModal('listingModal')" style="display:none;" data-i18n="addListing">+ Add Listing</a>
                     <a href="#" class="nav-link" id="navAdmin" onclick="showPage('admin')" style="display:none;">Admin</a>
@@ -269,12 +270,27 @@
     <div id="page-messages" style="display:none;" class="page-section">
         <div class="container">
             <h2 class="section-title">Messages</h2>
+            <div class="msg-search-bar">
+                <input type="text" id="msgSearchInput" placeholder="Search conversations..." oninput="filterConversations()">
+            </div>
             <div class="msg-layout">
                 <div class="msg-list" id="msgList"></div>
                 <div class="msg-chat" id="msgChat">
                     <p class="msg-empty">Select a conversation to start chatting</p>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- ===== PEOPLE SEARCH PAGE ===== -->
+    <div id="page-people" style="display:none;" class="page-section">
+        <div class="container">
+            <h2 class="section-title">Find People</h2>
+            <div class="people-search-bar">
+                <input type="text" id="peopleSearchInput" placeholder="Search by name or city..." oninput="searchPeople()">
+            </div>
+            <div class="grid" id="peopleGrid"></div>
+            <p class="dash-empty" id="peopleEmpty">Search for growers and buyers by name or city</p>
         </div>
     </div>
 

@@ -164,4 +164,17 @@ router.get('/:id', async (req, res) => {
   } catch (e: any) { res.status(500).json({ error: e.message }); }
 });
 
+// Search users
+router.get('/search/find', async (req, res) => {
+  try {
+    const q = req.query.q as string;
+    if (!q || q.length < 2) return res.json([]);
+    const users = await db.all(
+      "SELECT id, name, city, type, rating, review_count, verified_seller FROM users WHERE LOWER(name) LIKE $1 OR LOWER(city) LIKE $1 ORDER BY rating DESC LIMIT 20",
+      `%${q.toLowerCase()}%`
+    );
+    res.json(users);
+  } catch (e: any) { res.status(500).json({ error: e.message }); }
+});
+
 export default router;

@@ -50,6 +50,7 @@ const Store = {
     return user;
   },
   async changePassword(data) { return api('PUT', '/api/users/me/password', data); },
+  async searchUsers(q) { return api('GET', '/api/users/search/find?q=' + encodeURIComponent(q)); },
   async verifyEmail(code) { return api('POST', '/api/users/verify-email', { code }); },
   async resendVerify() { return api('POST', '/api/users/resend-verify'); },
   async forgotPassword(email) { return api('POST', '/api/users/forgot-password', { email }); },

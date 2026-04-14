@@ -19,6 +19,7 @@ function showPage(page, data) {
   if (page === "seller" && data) renderSellerProfile(data);
   if (page === "admin") renderAdminPage();
   if (page === "profile") renderMyProfile();
+  if (page === "people") {} // static page, search is interactive
 }
 
 // === Modal Helpers ===
@@ -41,7 +42,7 @@ async function updateAuthUI() {
   document.getElementById("navLoggedIn").style.display = session ? "flex" : "none";
   if (session) {
     document.getElementById("navUserName").textContent = session.name;
-    document.getElementById("navAddListing").style.display = session.type === "seller" ? "inline" : "none";
+    document.getElementById("navAddListing").style.display = "inline"; // All users can sell
     try {
       const [unreadMsg, unreadNotif] = await Promise.all([Store.getUnreadCount(), Store.getNotifCount()]);
       const msgBadge = document.getElementById("msgBadge");
@@ -465,6 +466,7 @@ async function renderMessages() {
   const session = Store.getSession();
   try {
     const convos = await Store.getConversations();
+    allConversations = convos; // cache for search filtering
     const list = document.getElementById("msgList");
     const chat = document.getElementById("msgChat");
     if (!convos.length) { list.innerHTML = '<p class="msg-empty">No messages yet</p>'; chat.innerHTML = '<p class="msg-empty">Select a conversation</p>'; return; }
@@ -1046,6 +1048,60 @@ function showToast(msg) {
 }
 
 // === My Profile Page (Boomerang-style) ===
+let allConversations = []; // cached for filtering
+
+function filterConversations() {
+  const q = (document.getElementById("msgSearchInput")?.value || '').toLowerCase();
+  const list = document.getElementById("msgList");
+  if (!allConversations.length) return;
+  const filtered = q ? allConversations.filter(c => c.otherName.toLowerCase().includes(q)) : allConversations;
+  list.innerHTML = filtered.length ? filtered.map((c, i) => {
+    const lastMsg = c.messages[c.messages.length - 1];
+    return `<div class="msg-item" data-idx="${i}" onclick="selectConvo(${i})">
+      <div class="msg-item-header"><strong>${esc(c.otherName)}</strong></div>
+      <p class="msg-preview">${esc((lastMsg.body||'').substring(0, 50))}...</p>
+    </div>`;
+  }).join("") : '<p class="msg-empty">No matching conversations</p>';
+}
+
+function selectConvo(idx) {
+  const session = Store.getSession();
+  const convo = allConversations[idx];
+  if (!convo || !session) return;
+  currentConvo = convo;
+  Store.markRead(convo.otherId);
+  renderChat(convo, session);
+}
+
+// People search
+let peopleSearchTimeout;
+function searchPeople() {
+  clearTimeout(peopleSearchTimeout);
+  const q = document.getElementById("peopleSearchInput")?.value || '';
+  if (q.length < 2) { document.getElementById("peopleGrid").innerHTML = ''; document.getElementById("peopleEmpty").style.display = "block"; return; }
+  peopleSearchTimeout = setTimeout(async () => {
+    try {
+      const users = await Store.searchUsers(q);
+      document.getElementById("peopleEmpty").style.display = users.length ? "none" : "block";
+      document.getElementById("peopleGrid").innerHTML = users.map(u => `
+        <div class="card" onclick="showPage('seller',${u.id})" style="cursor:pointer;">
+          <div class="card-body" style="padding:16px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+              <div class="seller-avatar-sm">${(u.name||'?')[0]}</div>
+              <div>
+                <h3 class="card-title">${esc(u.name)} ${u.verified_seller ? '<span class="verified-badge">✓</span>' : ''}</h3>
+                <p class="card-latin">${esc(u.city||'')} · ${u.type}</p>
+              </div>
+            </div>
+            <div class="card-footer" style="border:none;padding-top:4px;">
+              <span class="card-rating">⭐ ${u.rating||0} (${u.review_count||0})</span>
+            </div>
+          </div>
+        </div>`).join("");
+    } catch {}
+  }, 300);
+}
+
 async function renderMyProfile() {
   if (!Store.isLoggedIn()) { showPage("home"); return; }
   try {

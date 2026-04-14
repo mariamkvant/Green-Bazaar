@@ -52,10 +52,9 @@ router.get('/seller/:id/profile', async (req, res) => {
 // Create listing (seller only)
 router.post('/', authMiddleware, async (req: AuthRequest, res) => {
   try {
-    // Check email verified for sellers
+    // Check email verified
     const userCheck = await db.get('SELECT type, verified FROM users WHERE id = ?', req.userId);
-    if (!userCheck || userCheck.type !== 'seller') return res.status(403).json({ error: 'Only sellers can create listings' });
-    if (!userCheck.verified) return res.status(403).json({ error: 'Please verify your email before creating listings' });
+    if (!userCheck?.verified) return res.status(403).json({ error: 'Please verify your email before creating listings' });
     const { name, latin, category, price, unit, height, age, stock, description, image, images, watering, sunlight, soil, frost_tolerance, best_planting, delivery_fee, delivery_note } = req.body;
     if (!name || !category || !price || !description) return res.status(400).json({ error: 'Required fields missing' });
     const imagesJson = images && images.length ? JSON.stringify(images.slice(0, 5)) : null;

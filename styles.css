@@ -617,3 +617,11 @@ img { max-width: 100%; display: block; }
 .prof-menu-item:hover { background: #FAFAF8; }
 .prof-menu-item:last-child { border-bottom: none; }
 .prof-menu-item span:last-child { color: #ccc; }
+
+/* === Message & People Search === */
+.msg-search-bar, .people-search-bar { margin-bottom: 14px; }
+.msg-search-bar input, .people-search-bar input {
+    width: 100%; padding: 10px 14px; border: 1px solid #E0DCD4; border-radius: 6px;
+    font-size: 0.85rem; font-family: 'DM Sans', sans-serif; outline: none; background: #fff;
+}
+.msg-search-bar input:focus, .people-search-bar input:focus { border-color: #8B9E7C; }
