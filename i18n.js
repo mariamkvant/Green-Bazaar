@@ -34,6 +34,10 @@ const translations = {
     similarPlants: "Similar Plants", photoGuidelines: "Photo Guidelines",
     delivery: "Delivery", pickup: "Local Pickup (Free)", courier: "Courier Delivery",
     sellerDelivery: "Seller Delivery",
+    story1: "It all started when my father began growing Thuja plants in our garden in Georgia. What started as a hobby quickly turned into something bigger — neighbors wanted them, friends asked where to buy, and we realized there was no easy way for growers and buyers to connect.",
+    story2: "That's how მწვანე ბაზარი was born. I wanted to create a space where anyone growing plants in Georgia could reach buyers directly — no middlemen, fair prices, and trust built into every transaction.",
+    story3: "Today, we're building Georgia's first dedicated plant marketplace. Whether you're a small grower with Thuja saplings or a large nursery with hundreds of varieties, this is your platform.",
+    founder: "Founder",
   },
   ka: {
     browse: "მცენარეების დათვალიერება", about: "ჩვენს შესახებ", login: "შესვლა", logout: "გასვლა",
@@ -70,6 +74,10 @@ const translations = {
     similarPlants: "მსგავსი მცენარეები", photoGuidelines: "ფოტოს მოთხოვნები",
     delivery: "მიწოდება", pickup: "ადგილზე გატანა (უფასო)", courier: "კურიერი",
     sellerDelivery: "გამყიდველის მიწოდება",
+    story1: "ყველაფერი დაიწყო, როცა ჩემმა მამამ ტუიას მცენარეების მოყვანა დაიწყო ჩვენს ბაღში საქართველოში. რაც ჰობით დაიწყო, სწრაფად გადაიქცა რაღაც უფრო დიდად — მეზობლებს სურდათ, მეგობრები კითხულობდნენ სად იყიდონ.",
+    story2: "ასე დაიბადა მწვანე ბაზარი. მინდოდა შემექმნა სივრცე, სადაც საქართველოში მცენარეების მწარმოებელი პირდაპირ მყიდველს მიაწვდიდა — შუამავლების გარეშე, სამართლიანი ფასებით.",
+    story3: "დღეს ჩვენ ვაშენებთ საქართველოს პირველ მცენარეების ბაზარს. იქნებით პატარა მწარმოებელი თუ დიდი სანერგე — ეს თქვენი პლატფორმაა.",
+    founder: "დამფუძნებელი",
   },
   fr: {
     browse: "Parcourir", about: "À propos", login: "Connexion", logout: "Déconnexion",

@@ -585,3 +585,7 @@ img { max-width: 100%; display: block; }
 .admin-table tr:hover { background: #FAFAF8; }
 .email-verified-icon { color: #2A4139; font-weight: 600; }
 .email-unverified { color: #B8704B; }
+
+/* === SVG Step Icons === */
+.step-icon-svg { margin: 8px 0 10px; }
+.step-icon { display: none; } /* hide old emoji icons */
