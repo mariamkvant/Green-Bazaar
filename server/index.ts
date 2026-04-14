@@ -42,7 +42,17 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/recommend', recommendRoutes);
 
 app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.json({ status: 'ok', timestamp: new Date().toISOString(), hasResendKey: !!process.env.RESEND_API_KEY, fromEmail: process.env.FROM_EMAIL || 'not set' });
+});
+
+// Test email endpoint
+app.post('/api/test-email', async (req, res) => {
+  const secret = req.query.secret || req.headers['x-admin-secret'];
+  if (secret !== (process.env.ADMIN_SECRET || 'gb-admin-2026')) return res.status(403).json({ error: 'Unauthorized' });
+  const { sendEmail, verifyEmailHtml } = require('./email');
+  const to = (req.body.to || 'mariamkvant@gmail.com') as string;
+  const result = await sendEmail(to, 'Test Email from Green Bazaar', verifyEmailHtml('123456'));
+  res.json({ sent: result, to, hasKey: !!process.env.RESEND_API_KEY, from: process.env.FROM_EMAIL });
 });
 
 // Serve static frontend — try multiple paths
