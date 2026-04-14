@@ -1094,10 +1094,13 @@ function renderMiniCard(p) {
 
 async function loadSimilarPlants(listingId) {
   try {
+    // Remove any existing similar section first
+    const existing = document.querySelector('.similar-section');
+    if (existing) existing.remove();
     const similar = await Store.getSimilar(listingId);
     if (similar.length) {
       document.getElementById("reviewsSection").insertAdjacentHTML('beforebegin',
-        `<div class="similar-section"><h2>Similar Plants</h2><div class="grid grid-scroll">${similar.map(p => renderMiniCard(p)).join("")}</div></div>`);
+        `<div class="similar-section"><h2>${t('similarPlants')}</h2><div class="grid grid-scroll">${similar.map(p => renderMiniCard(p)).join("")}</div></div>`);
     }
   } catch {}
 }
