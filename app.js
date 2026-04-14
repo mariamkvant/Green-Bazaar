@@ -235,8 +235,6 @@ async function renderPlantDetail(plantId) {
 // === Buy / Message ===
 function handleBuyNow(plantId) {
   if (!Store.isLoggedIn()) { showToast("Please log in or register to buy"); openModal("loginModal"); return; }
-  const session = Store.getSession();
-  if (session.type === "seller") { showToast("Switch to a buyer account to purchase"); return; }
   showPage("checkout", plantId);
 }
 
