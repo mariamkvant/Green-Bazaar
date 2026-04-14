@@ -86,3 +86,5 @@ router.post('/reset-password', async (req, res) => {
     res.json({ message: 'Password reset successfully' });
   } catch (e: any) { res.status(500).json({ error: e.message }); }
 });
+
+export default router;
