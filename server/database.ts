@@ -156,6 +156,8 @@ export async function initDatabase() {
     try { await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS completed_orders INTEGER DEFAULT 0'); } catch(e) {}
     try { await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false'); } catch(e) {}
     try { await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS verify_code TEXT'); } catch(e) {}
+    // Make all accounts universal
+    try { await client.query("UPDATE users SET type = 'user' WHERE type IN ('buyer', 'seller')"); } catch(e) {}
     try { await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS verify_expires TIMESTAMPTZ'); } catch(e) {}
 
     await client.query('CREATE INDEX IF NOT EXISTS idx_favorites_user ON favorites(user_id)');

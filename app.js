@@ -797,30 +797,13 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   } catch (err) { showToast(err.message); }
 });
 
-document.getElementById("sellerForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  try {
-    const user = await Store.register({
-      name: document.getElementById("sellerName").value, email: document.getElementById("sellerEmail").value,
-      phone: document.getElementById("sellerPhone").value, city: document.getElementById("sellerCity").value,
-      password: document.getElementById("sellerPassword").value, type: "seller"
-    });
-    closeModal("sellModal"); e.target.reset();
-    updateAuthUI();
-    // Show verification modal
-    document.getElementById("verifyEmailDisplay").textContent = user.email;
-    openModal("verifyModal");
-    showToast("Check your email for a verification code!");
-  } catch (err) { showToast(err.message); }
-});
-
 document.getElementById("buyerForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   try {
     const user = await Store.register({
       name: document.getElementById("regBuyerName").value, email: document.getElementById("regBuyerEmail").value,
       phone: document.getElementById("regBuyerPhone").value, city: document.getElementById("regBuyerCity").value,
-      password: document.getElementById("regBuyerPassword").value, type: "buyer"
+      password: document.getElementById("regBuyerPassword").value, type: "user"
     });
     closeModal("buyerModal"); e.target.reset();
     updateAuthUI();

@@ -262,7 +262,7 @@
                 <div class="faq-list">
                     <details class="faq-item"><summary>How does the escrow payment work?</summary><p>When you buy a plant, your payment is held securely by our platform — not sent directly to the seller. The seller only receives the money after you confirm the plant arrived in good condition. You have a 3-day inspection window after delivery.</p></details>
                     <details class="faq-item"><summary>What if my plant arrives damaged?</summary><p>You can open a dispute within the 3-day inspection window. Upload photos of the damage, and our mediation team will review the case within 48 hours. You can request a full refund, partial refund, or replacement.</p></details>
-                    <details class="faq-item"><summary>How do I become a seller?</summary><p>Click "Sell Your Plants" and register as a seller. You'll need to provide your name, location, phone number, and describe what plants you grow. Once registered, you can immediately start creating listings.</p></details>
+                    <details class="faq-item"><summary>How do I start selling?</summary><p>Every account can both buy and sell. Just click "+ Sell" in the navigation, fill in your plant details, add photos, and publish. Your listing will appear in the marketplace immediately.</p></details>
                     <details class="faq-item"><summary>What fees does the platform charge?</summary><p>Buyers pay a 7% service fee on each purchase. This covers escrow protection, dispute resolution, and platform maintenance. Sellers receive the full listed price — no seller fees.</p></details>
                     <details class="faq-item"><summary>Can I sell seeds, fertilizers, or gardening tools?</summary><p>Yes! მწვანე ბაზარი supports multiple categories: Plants, Seeds, Fertilizers, and Materials. You can list any gardening-related product.</p></details>
                     <details class="faq-item"><summary>How does delivery work?</summary><p>You can choose between local pickup (free) or courier delivery (₾10). For local pickup, you and the seller coordinate a meeting point via in-app messaging. For courier delivery, the seller ships to your address.</p></details>
@@ -582,52 +582,12 @@
         </div>
     </div>
 
-    <!-- Seller Registration Modal -->
-    <div class="modal-overlay" id="sellModal">
-        <div class="modal">
-            <button class="modal-close" data-close="sellModal" aria-label="Close">&times;</button>
-            <h2>🌱 Register as a Seller</h2>
-            <p class="modal-desc">Start selling your plants on მწვანე ბაზარი.</p>
-            <form id="sellerForm" class="contact-form">
-                <label for="sellerName">Full Name <span class="required">*</span></label>
-                <input type="text" id="sellerName" required placeholder="Full name">
-                <label for="sellerEmail">Email Address <span class="required">*</span></label>
-                <input type="email" id="sellerEmail" required placeholder="your@email.com">
-                <label for="sellerPhone">Phone Number <span class="required">*</span></label>
-                <input type="tel" id="sellerPhone" required placeholder="+995 5XX XXX XXX">
-                <label for="sellerCity">City / Region <span class="required">*</span></label>
-                <select id="sellerCity" required>
-                    <option value="">Select your location</option>
-                    <option value="Tbilisi">Tbilisi</option>
-                    <option value="Batumi">Batumi, Adjara</option>
-                    <option value="Kutaisi">Kutaisi</option>
-                    <option value="Rustavi">Rustavi</option>
-                    <option value="Zugdidi">Zugdidi</option>
-                    <option value="Telavi">Telavi, Kakheti</option>
-                    <option value="Gori">Gori</option>
-                    <option value="Senaki">Senaki</option>
-                    <option value="Marneuli">Marneuli</option>
-                    <option value="Other">Other</option>
-                </select>
-                <label for="sellerPlants">What plants do you grow? <span class="required">*</span></label>
-                <textarea id="sellerPlants" rows="3" required placeholder="Describe the types and quantities..."></textarea>
-                <label for="sellerPassword">Create Password <span class="required">*</span></label>
-                <input type="password" id="sellerPassword" required minlength="8" placeholder="Minimum 8 characters">
-                <div class="checkbox-group">
-                    <input type="checkbox" id="sellerPrivacy" required>
-                    <label for="sellerPrivacy">I agree to the <a href="#" class="link privacy-link">Privacy Policy</a> <span class="required">*</span></label>
-                </div>
-                <button type="submit" class="btn btn-primary btn-full">Register & Verify Email</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Buyer Registration Modal -->
+    <!-- Registration Modal (unified) -->
     <div class="modal-overlay" id="buyerModal">
         <div class="modal">
             <button class="modal-close" data-close="buyerModal" aria-label="Close">&times;</button>
-            <h2>🛒 Register as a Buyer</h2>
-            <p class="modal-desc">Create an account to buy plants with escrow protection.</p>
+            <h2>Join მწვანე ბაზარი</h2>
+            <p class="modal-desc">Create an account to buy and sell plants.</p>
             <form id="buyerForm" class="contact-form">
                 <label for="regBuyerName">Full Name <span class="required">*</span></label>
                 <input type="text" id="regBuyerName" required placeholder="Full name">
@@ -639,14 +599,12 @@
                 <select id="regBuyerCity" required>
                     <option value="">Select your location</option>
                     <option value="Tbilisi">Tbilisi</option>
-                    <option value="Batumi">Batumi, Adjara</option>
+                    <option value="Batumi, Adjara">Batumi, Adjara</option>
                     <option value="Kutaisi">Kutaisi</option>
                     <option value="Rustavi">Rustavi</option>
                     <option value="Zugdidi">Zugdidi</option>
-                    <option value="Telavi">Telavi, Kakheti</option>
+                    <option value="Telavi, Kakheti">Telavi, Kakheti</option>
                     <option value="Gori">Gori</option>
-                    <option value="Senaki">Senaki</option>
-                    <option value="Marneuli">Marneuli</option>
                     <option value="Other">Other</option>
                 </select>
                 <label for="regBuyerPassword">Create Password <span class="required">*</span></label>
@@ -655,7 +613,7 @@
                     <input type="checkbox" id="buyerPrivacy" required>
                     <label for="buyerPrivacy">I agree to the <a href="#" class="link privacy-link">Privacy Policy</a> <span class="required">*</span></label>
                 </div>
-                <button type="submit" class="btn btn-primary btn-full">Register & Verify Email</button>
+                <button type="submit" class="btn btn-primary btn-full">Create Account</button>
             </form>
         </div>
     </div>
