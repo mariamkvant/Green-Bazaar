@@ -460,19 +460,53 @@ function renderChat(convo, session) {
   chat.innerHTML = `
     <div class="chat-header"><strong>${convo.otherName}</strong>${convo.orderId ? ` · Order #${convo.orderId}` : ""}</div>
     <div class="chat-messages" id="chatMessages">
-      ${convo.messages.map(m => `<div class="chat-msg ${m.sender_id === session.id ? 'msg-mine' : 'msg-theirs'}">
-        <p>${m.body}</p><small>${new Date(m.created_at).toLocaleString()}</small>
-      </div>`).join("")}
+      ${convo.messages.map(m => {
+        let msgBody = esc(m.body);
+        // Render inline photos
+        msgBody = msgBody.replace(/\[photo\](.*?)\[\/photo\]/g, '<img src="$1" class="chat-msg-photo" alt="Photo">');
+        return `<div class="chat-msg ${m.sender_id === session.id ? 'msg-mine' : 'msg-theirs'}">
+        <p>${msgBody}</p><small>${new Date(m.created_at).toLocaleString()}</small>
+      </div>`;}).join("")}
     </div>
-    <form class="chat-input" id="chatForm"><input type="text" id="chatText" placeholder="Type a message..." required><button type="submit" class="btn btn-primary">Send</button></form>`;
+    <form class="chat-input" id="chatForm">
+      <input type="file" id="chatPhoto" accept="image/*" style="display:none;">
+      <button type="button" class="btn btn-outline btn-sm chat-photo-btn" onclick="document.getElementById('chatPhoto').click()">📷</button>
+      <input type="text" id="chatText" placeholder="Type a message...">
+      <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+    <div class="chat-photo-preview" id="chatPhotoPreview"></div>`;
   document.getElementById("chatMessages").scrollTop = 99999;
+
+  // Photo preview in chat
+  let chatPhotoData = null;
+  document.getElementById("chatPhoto").addEventListener("change", (ev) => {
+    const file = ev.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      chatPhotoData = e.target.result;
+      document.getElementById("chatPhotoPreview").innerHTML = `
+        <div class="chat-preview-wrap">
+          <img src="${chatPhotoData}" alt="Photo">
+          <button type="button" onclick="chatPhotoData=null;document.getElementById('chatPhotoPreview').innerHTML='';">✕</button>
+        </div>`;
+    };
+    reader.readAsDataURL(file);
+  });
+
   document.getElementById("chatForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const text = document.getElementById("chatText").value.trim();
-    if (!text) return;
+    if (!text && !chatPhotoData) return;
     try {
-      await Store.sendMessage({ receiver_id: convo.otherId, order_id: convo.orderId, body: text });
+      let body = text;
+      if (chatPhotoData) {
+        body = (text ? text + '\n' : '') + `[photo]${chatPhotoData}[/photo]`;
+      }
+      await Store.sendMessage({ receiver_id: convo.otherId, order_id: convo.orderId, body });
       document.getElementById("chatText").value = "";
+      chatPhotoData = null;
+      document.getElementById("chatPhotoPreview").innerHTML = "";
       renderMessages();
     } catch (err) { showToast(err.message); }
   });

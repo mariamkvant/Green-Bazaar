@@ -515,3 +515,11 @@ img { max-width: 100%; display: block; }
 .grid-scroll { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
 .similar-section { margin-top: 32px; }
 .similar-section h2 { font-size: 1.1rem; margin-bottom: 14px; color: #2A4139; font-weight: 500; }
+
+/* === Chat Photos === */
+.chat-photo-btn { padding: 6px 10px; font-size: 0.9rem; flex-shrink: 0; border-color: #DDD8D0; color: #888; }
+.chat-photo-preview { padding: 0 14px; }
+.chat-preview-wrap { position: relative; display: inline-block; margin: 6px 0; }
+.chat-preview-wrap img { width: 80px; height: 80px; object-fit: cover; border-radius: 6px; }
+.chat-preview-wrap button { position: absolute; top: -4px; right: -4px; background: #7A3B2E; color: #fff; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 0.65rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.chat-msg-photo { max-width: 200px; border-radius: 6px; margin-top: 4px; cursor: pointer; }
