@@ -22,6 +22,10 @@ function showPage(page, data) {
 // === Modal Helpers ===
 function openModal(id) { document.getElementById(id).classList.add("open"); }
 function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+
+// HTML sanitizer for rendering user content
+function esc(str) { if (!str) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
 document.addEventListener("click", (e) => {
   if (e.target.classList.contains("modal-overlay")) e.target.classList.remove("open");
   if (e.target.dataset.close) closeModal(e.target.dataset.close);
@@ -75,9 +79,9 @@ function renderPlants(list) {
         <div class="card-body" onclick="showPage('plant', ${p.id})">
           <span class="card-badge ${badgeClass}">${badgeText}</span>
           ${p.best_planting ? `<span class="planting-badge">🌱 Plant: ${p.best_planting}</span>` : ''}
-          <h3 class="card-title">${p.name}</h3>
-          <p class="card-latin">${p.latin || ''}</p>
-          <p class="card-desc">${(p.description || '').substring(0, 100)}...</p>
+          <h3 class="card-title">${esc(p.name)}</h3>
+          <p class="card-latin">${esc(p.latin || '')}</p>
+          <p class="card-desc">${esc((p.description || '').substring(0, 100))}...</p>
           <div class="card-meta">
             <span>📏 ${p.height || ''}</span>
             <span>🌱 ${p.age || ''}</span>
@@ -315,8 +319,9 @@ async function renderDashTab(tab, orders, disputes, session) {
             <p class="card-latin">${l.latin || ''}</p>
             <div class="card-footer"><span class="card-price">₾${l.price} <span class="card-price-unit">/ ${l.unit}</span></span></div>
             <div class="order-actions" style="margin-top:10px;">
+              <button class="btn btn-outline btn-sm" onclick="openEditListing(${l.id})">✏️ Edit</button>
               <button class="btn btn-outline btn-sm" onclick="toggleListing(${l.id}, ${l.active})">${l.active ? '⏸ Deactivate' : '▶ Activate'}</button>
-              <button class="btn btn-outline btn-sm" style="border-color:#d32f2f;color:#d32f2f;" onclick="deleteListingApi(${l.id})">🗑 Delete</button>
+              <button class="btn btn-outline btn-sm" style="border-color:#7A3B2E;color:#7A3B2E;" onclick="deleteListingApi(${l.id})">🗑 Delete</button>
             </div>
           </div>
         </div>`).join("")}</div>`;
@@ -686,6 +691,90 @@ document.querySelectorAll(".tag").forEach(tag => {
 });
 document.getElementById("searchInput").addEventListener("input", () => renderPlants(filterPlants()));
 document.getElementById("searchBtn").addEventListener("click", () => renderPlants(filterPlants()));
+
+// === Profile Edit ===
+async function openProfileEdit() {
+  if (!Store.isLoggedIn()) return;
+  try {
+    const profile = await Store.getProfile();
+    document.getElementById("profName").value = profile.name || '';
+    document.getElementById("profPhone").value = profile.phone || '';
+    document.getElementById("profCity").value = profile.city || '';
+    document.getElementById("profBio").value = profile.bio || '';
+    openModal("profileModal");
+  } catch (e) { showToast("Failed to load profile"); }
+}
+
+document.getElementById("profileForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  try {
+    await Store.updateProfile({
+      name: document.getElementById("profName").value,
+      phone: document.getElementById("profPhone").value,
+      city: document.getElementById("profCity").value,
+      bio: document.getElementById("profBio").value,
+    });
+    closeModal("profileModal");
+    updateAuthUI();
+    showToast("Profile updated!");
+  } catch (err) { showToast(err.message); }
+});
+
+document.getElementById("passwordForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  try {
+    await Store.changePassword({
+      currentPassword: document.getElementById("profCurrentPw").value,
+      newPassword: document.getElementById("profNewPw").value,
+    });
+    closeModal("profileModal");
+    showToast("Password updated!");
+    e.target.reset();
+  } catch (err) { showToast(err.message); }
+});
+
+// === Edit Listing ===
+let editingListingId = null;
+async function openEditListing(id) {
+  try {
+    const l = await Store.getListing(id);
+    editingListingId = id;
+    document.getElementById("editListId").value = id;
+    document.getElementById("editListName").value = l.name || '';
+    document.getElementById("editListLatin").value = l.latin || '';
+    document.getElementById("editListCategory").value = l.category || 'thuja';
+    document.getElementById("editListPrice").value = l.price || '';
+    document.getElementById("editListUnit").value = l.unit || 'per plant';
+    document.getElementById("editListHeight").value = l.height || '';
+    document.getElementById("editListAge").value = l.age || '';
+    document.getElementById("editListStock").value = l.stock || 'available';
+    document.getElementById("editListDesc").value = l.description || '';
+    document.getElementById("editListImage").value = l.image || '';
+    openModal("editListingModal");
+  } catch (e) { showToast("Failed to load listing"); }
+}
+
+document.getElementById("editListingForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  try {
+    await Store.updateListing(editingListingId, {
+      name: document.getElementById("editListName").value,
+      latin: document.getElementById("editListLatin").value,
+      category: document.getElementById("editListCategory").value,
+      price: parseInt(document.getElementById("editListPrice").value),
+      unit: document.getElementById("editListUnit").value,
+      height: document.getElementById("editListHeight").value,
+      age: document.getElementById("editListAge").value,
+      stock: document.getElementById("editListStock").value,
+      description: document.getElementById("editListDesc").value,
+      image: document.getElementById("editListImage").value,
+    });
+    closeModal("editListingModal");
+    showToast("Listing updated!");
+    renderDashboard();
+    loadListings();
+  } catch (err) { showToast(err.message); }
+});
 
 // === Language Toggle ===
 function toggleLang() {

@@ -3,9 +3,13 @@ import db from '../database';
 
 const router = Router();
 
-// Manual seed endpoint — call once to populate sample data
-router.post('/seed', async (_req, res) => {
+// Manual seed endpoint — requires admin secret
+router.post('/seed', async (req, res) => {
   try {
+    const secret = req.headers['x-admin-secret'] || req.query.secret;
+    if (secret !== (process.env.ADMIN_SECRET || 'gb-admin-2026')) {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
     const existing = await db.get('SELECT COUNT(*) as cnt FROM listings WHERE seller_id IN (SELECT id FROM users WHERE email LIKE $1)', '%@bazaar.green');
     if (existing && parseInt(existing.cnt) > 0) return res.json({ message: 'Already seeded', count: existing.cnt });
 

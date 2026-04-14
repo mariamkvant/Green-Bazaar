@@ -34,7 +34,7 @@
                     <a href="#" class="nav-link" onclick="showPage('favorites')">❤️</a>
                     <a href="#" class="nav-link notif-bell" onclick="showPage('notifications')">🔔 <span class="badge-count" id="notifBadge" style="display:none;"></span></a>
                     <a href="#" class="nav-link seller-only" id="navAddListing" onclick="openModal('listingModal')" style="display:none;" data-i18n="addListing">➕ Add Listing</a>
-                    <span class="nav-user" id="navUserName" onclick="showPage('profile')" style="cursor:pointer;"></span>
+                    <span class="nav-user" id="navUserName" onclick="openProfileEdit()" style="cursor:pointer;" title="Edit Profile"></span>
                     <a href="#" class="btn btn-outline btn-sm" id="logoutBtn" data-i18n="logout">Log Out</a>
                 </div>
             </nav>
@@ -539,6 +539,81 @@
                     <label class="radio-label"><input type="radio" name="resolution" value="replacement"> Replacement plant</label>
                 </div>
                 <button type="submit" class="btn btn-primary btn-full">Submit Dispute</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Profile Edit Modal -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal">
+            <button class="modal-close" data-close="profileModal" aria-label="Close">&times;</button>
+            <h2>👤 Edit Profile</h2>
+            <form id="profileForm" class="contact-form">
+                <label for="profName">Name <span class="required">*</span></label>
+                <input type="text" id="profName" required>
+                <label for="profPhone">Phone</label>
+                <input type="tel" id="profPhone" placeholder="+995 5XX XXX XXX">
+                <label for="profCity">City / Region</label>
+                <select id="profCity">
+                    <option value="">Select location</option>
+                    <option value="Tbilisi">Tbilisi</option>
+                    <option value="Batumi, Adjara">Batumi, Adjara</option>
+                    <option value="Kutaisi">Kutaisi</option>
+                    <option value="Rustavi">Rustavi</option>
+                    <option value="Zugdidi">Zugdidi</option>
+                    <option value="Telavi, Kakheti">Telavi, Kakheti</option>
+                    <option value="Gori">Gori</option>
+                    <option value="Other">Other</option>
+                </select>
+                <label for="profBio">Bio</label>
+                <textarea id="profBio" rows="3" placeholder="Tell buyers/sellers about yourself..."></textarea>
+                <button type="submit" class="btn btn-primary btn-full">Save Profile</button>
+            </form>
+            <hr style="margin:18px 0;border-color:#EDE9E0;">
+            <h3 style="font-size:0.95rem;color:#2A4139;">Change Password</h3>
+            <form id="passwordForm" class="contact-form">
+                <label for="profCurrentPw">Current Password</label>
+                <input type="password" id="profCurrentPw" required>
+                <label for="profNewPw">New Password</label>
+                <input type="password" id="profNewPw" required minlength="8">
+                <button type="submit" class="btn btn-outline btn-full" style="border-color:#2A4139;color:#2A4139;">Update Password</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Listing Modal -->
+    <div class="modal-overlay" id="editListingModal">
+        <div class="modal modal-lg">
+            <button class="modal-close" data-close="editListingModal" aria-label="Close">&times;</button>
+            <h2>✏️ Edit Listing</h2>
+            <form id="editListingForm" class="contact-form">
+                <input type="hidden" id="editListId">
+                <label for="editListName">Plant Name <span class="required">*</span></label>
+                <input type="text" id="editListName" required>
+                <label for="editListLatin">Latin Name</label>
+                <input type="text" id="editListLatin">
+                <label for="editListCategory">Category <span class="required">*</span></label>
+                <select id="editListCategory" required>
+                    <option value="thuja">Thuja</option>
+                    <option value="hedge">Hedge Plants</option>
+                    <option value="ornamental">Ornamental</option>
+                    <option value="fruit">Fruit Trees</option>
+                </select>
+                <div class="form-row">
+                    <div><label for="editListPrice">Price (₾) <span class="required">*</span></label><input type="number" id="editListPrice" required min="1"></div>
+                    <div><label for="editListUnit">Unit</label><select id="editListUnit"><option value="per plant">Per plant</option><option value="per tree">Per tree</option><option value="pack of 5">Pack of 5</option><option value="pack of 10">Pack of 10</option></select></div>
+                </div>
+                <div class="form-row">
+                    <div><label for="editListHeight">Height</label><input type="text" id="editListHeight"></div>
+                    <div><label for="editListAge">Age</label><input type="text" id="editListAge"></div>
+                </div>
+                <label for="editListStock">Availability</label>
+                <select id="editListStock"><option value="available">Available</option><option value="limited">Limited</option><option value="preorder">Pre-order</option></select>
+                <label for="editListDesc">Description <span class="required">*</span></label>
+                <textarea id="editListDesc" rows="3" required></textarea>
+                <label for="editListImage">Image URL</label>
+                <input type="url" id="editListImage">
+                <button type="submit" class="btn btn-primary btn-full">Save Changes</button>
             </form>
         </div>
     </div>
