@@ -20,7 +20,11 @@
                 <a href="#" class="nav-link" onclick="showPage('home')" data-i18n="browse">Browse Plants</a>
                 <a href="#about" class="nav-link" data-i18n="about">About</a>
                 <!-- Language toggle -->
-                <button class="lang-toggle" id="langToggle" onclick="toggleLang()">🇬🇪 ქარ</button>
+                <select class="lang-toggle" id="langToggle" onchange="switchLang(this.value)">
+                    <option value="en">EN</option>
+                    <option value="ka">ქარ</option>
+                    <option value="fr">FR</option>
+                </select>
                 <!-- Logged out -->
                 <div id="navLoggedOut">
                     <a href="#" class="btn btn-outline" id="registerBuyerBtn" data-i18n="registerBuyer">Register as Buyer</a>
@@ -770,9 +774,25 @@
                 </select>
                 <label for="listDesc">Description <span class="required">*</span></label>
                 <textarea id="listDesc" rows="4" required placeholder="Describe the plant, growing conditions, what makes it special..."></textarea>
-                <label for="listImage">Main Image URL</label>
-                <input type="url" id="listImage" placeholder="https://... (paste a link to a photo)">
-                <p class="field-hint">Tip: Upload to <a href="https://imgbb.com" target="_blank" class="link">imgbb.com</a> and paste the direct link.</p>
+                <label>Plant Photos <span class="required">*</span></label>
+                <div class="photo-upload-zone" id="listingPhotoZone">
+                    <input type="file" id="listPhotos" accept="image/*" multiple style="display:none;">
+                    <div class="upload-placeholder" onclick="document.getElementById('listPhotos').click()">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        <span>Click to upload photos</span>
+                    </div>
+                </div>
+                <div class="photo-preview" id="listingPhotoPreview"></div>
+                <div class="photo-guidelines">
+                    <strong>Photo Guidelines</strong>
+                    <ul>
+                        <li>Use a clean white or light background</li>
+                        <li>Show the full plant including the pot</li>
+                        <li>Take photos in natural daylight</li>
+                        <li>Include a size reference if possible</li>
+                        <li>Up to 5 photos — first one becomes the main image</li>
+                    </ul>
+                </div>
                 <details class="form-section">
                     <summary>🌱 Plant Care Guide (optional — helps buyers)</summary>
                     <label for="listWatering">Watering</label>
@@ -844,9 +864,10 @@
         </div>
     </footer>
 
-    <script src="plants.js?v=3"></script>
-    <script src="i18n.js?v=3"></script>
-    <script src="store.js?v=3"></script>
-    <script src="app.js?v=3"></script>
+    <script src="plants.js?v=4"></script>
+    <script src="i18n.js?v=4"></script>
+    <script src="funfacts.js?v=4"></script>
+    <script src="store.js?v=4"></script>
+    <script src="app.js?v=4"></script>
 </body>
 </html>

@@ -523,3 +523,46 @@ img { max-width: 100%; display: block; }
 .chat-preview-wrap img { width: 80px; height: 80px; object-fit: cover; border-radius: 6px; }
 .chat-preview-wrap button { position: absolute; top: -4px; right: -4px; background: #7A3B2E; color: #fff; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 0.65rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .chat-msg-photo { max-width: 200px; border-radius: 6px; margin-top: 4px; cursor: pointer; }
+
+/* === Fun Facts === */
+.funfacts-section { margin-top: 28px; }
+.funfacts-section h2 { font-size: 1.1rem; margin-bottom: 12px; color: #2A4139; font-weight: 500; }
+.funfacts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.funfact-card { background: #fff; border: 1px solid #EDE9E0; border-radius: 6px; padding: 14px; position: relative; }
+.funfact-num { position: absolute; top: 10px; right: 12px; font-size: 1.4rem; font-weight: 700; color: #EDE9E0; }
+.funfact-card p { font-size: 0.8rem; color: #666; line-height: 1.6; }
+
+/* === Recommended Products === */
+.recs-products-section { margin-top: 24px; }
+.recs-products-section h2 { font-size: 1.1rem; margin-bottom: 12px; color: #2A4139; font-weight: 500; }
+.recs-products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.rec-product-card { background: #F5F0E8; border-radius: 6px; padding: 14px; }
+.rec-type { display: inline-block; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.5px; color: #B8704B; background: #FDF0E8; padding: 2px 6px; border-radius: 2px; margin-bottom: 6px; }
+.rec-product-card h4 { font-size: 0.85rem; color: #2A4139; margin-bottom: 2px; font-weight: 500; }
+.rec-product-card p { font-size: 0.75rem; color: #888; }
+
+/* === Photo Upload Zone === */
+.photo-upload-zone { margin: 6px 0; }
+.upload-placeholder {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px; padding: 24px; border: 2px dashed #DDD8D0; border-radius: 6px;
+    cursor: pointer; transition: border-color 0.2s; color: #bbb; font-size: 0.82rem;
+}
+.upload-placeholder:hover { border-color: #8B9E7C; }
+.photo-main { border: 2px solid #B8704B; }
+.photo-main-label { position: absolute; bottom: 2px; left: 2px; background: #B8704B; color: #fff; font-size: 0.55rem; padding: 1px 4px; border-radius: 2px; text-transform: uppercase; }
+.photo-guidelines { background: #F5F0E8; border-radius: 6px; padding: 12px 14px; margin-top: 8px; }
+.photo-guidelines strong { font-size: 0.78rem; color: #2A4139; display: block; margin-bottom: 4px; }
+.photo-guidelines ul { padding-left: 16px; margin: 0; }
+.photo-guidelines li { font-size: 0.72rem; color: #888; margin-bottom: 2px; }
+
+/* === Language Select === */
+.lang-toggle {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    color: #D9CCBA; padding: 3px 6px; border-radius: 3px; font-size: 0.7rem;
+    cursor: pointer; font-family: inherit;
+}
+
+@media (max-width: 768px) {
+    .funfacts-grid, .recs-products-grid { grid-template-columns: 1fr; }
+}

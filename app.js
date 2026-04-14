@@ -185,6 +185,24 @@ async function renderPlantDetail(plantId) {
         </div>
       </div>`;
 
+    // Fun facts
+    const facts = getFunFacts(p.category);
+    const factsHtml = facts.length ? `<div class="funfacts-section">
+      <h2>${t('funFacts')}</h2>
+      <div class="funfacts-grid">${facts.map((f, i) => `<div class="funfact-card"><span class="funfact-num">${i+1}</span><p>${f}</p></div>`).join("")}</div>
+    </div>` : '';
+
+    // Recommended products
+    const recs = getRecommendedProducts(p.category);
+    const recsHtml = recs.length ? `<div class="recs-products-section">
+      <h2>${t('recommendedProducts')}</h2>
+      <div class="recs-products-grid">${recs.map(r => `<div class="rec-product-card">
+        <span class="rec-type">${r.type}</span><h4>${r.name}</h4><p>${r.desc}</p>
+      </div>`).join("")}</div>
+    </div>` : '';
+
+    document.getElementById("plantDetail").innerHTML += factsHtml + recsHtml;
+
     const reviewsHtml = reviews.length ? reviews.map(r => `
       <div class="review-card">
         <div class="review-header">
@@ -648,6 +666,42 @@ async function deleteListingApi(id) {
   catch (e) { showToast(e.message); }
 }
 
+// === Listing Photo Upload ===
+let listingPhotos = [];
+document.getElementById("listPhotos").addEventListener("change", (e) => {
+  const files = Array.from(e.target.files).slice(0, 5);
+  listingPhotos = [];
+  const preview = document.getElementById("listingPhotoPreview");
+  let loaded = 0;
+  files.forEach((file, idx) => {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      listingPhotos[idx] = ev.target.result;
+      loaded++;
+      if (loaded === files.length) {
+        listingPhotos = listingPhotos.filter(Boolean);
+        preview.innerHTML = listingPhotos.map((src, i) => `
+          <div class="photo-thumb">
+            <img src="${src}" alt="Photo ${i+1}">
+            ${i === 0 ? '<span class="photo-main-badge">Main</span>' : ''}
+            <button type="button" class="photo-remove" onclick="removeListingPhoto(${i})">×</button>
+          </div>`).join("") + (listingPhotos.length < 5 ? `<div class="photo-add-more" onclick="document.getElementById('listPhotos').click()">+</div>` : '');
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+});
+function removeListingPhoto(idx) {
+  listingPhotos.splice(idx, 1);
+  const preview = document.getElementById("listingPhotoPreview");
+  preview.innerHTML = listingPhotos.map((src, i) => `
+    <div class="photo-thumb">
+      <img src="${src}" alt="Photo ${i+1}">
+      ${i === 0 ? '<span class="photo-main-badge">Main</span>' : ''}
+      <button type="button" class="photo-remove" onclick="removeListingPhoto(${i})">×</button>
+    </div>`).join("") + (listingPhotos.length < 5 ? `<div class="photo-add-more" onclick="document.getElementById('listPhotos').click()">+</div>` : '');
+}
+
 // === Create Listing ===
 document.getElementById("listingForm").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -662,14 +716,16 @@ document.getElementById("listingForm").addEventListener("submit", async (e) => {
       age: document.getElementById("listAge").value,
       stock: document.getElementById("listStock").value,
       description: document.getElementById("listDesc").value,
-      image: document.getElementById("listImage").value,
+      image: listingPhotos.length ? listingPhotos[0] : '',
+      images: listingPhotos.length ? listingPhotos : undefined,
       watering: document.getElementById("listWatering").value,
       sunlight: document.getElementById("listSunlight").value,
       soil: document.getElementById("listSoil").value,
       frost_tolerance: document.getElementById("listFrost").value,
       best_planting: document.getElementById("listBestPlanting").value,
     });
-    closeModal("listingModal"); e.target.reset();
+    closeModal("listingModal"); e.target.reset(); listingPhotos = [];
+    document.getElementById("listingPhotoPreview").innerHTML = "";
     showToast(`"${listing.name}" is now live!`);
     loadListings();
   } catch (err) { showToast(err.message); }
@@ -813,12 +869,15 @@ document.getElementById("editListingForm").addEventListener("submit", async (e) 
 });
 
 // === Language Toggle ===
-function toggleLang() {
-  const newLang = getLang() === 'en' ? 'ka' : 'en';
-  setLang(newLang);
-  document.getElementById("langToggle").textContent = newLang === 'en' ? '🇬🇪 ქარ' : '🇬🇧 Eng';
+function switchLang(lang) {
+  setLang(lang);
   document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
+  // Update placeholders
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) searchInput.placeholder = t('searchPlaceholder');
 }
+
+function toggleLang() { switchLang(getLang() === 'en' ? 'ka' : getLang() === 'ka' ? 'fr' : 'en'); }
 
 // === Favorites ===
 async function toggleFav(listingId) {
@@ -940,8 +999,9 @@ loadFavIds();
 loadListings();
 loadRecommendations();
 // Apply saved language
-if (getLang() === 'ka') {
-  document.getElementById("langToggle").textContent = '🇬🇧 Eng';
+const savedLang = getLang();
+document.getElementById("langToggle").value = savedLang;
+if (savedLang !== 'en') {
   document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
 }
 
