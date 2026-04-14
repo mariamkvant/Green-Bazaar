@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>მწვანე ბაზარი — Plant Marketplace Georgia</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -58,6 +58,9 @@
                     <button class="tag" data-filter="hedge">Hedge Plants</button>
                     <button class="tag" data-filter="ornamental">Ornamental</button>
                     <button class="tag" data-filter="fruit">Fruit Trees</button>
+                    <button class="tag" data-filter="seeds">Seeds</button>
+                    <button class="tag" data-filter="fertilizer">Fertilizers</button>
+                    <button class="tag" data-filter="materials">Materials</button>
                 </div>
             </div>
         </section>
@@ -130,25 +133,77 @@
                 <h2 class="section-title">Why მწვანე ბაზარი?</h2>
                 <div class="features">
                     <div class="feature">
-                        <span class="feature-icon">🔒</span>
+                        <div class="feature-icon-circle">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2A4139" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                        </div>
                         <h3>Escrow Protection</h3>
                         <p>Your money is safe. Payments are held until you confirm the plant arrived healthy.</p>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🌱</span>
+                        <div class="feature-icon-circle">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2A4139" stroke-width="2"><path d="M12 22c4-4 8-7.5 8-12a8 8 0 10-16 0c0 4.5 4 8 8 12z"/><circle cx="12" cy="10" r="3"/></svg>
+                        </div>
                         <h3>Local Growers</h3>
                         <p>All plants grown locally in Georgia, adapted to our climate and soil.</p>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">⭐</span>
+                        <div class="feature-icon-circle">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2A4139" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        </div>
                         <h3>Verified Reviews</h3>
                         <p>Real ratings from real buyers. "Plant Arrived Healthy" badge you can trust.</p>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🛡️</span>
+                        <div class="feature-icon-circle">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2A4139" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
                         <h3>Dispute Resolution</h3>
                         <p>Issues? Our mediation team resolves disputes fairly within 48 hours.</p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Our Story / Testimonial -->
+        <section class="story-section">
+            <div class="container">
+                <div class="story-grid">
+                    <div class="story-content">
+                        <h2 class="section-title" style="text-align:left;">Our Story</h2>
+                        <p class="story-text">It all started when my father began growing Thuja plants in our garden in Georgia. What started as a hobby quickly turned into something bigger — neighbors wanted them, friends asked where to buy, and we realized there was no easy way for growers and buyers to connect.</p>
+                        <p class="story-text">That's how მწვანე ბაზარი was born. I wanted to create a space where anyone growing plants in Georgia could reach buyers directly — no middlemen, fair prices, and trust built into every transaction.</p>
+                        <p class="story-text">Today, we're building Georgia's first dedicated plant marketplace. Whether you're a small grower with Thuja saplings or a large nursery with hundreds of varieties, this is your platform.</p>
+                        <div class="story-author">
+                            <div class="author-avatar">M</div>
+                            <div>
+                                <strong>Mariam</strong>
+                                <span>Founder, მწვანე ბაზარი</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="story-image">
+                        <img src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=500&h=600&fit=crop" alt="Garden plants" style="border-radius:8px;width:100%;height:100%;object-fit:cover;">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section" id="faq">
+            <div class="container">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-subtitle">Everything you need to know about buying and selling plants</p>
+                <div class="faq-list">
+                    <details class="faq-item"><summary>How does the escrow payment work?</summary><p>When you buy a plant, your payment is held securely by our platform — not sent directly to the seller. The seller only receives the money after you confirm the plant arrived in good condition. You have a 3-day inspection window after delivery.</p></details>
+                    <details class="faq-item"><summary>What if my plant arrives damaged?</summary><p>You can open a dispute within the 3-day inspection window. Upload photos of the damage, and our mediation team will review the case within 48 hours. You can request a full refund, partial refund, or replacement.</p></details>
+                    <details class="faq-item"><summary>How do I become a seller?</summary><p>Click "Sell Your Plants" and register as a seller. You'll need to provide your name, location, phone number, and describe what plants you grow. Once registered, you can immediately start creating listings.</p></details>
+                    <details class="faq-item"><summary>What fees does the platform charge?</summary><p>Buyers pay a 7% service fee on each purchase. This covers escrow protection, dispute resolution, and platform maintenance. Sellers receive the full listed price — no seller fees.</p></details>
+                    <details class="faq-item"><summary>Can I sell seeds, fertilizers, or gardening tools?</summary><p>Yes! მწვანე ბაზარი supports multiple categories: Plants, Seeds, Fertilizers, and Materials. You can list any gardening-related product.</p></details>
+                    <details class="faq-item"><summary>How does delivery work?</summary><p>You can choose between local pickup (free) or courier delivery (₾10). For local pickup, you and the seller coordinate a meeting point via in-app messaging. For courier delivery, the seller ships to your address.</p></details>
+                    <details class="faq-item"><summary>How do I know if a seller is trustworthy?</summary><p>Look for the "Verified Grower" badge — sellers earn this after 5+ successful orders with a 4.0+ star rating. You can also check their profile for reviews, ratings, and how long they've been on the platform.</p></details>
+                    <details class="faq-item"><summary>What is the "Plant Arrived Healthy" badge?</summary><p>When buyers confirm their plant arrived in good condition, it counts toward the seller's "Plant Arrived Healthy" percentage. This is displayed on listings so future buyers can see the seller's track record.</p></details>
+                    <details class="faq-item"><summary>Can I negotiate the price?</summary><p>Yes! Use the "Request This Plant" button to send a custom inquiry with your desired quantity and message. The seller can then respond with a custom quote or accept your request.</p></details>
+                    <details class="faq-item"><summary>Is the platform available in Georgian?</summary><p>Yes! Click the language toggle (🇬🇪 ქარ) in the navigation bar to switch between English and Georgian.</p></details>
                 </div>
             </div>
         </section>
@@ -632,10 +687,27 @@
                 <label for="listCategory">Category <span class="required">*</span></label>
                 <select id="listCategory" required>
                     <option value="">Select category</option>
-                    <option value="thuja">Thuja</option>
-                    <option value="hedge">Hedge Plants</option>
-                    <option value="ornamental">Ornamental</option>
-                    <option value="fruit">Fruit Trees</option>
+                    <optgroup label="Plants">
+                        <option value="thuja">Thuja</option>
+                        <option value="hedge">Hedge Plants</option>
+                        <option value="ornamental">Ornamental</option>
+                        <option value="fruit">Fruit Trees</option>
+                        <option value="indoor">Indoor Plants</option>
+                        <option value="succulent">Succulents</option>
+                    </optgroup>
+                    <optgroup label="Seeds">
+                        <option value="seeds">Seeds</option>
+                        <option value="bulbs">Bulbs</option>
+                    </optgroup>
+                    <optgroup label="Fertilizers">
+                        <option value="fertilizer">Fertilizer</option>
+                        <option value="soil">Soil & Compost</option>
+                    </optgroup>
+                    <optgroup label="Materials">
+                        <option value="pots">Pots & Planters</option>
+                        <option value="tools">Tools</option>
+                        <option value="materials">Other Materials</option>
+                    </optgroup>
                 </select>
                 <div class="form-row">
                     <div>
@@ -744,9 +816,9 @@
         </div>
     </footer>
 
-    <script src="plants.js"></script>
-    <script src="i18n.js"></script>
-    <script src="store.js"></script>
-    <script src="app.js"></script>
+    <script src="plants.js?v=3"></script>
+    <script src="i18n.js?v=3"></script>
+    <script src="store.js?v=3"></script>
+    <script src="app.js?v=3"></script>
 </body>
 </html>
