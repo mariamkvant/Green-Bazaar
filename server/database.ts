@@ -150,6 +150,8 @@ export async function initDatabase() {
     // Add verified badge fields to users
     try { await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS verified_seller BOOLEAN DEFAULT false'); } catch(e) {}
     try { await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS completed_orders INTEGER DEFAULT 0'); } catch(e) {}
+    try { await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS verify_code TEXT'); } catch(e) {}
+    try { await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS verify_expires TIMESTAMPTZ'); } catch(e) {}
 
     await client.query('CREATE INDEX IF NOT EXISTS idx_favorites_user ON favorites(user_id)');
     await client.query('CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id)');

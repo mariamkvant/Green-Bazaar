@@ -45,9 +45,15 @@ const Store = {
   async getProfile() { return api('GET', '/api/users/me'); },
   async updateProfile(data) {
     const user = await api('PUT', '/api/users/me', data);
-    localStorage.setItem('gb_session', JSON.stringify(user));
+    const session = this.getSession();
+    if (session) { Object.assign(session, user); localStorage.setItem('gb_session', JSON.stringify(session)); }
     return user;
   },
+  async changePassword(data) { return api('PUT', '/api/users/me/password', data); },
+  async verifyEmail(code) { return api('POST', '/api/users/verify-email', { code }); },
+  async resendVerify() { return api('POST', '/api/users/resend-verify'); },
+  async forgotPassword(email) { return api('POST', '/api/users/forgot-password', { email }); },
+  async resetPassword(data) { return api('POST', '/api/users/reset-password', data); },
 
   // --- Listings ---
   async getListings() { return api('GET', '/api/listings'); },

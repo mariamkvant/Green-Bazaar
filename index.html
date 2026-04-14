@@ -34,7 +34,7 @@
                     <a href="#" class="nav-link" onclick="showPage('favorites')">❤️</a>
                     <a href="#" class="nav-link notif-bell" onclick="showPage('notifications')">🔔 <span class="badge-count" id="notifBadge" style="display:none;"></span></a>
                     <a href="#" class="nav-link seller-only" id="navAddListing" onclick="openModal('listingModal')" style="display:none;" data-i18n="addListing">➕ Add Listing</a>
-                    <span class="nav-user" id="navUserName"></span>
+                    <span class="nav-user" id="navUserName" onclick="showPage('profile')" style="cursor:pointer;"></span>
                     <a href="#" class="btn btn-outline btn-sm" id="logoutBtn" data-i18n="logout">Log Out</a>
                 </div>
             </nav>
@@ -269,6 +269,57 @@
             </div>
             <div id="notifList"></div>
             <p class="dash-empty" id="notifEmpty" style="display:none;">No notifications yet.</p>
+        </div>
+    </div>
+
+    <!-- ===== MY PROFILE PAGE ===== -->
+    <div id="page-profile" style="display:none;" class="page-section">
+        <div class="container">
+            <h2 class="section-title">My Profile</h2>
+            <div class="profile-card" id="profileCard"></div>
+            <div class="profile-sections">
+                <div class="profile-section">
+                    <h3>Edit Profile</h3>
+                    <form id="profileForm" class="contact-form">
+                        <label for="profName">Name</label>
+                        <input type="text" id="profName">
+                        <label for="profPhone">Phone</label>
+                        <input type="tel" id="profPhone">
+                        <label for="profCity">City</label>
+                        <select id="profCity">
+                            <option value="Tbilisi">Tbilisi</option>
+                            <option value="Batumi, Adjara">Batumi</option>
+                            <option value="Kutaisi">Kutaisi</option>
+                            <option value="Rustavi">Rustavi</option>
+                            <option value="Telavi, Kakheti">Telavi</option>
+                            <option value="Zugdidi">Zugdidi</option>
+                            <option value="Gori">Gori</option>
+                        </select>
+                        <label for="profBio">Bio</label>
+                        <textarea id="profBio" rows="3" placeholder="Tell buyers about yourself..."></textarea>
+                        <button type="submit" class="btn btn-primary btn-full">Save Changes</button>
+                    </form>
+                </div>
+                <div class="profile-section">
+                    <h3>Change Password</h3>
+                    <form id="passwordForm" class="contact-form">
+                        <label for="curPassword">Current Password</label>
+                        <input type="password" id="curPassword" required>
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" required minlength="8">
+                        <button type="submit" class="btn btn-primary btn-full">Update Password</button>
+                    </form>
+                </div>
+                <div class="profile-section" id="verifySection" style="display:none;">
+                    <h3>📧 Verify Email</h3>
+                    <p class="modal-desc">Enter the 6-digit code sent to your email.</p>
+                    <form id="profileVerifyForm" class="contact-form">
+                        <input type="text" id="profVerifyCode" maxlength="6" pattern="[0-9]{6}" placeholder="000000" class="code-input">
+                        <button type="submit" class="btn btn-primary btn-full">Verify</button>
+                    </form>
+                    <p class="resend-text"><a href="#" class="link" id="profResendCode">Resend code</a></p>
+                </div>
+            </div>
         </div>
     </div>
 
