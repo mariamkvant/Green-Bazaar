@@ -169,9 +169,9 @@ async function renderPlantDetail(plantId) {
             <span class="card-price-unit"> / ${p.unit}</span>
           </div>
           <div class="detail-actions">
-            <button class="btn btn-primary btn-lg" onclick="handleBuyNow(${p.id})">🛒 Buy Now — Escrow Protected</button>
-            <button class="btn btn-outline btn-lg" onclick="openRequestModal(${p.id}, ${p.seller_id}, '${(p.seller_name||'').replace(/'/g,"\\'")}', '${(p.name||'').replace(/'/g,"\\'")}', ${p.price})">📩 Request This Plant</button>
-            <button class="btn btn-outline" onclick="handleMessageSeller(${p.id}, ${p.seller_id}, '${(p.seller_name||'').replace(/'/g,"\\'")}', '${(p.name||'').replace(/'/g,"\\'")}')">💬 Message Seller</button>
+            <button class="btn btn-primary btn-lg" onclick="handleBuyNow(${p.id})">Buy Now</button>
+            <button class="btn btn-outline btn-lg" onclick="openOfferModal(${p.id}, ${p.seller_id}, '${(p.seller_name||'').replace(/'/g,"\\'")}', '${(p.name||'').replace(/'/g,"\\'")}', ${p.price})">Make an Offer</button>
+            <button class="btn btn-outline" onclick="handleMessageSeller(${p.id}, ${p.seller_id}, '${(p.seller_name||'').replace(/'/g,"\\'")}', '${(p.name||'').replace(/'/g,"\\'")}')">Message</button>
           </div>
           <div class="escrow-badge"><span>🔒</span> Payment held in escrow until you confirm delivery. 3-day inspection window.</div>
           ${(p.watering || p.sunlight || p.soil || p.frost_tolerance || p.best_planting) ? `
@@ -651,54 +651,71 @@ document.getElementById("disputeForm").addEventListener("submit", async (e) => {
   } catch (err) { showToast(err.message); }
 });
 
-// === Plant Request ===
-let reqPlantId = null, reqSellerId = null, reqSellerName = '', reqPlantName = '', reqPrice = 0;
+// === Make an Offer (Vinted-style) ===
+let offerPlantId = null, offerSellerId = null, offerSellerName = '', offerPlantName = '', offerListPrice = 0;
 
-function openRequestModal(plantId, sellerId, sellerName, plantName, price) {
-  if (!Store.isLoggedIn()) { showToast("Please log in to send a request"); openModal("loginModal"); return; }
-  reqPlantId = plantId; reqSellerId = sellerId; reqSellerName = sellerName; reqPlantName = plantName; reqPrice = price;
+function openOfferModal(plantId, sellerId, sellerName, plantName, price) {
+  if (!Store.isLoggedIn()) { showToast("Please log in to make an offer"); openModal("loginModal"); return; }
+  offerPlantId = plantId; offerSellerId = sellerId; offerSellerName = sellerName; offerPlantName = plantName; offerListPrice = price;
   document.getElementById("requestPlantInfo").innerHTML = `
-    <div class="info-box"><strong>${plantName}</strong> · ₾${price} · by ${sellerName}</div>`;
+    <div class="info-box"><strong>${esc(plantName)}</strong> · Listed at ₾${price} · by ${esc(sellerName)}</div>`;
+  document.getElementById("offerPrice").value = price;
   document.getElementById("reqQuantity").value = 1;
-  updateRequestEstimate();
+  updateOfferHint();
+  updateOfferEstimate();
   openModal("requestModal");
 }
 
-function updateRequestEstimate() {
+function updateOfferHint() {
+  const offer = parseInt(document.getElementById("offerPrice").value) || 0;
+  const hint = document.getElementById("offerHint");
+  if (offer >= offerListPrice) hint.innerHTML = '<span style="color:#2A4139;">Full price or above — likely to be accepted</span>';
+  else if (offer >= offerListPrice * 0.8) hint.innerHTML = '<span style="color:#8B9E7C;">Good offer — sellers usually accept 80%+ of list price</span>';
+  else if (offer >= offerListPrice * 0.5) hint.innerHTML = '<span style="color:#B8704B;">Low offer — seller may counter</span>';
+  else hint.innerHTML = '<span style="color:#7A3B2E;">Very low — seller will likely decline</span>';
+}
+
+function updateOfferEstimate() {
+  const offer = parseInt(document.getElementById("offerPrice").value) || 0;
   const qty = parseInt(document.getElementById("reqQuantity").value) || 1;
-  const subtotal = reqPrice * qty;
+  const delivery = document.getElementById("reqDelivery").value;
+  const deliveryCost = delivery === 'courier' ? 10 : 0;
+  const subtotal = offer * qty;
   const fee = Math.round(subtotal * 0.07);
   document.getElementById("requestEstimate").innerHTML = `
-    <div class="info-box" style="margin-top:12px;">
-      <div class="total-row"><span>Estimated: ${qty} × ₾${reqPrice}</span><span>₾${subtotal}</span></div>
+    <div class="info-box" style="margin-top:10px;">
+      <div class="total-row"><span>${qty} × ₾${offer}</span><span>₾${subtotal}</span></div>
+      <div class="total-row"><span>Delivery</span><span>${deliveryCost ? '₾'+deliveryCost : 'Free'}</span></div>
       <div class="total-row"><span>Service fee (7%)</span><span>₾${fee}</span></div>
-      <div class="total-row total-final"><span>Estimated total</span><span>₾${subtotal + fee}</span></div>
-      <p style="font-size:0.75rem;color:#999;margin-top:6px;">Final price confirmed by seller after review.</p>
+      <div class="total-row total-final"><span>Total if accepted</span><span>₾${subtotal + deliveryCost + fee}</span></div>
     </div>`;
 }
 
-document.getElementById("reqQuantity").addEventListener("input", updateRequestEstimate);
+document.getElementById("offerPrice")?.addEventListener("input", () => { updateOfferHint(); updateOfferEstimate(); });
+document.getElementById("reqQuantity")?.addEventListener("input", updateOfferEstimate);
+document.getElementById("reqDelivery")?.addEventListener("change", updateOfferEstimate);
 
 document.getElementById("requestForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   if (!Store.isLoggedIn()) return;
+  const offer = document.getElementById("offerPrice").value;
   const qty = document.getElementById("reqQuantity").value;
   const delivery = document.getElementById("reqDelivery").value;
-  const date = document.getElementById("reqDate").value;
   const message = document.getElementById("reqMessage").value;
 
-  const body = `📩 Plant Request\n` +
-    `Plant: ${reqPlantName}\n` +
+  const body = `💰 New Offer\n` +
+    `Plant: ${offerPlantName}\n` +
+    `Offer: ₾${offer} per unit (listed at ₾${offerListPrice})\n` +
     `Quantity: ${qty}\n` +
     `Delivery: ${delivery}\n` +
-    `${date ? 'Preferred date: ' + date + '\n' : ''}` +
-    `Message: ${message}`;
+    `${message ? 'Note: ' + message : ''}\n\n` +
+    `Reply to accept, decline, or counter this offer.`;
 
   try {
-    await Store.sendMessage({ receiver_id: reqSellerId, listing_id: reqPlantId, body });
+    await Store.sendMessage({ receiver_id: offerSellerId, listing_id: offerPlantId, body });
     closeModal("requestModal");
     e.target.reset();
-    showToast("Request sent! The seller will review and respond.");
+    showToast("Offer sent! The seller will respond.");
     showPage("messages");
   } catch (err) { showToast(err.message); }
 });
