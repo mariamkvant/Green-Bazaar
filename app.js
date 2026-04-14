@@ -20,6 +20,7 @@ function showPage(page, data) {
   if (page === "admin") renderAdminPage();
   if (page === "profile") renderMyProfile();
   if (page === "people") {} // static page, search is interactive
+  if (page === "news") renderNewsPage();
 }
 
 // === Modal Helpers ===
@@ -42,6 +43,7 @@ async function updateAuthUI() {
   document.getElementById("navLoggedIn").style.display = session ? "flex" : "none";
   if (session) {
     document.getElementById("navUserName").textContent = session.name;
+    document.getElementById("navUserInitial").textContent = (session.name||'?')[0].toUpperCase();
     document.getElementById("navAddListing").style.display = "inline"; // All users can sell
     try {
       const [unreadMsg, unreadNotif] = await Promise.all([Store.getUnreadCount(), Store.getNotifCount()]);
@@ -752,7 +754,6 @@ document.getElementById("listingForm").addEventListener("submit", async (e) => {
 });
 
 // === Registration & Auth ===
-document.getElementById("sellBtn").addEventListener("click", (e) => { e.preventDefault(); openModal("sellModal"); });
 document.getElementById("registerBuyerBtn").addEventListener("click", (e) => { e.preventDefault(); openModal("buyerModal"); });
 document.getElementById("loginBtn").addEventListener("click", (e) => { e.preventDefault(); openModal("loginModal"); });
 document.getElementById("switchToRegister").addEventListener("click", (e) => { e.preventDefault(); closeModal("loginModal"); openModal("buyerModal"); });
@@ -1233,6 +1234,35 @@ async function adminVerify(userId) {
 async function adminResolve(disputeId, resolution) {
   try { await Store.resolveDispute(disputeId, resolution); showToast("Dispute resolved"); loadAdminTab('disputes'); } catch (e) { showToast(e.message); }
 }
+
+// === News Page ===
+async function renderNewsPage() {
+  const articles = [
+    { title: "Best Plants to Grow in Georgian Climate 2026", desc: "A comprehensive guide to plants that thrive in Georgia's diverse climate zones, from the Black Sea coast to the Caucasus mountains.", date: "April 2026", tag: "Guide", img: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=250&fit=crop" },
+    { title: "Thuja Care: Common Mistakes to Avoid", desc: "Overwatering, wrong soil pH, and planting too deep are the top 3 reasons Thuja plants fail. Here's how to avoid them.", date: "April 2026", tag: "Care Tips", img: "https://images.unsplash.com/photo-1509423350716-97f9360b4e09?w=400&h=250&fit=crop" },
+    { title: "How to Start a Plant Nursery Business in Georgia", desc: "From permits to pricing, everything you need to know about turning your garden into a profitable nursery business.", date: "March 2026", tag: "Business", img: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=400&h=250&fit=crop" },
+    { title: "Spring Planting Calendar for Georgian Gardeners", desc: "Month-by-month guide: what to plant, when to prune, and how to prepare your garden for the growing season.", date: "March 2026", tag: "Seasonal", img: "https://images.unsplash.com/photo-1463936575829-25148e1db1b8?w=400&h=250&fit=crop" },
+    { title: "Organic Pest Control for Fruit Trees", desc: "Natural methods to protect your pomegranate, fig, and grape vines from common Georgian pests without chemicals.", date: "February 2026", tag: "Care Tips", img: "https://images.unsplash.com/photo-1567331711402-509c12c41959?w=400&h=250&fit=crop" },
+    { title: "The Rise of Urban Gardening in Tbilisi", desc: "How apartment dwellers in Tbilisi are transforming balconies and rooftops into thriving green spaces.", date: "February 2026", tag: "Trends", img: "https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=400&h=250&fit=crop" },
+  ];
+  document.getElementById("newsGrid").innerHTML = articles.map(a => `
+    <article class="news-card">
+      <img src="${a.img}" alt="${esc(a.title)}" class="news-img" onerror="this.style.background='#EDE9E0';">
+      <div class="news-body">
+        <span class="news-tag">${a.tag}</span>
+        <h3>${esc(a.title)}</h3>
+        <p>${esc(a.desc)}</p>
+        <span class="news-date">${a.date}</span>
+      </div>
+    </article>`).join("");
+}
+
+// Close dropdown when clicking outside
+document.addEventListener("click", (e) => {
+  const dd = document.getElementById("userDropdown");
+  const btn = document.getElementById("userMenuBtn");
+  if (dd && !dd.contains(e.target) && !btn?.contains(e.target)) dd.classList.remove("open");
+});
 
 // === Init ===
 updateAuthUI();

@@ -17,9 +17,9 @@
                 <span class="logo-sub">Plant Marketplace</span>
             </a>
             <nav class="nav" id="mainNav">
-                <a href="#" class="nav-link" onclick="showPage('home')" data-i18n="browse">Browse Plants</a>
+                <a href="#" class="nav-link" onclick="showPage('home')" data-i18n="browse">Browse</a>
+                <a href="#" class="nav-link" onclick="showPage('news')">News</a>
                 <a href="#about" class="nav-link" data-i18n="about">About</a>
-                <!-- Language toggle -->
                 <select class="lang-toggle" id="langToggle" onchange="switchLang(this.value)">
                     <option value="en">EN</option>
                     <option value="ka">ქარ</option>
@@ -27,21 +27,30 @@
                 </select>
                 <!-- Logged out -->
                 <div id="navLoggedOut">
-                    <a href="#" class="btn btn-outline" id="registerBuyerBtn" data-i18n="registerBuyer">Register as Buyer</a>
-                    <a href="#" class="btn btn-outline" id="loginBtn" data-i18n="login">Log In</a>
-                    <a href="#" class="btn btn-primary" id="sellBtn" data-i18n="sellPlants">Sell Your Plants</a>
+                    <a href="#" class="btn btn-outline" id="loginBtn">Log In</a>
+                    <a href="#" class="btn btn-primary" id="registerBuyerBtn">Join</a>
                 </div>
-                <!-- Logged in -->
+                <!-- Logged in — dropdown menu -->
                 <div id="navLoggedIn" style="display:none;">
-                    <a href="#" class="nav-link" onclick="showPage('dashboard')" data-i18n="dashboard">Dashboard</a>
-                    <a href="#" class="nav-link" onclick="showPage('messages')">Messages <span class="badge-count" id="msgBadge" style="display:none;"></span></a>
-                    <a href="#" class="nav-link" onclick="showPage('favorites')">Favorites</a>
-                    <a href="#" class="nav-link" onclick="showPage('people')">People</a>
-                    <a href="#" class="nav-link" onclick="showPage('notifications')">Notifications <span class="badge-count" id="notifBadge" style="display:none;"></span></a>
-                    <a href="#" class="nav-link seller-only" id="navAddListing" onclick="openModal('listingModal')" style="display:none;" data-i18n="addListing">+ Add Listing</a>
-                    <a href="#" class="nav-link" id="navAdmin" onclick="showPage('admin')" style="display:none;">Admin</a>
-                    <span class="nav-user" id="navUserName" onclick="showPage('profile')" style="cursor:pointer;" title="My Profile"></span>
-                    <a href="#" class="btn btn-outline btn-sm" id="logoutBtn" data-i18n="logout">Log Out</a>
+                    <a href="#" class="btn btn-primary btn-sm" id="navAddListing" onclick="openModal('listingModal')" style="display:none;">+ Sell</a>
+                    <div class="user-menu-wrap">
+                        <button class="user-menu-btn" id="userMenuBtn" onclick="document.getElementById('userDropdown').classList.toggle('open')">
+                            <span class="user-avatar-nav" id="navUserInitial"></span>
+                            <span id="navUserName" class="user-menu-name"></span>
+                            <span class="user-menu-badges"><span class="badge-count" id="msgBadge" style="display:none;"></span><span class="badge-count" id="notifBadge" style="display:none;"></span></span>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a onclick="showPage('profile');document.getElementById('userDropdown').classList.remove('open')">My Profile</a>
+                            <a onclick="showPage('dashboard');document.getElementById('userDropdown').classList.remove('open')">Dashboard</a>
+                            <a onclick="showPage('messages');document.getElementById('userDropdown').classList.remove('open')">Messages</a>
+                            <a onclick="showPage('favorites');document.getElementById('userDropdown').classList.remove('open')">Favorites</a>
+                            <a onclick="showPage('notifications');document.getElementById('userDropdown').classList.remove('open')">Notifications</a>
+                            <a onclick="showPage('people');document.getElementById('userDropdown').classList.remove('open')">Find People</a>
+                            <a id="navAdmin" onclick="showPage('admin');document.getElementById('userDropdown').classList.remove('open')" style="display:none;">Admin</a>
+                            <div class="dd-divider"></div>
+                            <a id="logoutBtn" class="dd-logout">Log Out</a>
+                        </div>
+                    </div>
                 </div>
             </nav>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">☰</button>
@@ -222,6 +231,28 @@
             </div>
         </section>
 
+        <!-- User Testimonials -->
+        <section class="testimonials-section">
+            <div class="container">
+                <h2 class="section-title">What Our Community Says</h2>
+                <p class="section-subtitle">Real stories from Georgian growers and gardeners</p>
+                <div class="testimonials-grid" id="testimonialsGrid">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"I've been growing Thuja for 5 years and never had an easy way to reach buyers. მწვანე ბაზარი changed everything — I sold 200 saplings in my first month."</p>
+                        <div class="testimonial-author"><div class="seller-avatar-sm">G</div><div><strong>Giorgi</strong><span>Seller · Tbilisi</span></div></div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"The escrow system gave me confidence to buy from a seller I'd never met. The plant arrived healthy and exactly as described. Will definitely buy again."</p>
+                        <div class="testimonial-author"><div class="seller-avatar-sm">N</div><div><strong>Nino</strong><span>Buyer · Batumi</span></div></div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"Finally a platform that understands Georgian gardeners. The care guides and seasonal recommendations helped me choose the right plants for my climate zone."</p>
+                        <div class="testimonial-author"><div class="seller-avatar-sm">D</div><div><strong>Dato</strong><span>Buyer · Kutaisi</span></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- FAQ Section -->
         <section class="faq-section" id="faq">
             <div class="container">
@@ -279,6 +310,15 @@
                     <p class="msg-empty">Select a conversation to start chatting</p>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- ===== NEWS PAGE ===== -->
+    <div id="page-news" style="display:none;" class="page-section">
+        <div class="container">
+            <h2 class="section-title">Plant News & Articles</h2>
+            <p class="section-subtitle">Latest from the world of plants and gardening</p>
+            <div id="newsGrid" class="news-grid"></div>
         </div>
     </div>
 
