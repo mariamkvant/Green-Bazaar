@@ -361,11 +361,11 @@ async function renderDashboard() {
 async function renderDashTab(tab, orders, disputes, session) {
   const content = document.getElementById("dashContent");
   if (tab === "orders") {
-    const buyOrders = orders.filter(o => o.buyer_id === session.id);
+    const buyOrders = orders.filter(o => String(o.buyer_id) === String(session.id));
     if (!buyOrders.length) { content.innerHTML = '<p class="dash-empty">No orders yet. <a href="#" onclick="showPage(\'home\')">Browse plants</a></p>'; return; }
     content.innerHTML = buyOrders.map(o => renderOrderCard(o, "buyer")).join("");
   } else if (tab === "sales") {
-    const sales = orders.filter(o => o.seller_id === session.id);
+    const sales = orders.filter(o => String(o.seller_id) === String(session.id));
     if (!sales.length) { content.innerHTML = '<p class="dash-empty">No sales yet.</p>'; return; }
     content.innerHTML = sales.map(o => renderOrderCard(o, "seller")).join("");
   } else if (tab === "listings") {
