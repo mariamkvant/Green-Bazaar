@@ -155,6 +155,7 @@ export async function initDatabase() {
     try { await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS verified_seller BOOLEAN DEFAULT false'); } catch(e) {}
     try { await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS completed_orders INTEGER DEFAULT 0'); } catch(e) {}
     try { await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false'); } catch(e) {}
+    try { await client.query('ALTER TABLE reviews ADD COLUMN IF NOT EXISTS photos TEXT'); } catch(e) {}
     try { await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS verify_code TEXT'); } catch(e) {}
     // Make all accounts universal
     try { await client.query("UPDATE users SET type = 'user' WHERE type IN ('buyer', 'seller')"); } catch(e) {}
