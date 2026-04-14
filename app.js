@@ -911,9 +911,15 @@ document.getElementById("editListingForm").addEventListener("submit", async (e) 
 function switchLang(lang) {
   setLang(lang);
   document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
-  // Update placeholders
   const searchInput = document.getElementById("searchInput");
   if (searchInput) searchInput.placeholder = t('searchPlaceholder');
+  // Update sort/filter options
+  const sortSel = document.getElementById("sortSelect");
+  if (sortSel) { sortSel.options[0].text = t('sortNewest'); sortSel.options[1].text = t('sortPriceLow'); sortSel.options[2].text = t('sortPriceHigh'); sortSel.options[3].text = t('sortRating'); }
+  const citySel = document.getElementById("filterCity");
+  if (citySel) citySel.options[0].text = t('filterCity');
+  const priceSel = document.getElementById("filterPrice");
+  if (priceSel) priceSel.options[0].text = t('filterPriceRange');
 }
 
 function toggleLang() { switchLang(getLang() === 'en' ? 'ka' : getLang() === 'ka' ? 'fr' : 'en'); }

@@ -50,28 +50,28 @@
     <div id="page-home">
         <section class="hero">
             <div class="container">
-                <h1>Find the Perfect Plants for Your Garden</h1>
-                <p>Georgia's growing marketplace for quality plants. Browse Thuja, ornamental trees, and more from local growers.</p>
+                <h1 data-i18n="heroTitle">Find the Perfect Plants for Your Garden</h1>
+                <p data-i18n="heroDesc">Georgia's growing marketplace for quality plants. Browse Thuja, ornamental trees, and more from local growers.</p>
                 <div class="search-bar">
                     <input type="text" id="searchInput" placeholder="Search plants... (e.g. Thuja, Emerald, Smaragd)" aria-label="Search plants">
-                    <button class="btn btn-primary" id="searchBtn">Search</button>
+                    <button class="btn btn-primary" id="searchBtn" data-i18n="search">Search</button>
                 </div>
                 <div class="filter-tags">
-                    <button class="tag active" data-filter="all">All</button>
-                    <button class="tag" data-filter="thuja">Thuja</button>
-                    <button class="tag" data-filter="hedge">Hedge Plants</button>
-                    <button class="tag" data-filter="ornamental">Ornamental</button>
-                    <button class="tag" data-filter="fruit">Fruit Trees</button>
-                    <button class="tag" data-filter="seeds">Seeds</button>
-                    <button class="tag" data-filter="fertilizer">Fertilizers</button>
-                    <button class="tag" data-filter="materials">Materials</button>
+                    <button class="tag active" data-filter="all" data-i18n="all">All</button>
+                    <button class="tag" data-filter="thuja" data-i18n="thuja">Thuja</button>
+                    <button class="tag" data-filter="hedge" data-i18n="hedge">Hedge Plants</button>
+                    <button class="tag" data-filter="ornamental" data-i18n="ornamental">Ornamental</button>
+                    <button class="tag" data-filter="fruit" data-i18n="fruit">Fruit Trees</button>
+                    <button class="tag" data-filter="seeds" data-i18n="seeds">Seeds</button>
+                    <button class="tag" data-filter="fertilizer" data-i18n="fertilizer">Fertilizers</button>
+                    <button class="tag" data-filter="materials" data-i18n="materials">Materials</button>
                 </div>
             </div>
         </section>
         <section class="listings" id="listings">
             <div class="container">
-                <h2 class="section-title">Available Plants</h2>
-                <p class="section-subtitle">Fresh listings from local Georgian growers</p>
+                <h2 class="section-title" data-i18n="availablePlants">Available Plants</h2>
+                <p class="section-subtitle" data-i18n="freshListings">Fresh listings from local Georgian growers</p>
                 <div class="sort-filter-bar">
                     <select id="sortSelect" onchange="renderPlants(filterPlants())">
                         <option value="newest">Newest</option>
@@ -129,32 +129,32 @@
 
         <section class="how-it-works" id="how-it-works">
             <div class="container">
-                <h2 class="section-title">How It Works</h2>
-                <p class="section-subtitle">Safe buying and selling with escrow protection</p>
+                <h2 class="section-title" data-i18n="howItWorks">How It Works</h2>
+                <p class="section-subtitle" data-i18n="howItWorksDesc">Safe buying and selling with escrow protection</p>
                 <div class="steps">
                     <div class="step">
                         <span class="step-num">1</span>
                         <span class="step-icon">🔍</span>
-                        <h3>Browse & Choose</h3>
-                        <p>Find the perfect plant from verified local growers across Georgia.</p>
+                        <h3 data-i18n="step1">Browse & Choose</h3>
+                        <p data-i18n="step1d">Find the perfect plant from verified local growers across Georgia.</p>
                     </div>
                     <div class="step">
                         <span class="step-num">2</span>
                         <span class="step-icon">💳</span>
-                        <h3>Pay Securely</h3>
-                        <p>Your payment is held in escrow — the seller doesn't get paid until you confirm delivery.</p>
+                        <h3 data-i18n="step2">Pay Securely</h3>
+                        <p data-i18n="step2d">Your payment is held in escrow — the seller doesn't get paid until you confirm delivery.</p>
                     </div>
                     <div class="step">
                         <span class="step-num">3</span>
                         <span class="step-icon">📦</span>
-                        <h3>Receive & Inspect</h3>
-                        <p>Get your plant delivered or pick it up. You have 3 days to inspect its condition.</p>
+                        <h3 data-i18n="step3">Receive & Inspect</h3>
+                        <p data-i18n="step3d">Get your plant delivered or pick it up. You have 3 days to inspect its condition.</p>
                     </div>
                     <div class="step">
                         <span class="step-num">4</span>
                         <span class="step-icon">⭐</span>
-                        <h3>Confirm & Review</h3>
-                        <p>Confirm the plant is healthy, leave a review, and the seller gets paid.</p>
+                        <h3 data-i18n="step4">Confirm & Review</h3>
+                        <p data-i18n="step4d">Confirm the plant is healthy, leave a review, and the seller gets paid.</p>
                     </div>
                 </div>
             </div>
@@ -162,35 +162,35 @@
 
         <section class="about" id="about">
             <div class="container">
-                <h2 class="section-title">Why მწვანე ბაზარი?</h2>
+                <h2 class="section-title" data-i18n="whyUs">Why მწვანე ბაზარი?</h2>
                 <div class="features">
                     <div class="feature">
                         <div class="feature-icon-circle">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2A4139" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                         </div>
-                        <h3>Escrow Protection</h3>
-                        <p>Your money is safe. Payments are held until you confirm the plant arrived healthy.</p>
+                        <h3 data-i18n="escrowTitle">Escrow Protection</h3>
+                        <p data-i18n="escrowDesc">Your money is safe. Payments are held until you confirm the plant arrived healthy.</p>
                     </div>
                     <div class="feature">
                         <div class="feature-icon-circle">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2A4139" stroke-width="2"><path d="M12 22c4-4 8-7.5 8-12a8 8 0 10-16 0c0 4.5 4 8 8 12z"/><circle cx="12" cy="10" r="3"/></svg>
                         </div>
-                        <h3>Local Growers</h3>
-                        <p>All plants grown locally in Georgia, adapted to our climate and soil.</p>
+                        <h3 data-i18n="localTitle">Local Growers</h3>
+                        <p data-i18n="localDesc">All plants grown locally in Georgia, adapted to our climate and soil.</p>
                     </div>
                     <div class="feature">
                         <div class="feature-icon-circle">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2A4139" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                         </div>
-                        <h3>Verified Reviews</h3>
-                        <p>Real ratings from real buyers. "Plant Arrived Healthy" badge you can trust.</p>
+                        <h3 data-i18n="reviewsTitle">Verified Reviews</h3>
+                        <p data-i18n="reviewsDesc">Real ratings from real buyers. "Plant Arrived Healthy" badge you can trust.</p>
                     </div>
                     <div class="feature">
                         <div class="feature-icon-circle">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2A4139" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         </div>
-                        <h3>Dispute Resolution</h3>
-                        <p>Issues? Our mediation team resolves disputes fairly within 48 hours.</p>
+                        <h3 data-i18n="disputeTitle">Dispute Resolution</h3>
+                        <p data-i18n="disputeDesc">Issues? Our mediation team resolves disputes fairly within 48 hours.</p>
                     </div>
                 </div>
             </div>
@@ -201,7 +201,7 @@
             <div class="container">
                 <div class="story-grid">
                     <div class="story-content">
-                        <h2 class="section-title" style="text-align:left;">Our Story</h2>
+                        <h2 class="section-title" style="text-align:left;" data-i18n="ourStory">Our Story</h2>
                         <p class="story-text">It all started when my father began growing Thuja plants in our garden in Georgia. What started as a hobby quickly turned into something bigger — neighbors wanted them, friends asked where to buy, and we realized there was no easy way for growers and buyers to connect.</p>
                         <p class="story-text">That's how მწვანე ბაზარი was born. I wanted to create a space where anyone growing plants in Georgia could reach buyers directly — no middlemen, fair prices, and trust built into every transaction.</p>
                         <p class="story-text">Today, we're building Georgia's first dedicated plant marketplace. Whether you're a small grower with Thuja saplings or a large nursery with hundreds of varieties, this is your platform.</p>
@@ -223,8 +223,8 @@
         <!-- FAQ Section -->
         <section class="faq-section" id="faq">
             <div class="container">
-                <h2 class="section-title">Frequently Asked Questions</h2>
-                <p class="section-subtitle">Everything you need to know about buying and selling plants</p>
+                <h2 class="section-title" data-i18n="faq">Frequently Asked Questions</h2>
+                <p class="section-subtitle" data-i18n="faqDesc">Everything you need to know about buying and selling plants</p>
                 <div class="faq-list">
                     <details class="faq-item"><summary>How does the escrow payment work?</summary><p>When you buy a plant, your payment is held securely by our platform — not sent directly to the seller. The seller only receives the money after you confirm the plant arrived in good condition. You have a 3-day inspection window after delivery.</p></details>
                     <details class="faq-item"><summary>What if my plant arrives damaged?</summary><p>You can open a dispute within the 3-day inspection window. Upload photos of the damage, and our mediation team will review the case within 48 hours. You can request a full refund, partial refund, or replacement.</p></details>
