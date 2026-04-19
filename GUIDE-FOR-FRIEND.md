@@ -151,3 +151,180 @@ Ask Kiro: "Add an API endpoint that [does something]"
 **Update sample data:**
 Call: `POST https://green-bazaar-production.up.railway.app/api/admin/reseed?secret=gb-admin-2026`
 Then: `POST https://green-bazaar-production.up.railway.app/api/admin/seed?secret=gb-admin-2026`
+
+
+---
+
+## Website Logic Flowchart
+
+### How a user visits the site
+
+```
+User opens bazaar.green
+        ↓
+Browser loads index.html
+        ↓
+index.html loads these scripts:
+  ├── plants.js     (hardcoded sample data, fallback)
+  ├── i18n.js       (translations EN/KA/FR)
+  ├── funfacts.js   (plant fun facts)
+  ├── store.js      (API client — talks to backend)
+  └── app.js        (all the page logic)
+        ↓
+app.js calls Store.getListings()
+        ↓
+store.js sends GET /api/listings to Railway server
+        ↓
+server/routes/listingRoutes.ts queries PostgreSQL
+        ↓
+Returns plant data → app.js renders cards on screen
+```
+
+---
+
+### Key Building Blocks
+
+```
+┌─────────────────────────────────────────────────────┐
+│                    FRONTEND                          │
+│                                                      │
+│  index.html ──── All pages & modals (HTML structure) │
+│  styles.css ──── Visual design (colors, fonts, etc.) │
+│  app.js     ──── Page logic & user interactions      │
+│  store.js   ──── API calls to backend                │
+│  i18n.js    ──── Language translations               │
+│  funfacts.js──── Plant fun facts data                │
+└──────────────────────┬──────────────────────────────┘
+                       │ HTTP requests (fetch)
+                       ↓
+┌─────────────────────────────────────────────────────┐
+│                    BACKEND (Railway)                 │
+│                                                      │
+│  server/index.ts ─── Express server, routes setup   │
+│  server/auth.ts  ─── JWT token verification          │
+│  server/email.ts ─── Resend email service            │
+│  server/database.ts ─ PostgreSQL connection          │
+│                                                      │
+│  server/routes/                                      │
+│  ├── userRoutes.ts    ─ Register, login, profile     │
+│  ├── listingRoutes.ts ─ Create, browse, edit plants  │
+│  ├── orderRoutes.ts   ─ Buy, track, complete orders  │
+│  ├── messageRoutes.ts ─ Chat between users           │
+│  ├── reviewRoutes.ts  ─ Ratings & photos             │
+│  ├── disputeRoutes.ts ─ Dispute resolution           │
+│  ├── favoriteRoutes.ts─ Save/unsave listings         │
+│  ├── notificationRoutes.ts ─ In-app alerts           │
+│  ├── recommendRoutes.ts ─ Similar/popular plants     │
+│  ├── adminRoutes.ts   ─ Admin dashboard              │
+│  ├── supportRoutes.ts ─ Support & dashboard stats    │
+│  └── seedRoutes.ts    ─ Sample data setup            │
+└──────────────────────┬──────────────────────────────┘
+                       │ SQL queries
+                       ↓
+┌─────────────────────────────────────────────────────┐
+│                  DATABASE (PostgreSQL)               │
+│                                                      │
+│  users ──────── All registered accounts             │
+│  listings ───── Plant listings for sale             │
+│  orders ─────── Purchases with escrow tracking      │
+│  messages ───── Chat conversations                  │
+│  reviews ────── Ratings + photos after orders       │
+│  disputes ───── Unresolved order issues             │
+│  favorites ──── Saved listings per user             │
+│  notifications ─ In-app alerts                      │
+└─────────────────────────────────────────────────────┘
+```
+
+---
+
+### Order Flow (how buying works)
+
+```
+Buyer clicks "Buy Now"
+        ↓
+Checkout page (delivery + payment method)
+        ↓
+POST /api/orders → order created, status = "paid"
+        ↓
+Escrow holds payment (simulated)
+        ↓
+Seller sees order in Dashboard → "Accept" or "Decline"
+        ↓
+Seller accepts → status = "accepted"
+        ↓
+Seller ships → status = "shipped"
+        ↓
+Buyer confirms receipt → status = "delivered"
+        ↓
+3-day inspection window starts
+        ↓
+Buyer confirms healthy → status = "completed"
+        ↓
+Payment released to seller ✓
+        ↓
+Buyer can leave review with photos
+
+(If issue: Buyer opens dispute → Admin resolves)
+```
+
+---
+
+### Authentication Flow
+
+```
+User registers → password hashed (bcrypt)
+        ↓
+Email verification code sent (Resend)
+        ↓
+User enters code → account verified
+        ↓
+Login → JWT token issued (7 days)
+        ↓
+Token stored in localStorage
+        ↓
+Every API call sends token in header:
+"Authorization: Bearer [token]"
+        ↓
+Backend verifies token → allows/denies request
+```
+
+---
+
+### Pages in the App
+
+```
+Home (/)
+  ├── Browse listings (grid)
+  ├── Seasonal recommendations
+  ├── Popular plants
+  ├── How it works
+  ├── Our story
+  ├── Testimonials
+  └── FAQ
+
+Plant Detail
+  ├── Photos, description, care guide
+  ├── Fun facts
+  ├── Buy Now / Make an Offer / Message
+  ├── Recommended products
+  ├── Similar plants
+  └── Reviews
+
+Dashboard
+  ├── Stats (trust score, spent, earned)
+  ├── Quick links
+  ├── Recent activity
+  ├── My Orders (as buyer)
+  ├── My Sales (as seller)
+  ├── My Listings
+  └── Disputes
+
+Messages ─── Chat with buyers/sellers
+Notifications ─── Order updates, alerts
+Favorites ─── Saved listings
+People ─── Search users
+News ─── Plant articles
+Support ─── Help & partnership
+Profile ─── Edit account, stats
+Admin ─── Platform management (admin only)
+```
